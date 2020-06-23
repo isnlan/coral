@@ -1,0 +1,63 @@
+// 定义项目 API 的 proto 文件 可以同时描述 gRPC 和 HTTP API
+// protobuf 文件参考:
+//  - https://developers.google.com/protocol-buffers/
+syntax = "proto3";
+
+package protos;
+
+service UserCenter {
+    rpc Auth (Validate) returns (DigitalIdentity) {
+    }
+}
+
+
+message Validate {
+    string access_token = 1;
+    string bduid = 2;
+}
+
+message FabricDigital {
+    // 数字身份唯一标识
+    string bduid = 1;
+    // 区块链网络ID
+    string network_id = 2;
+    // 加密后的私钥
+    string private_key = 3;
+    // 证书
+    string cert = 4;
+    // msp id
+    string msp_id = 5;
+    // 激活状态
+    bool status = 6;
+    // 是否是组织
+    bool is_org = 7;
+}
+
+message KBaasDigital {
+    // 数字身份唯一标识
+    string bduid = 1;
+    // 区块链网络ID
+    string network_id = 2;
+    // 加密后的私钥
+    string private_key = 3;
+    // 公钥
+    string public_key = 4;
+    // 证书
+    string cert = 5;
+    // 激活状态
+    bool status = 6;
+}
+
+message DigitalIdentity {
+    // 数字身份唯一标识
+    string bduid = 1;
+    // 服务中心的数字身份地址
+    string proxy = 2;
+    // 访问的区块链网络ID
+    string network_id = 3;
+    // 数字身份
+    oneof digital {
+        FabricDigital fabric = 4;
+        KBaasDigital kbaas = 5;
+    }
+}

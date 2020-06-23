@@ -1,0 +1,63 @@
+// 定义项目 API 的 proto 文件 可以同时描述 gRPC 和 HTTP API
+// protobuf 文件参考:
+//  - https://developers.google.com/protocol-buffers/
+syntax = "proto3";
+
+option java_package = "org.kchain.cat.protos";
+
+package protos;
+
+service BehaviorLog {
+    rpc Recode (Record) returns (Empty) {
+    }
+}
+
+message Empty {}
+
+message Record {
+    // 当前微服务名称
+    string service = 1;
+
+    // 区块链网络ID,取值包括"fabric"、"kbaas"
+    string network_id = 2;
+
+    // 区块链网络中的指定链
+    string channel = 3;
+
+    // 合约名称
+    string contract = 4;
+
+    // 代理数字身份
+    string proxy = 5;
+
+    // 数字身份唯一标识
+    string bduid = 6;
+
+    // 操作名称，特指调用智能合约的方法名称
+    // 例如调用 "AuthService.ApplyAuthorization"
+    string operation = 7;
+
+    // 操作的资源列表
+    repeated Resource resources = 8;
+
+    // 交易Id
+    string tx_id = 9;
+
+    string trace_id = 11;
+
+    int64 timestamp = 12;
+
+    string function = 13;
+
+    string url = 14;
+
+    string content = 15;
+}
+
+message Resource {
+    // 资源ID
+    string id = 1;
+    // 资源类型
+    // 例如"DataService.DataID", "SchemaService.SchemaID
+    string type = 2;
+}
