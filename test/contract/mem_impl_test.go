@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/snlansky/coral/pkg/contract"
-	"github.com/snlansky/coral/pkg/contract/impl"
+	"github.com/snlansky/coral/pkg/contract/mock"
 
+	"github.com/snlansky/coral/pkg/contract"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestNewIndex(t *testing.T) {
-	chain := impl.NewMemoryFactoryChain()
+	chain := mock.NewMemoryFactoryChain()
 	stub := chain.NewStub("address1")
 
 	index := contract.NewIndex("MyAPP", "user_table", "uid")
@@ -50,7 +50,7 @@ func TestNewIndex(t *testing.T) {
 }
 
 func TestIndex_Update(t *testing.T) {
-	chain := impl.NewMemoryFactoryChain()
+	chain := mock.NewMemoryFactoryChain()
 	stub := chain.NewStub("address1")
 
 	index := contract.NewIndex("MyAPP", "user_table", "uid")
@@ -75,7 +75,7 @@ func TestIndex_Update(t *testing.T) {
 }
 
 func TestNewMemImpl(t *testing.T) {
-	chain := impl.NewMemoryFactoryChain()
+	chain := mock.NewMemoryFactoryChain()
 	stub := chain.NewStub("address1")
 
 	index := contract.NewIndex("MyAPP", "user_table", "uid")
@@ -94,7 +94,7 @@ func TestNewMemImpl(t *testing.T) {
 }
 
 func TestNewMemImpl2(t *testing.T) {
-	chain := impl.NewMemoryFactoryChain()
+	chain := mock.NewMemoryFactoryChain()
 	stub := chain.NewStub("address1")
 
 	index := contract.NewIndex("MyAPP", "user_table", "uid")
@@ -124,7 +124,7 @@ func TestNewMemImpl2(t *testing.T) {
 }
 
 func TestNewMemImpl_Index_Latest(t *testing.T) {
-	chain := impl.NewMemoryFactoryChain()
+	chain := mock.NewMemoryFactoryChain()
 	stub := chain.NewStub("address1")
 
 	index := contract.NewIndex("MyAPP", "user_table", "uid")

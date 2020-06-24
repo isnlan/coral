@@ -1,6 +1,7 @@
 package impl
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -8,7 +9,6 @@ import (
 	"github.com/snlansky/coral/pkg/contract/identity"
 
 	"github.com/hyperledger/fabric-chaincode-go/shim"
-	"github.com/pkg/errors"
 )
 
 type FabricContractStub struct {

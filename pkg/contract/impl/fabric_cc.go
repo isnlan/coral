@@ -2,7 +2,9 @@ package impl
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"log"
 	"reflect"
 	"runtime"
 	"runtime/debug"
@@ -13,11 +15,7 @@ import (
 
 	"github.com/hyperledger/fabric-chaincode-go/shim"
 	pb "github.com/hyperledger/fabric-protos-go/peer"
-	"github.com/pkg/errors"
-	"github.com/snlansky/coral/pkg/logging"
 )
-
-var logger = logging.MustGetLogger("contract")
 
 type FabricChaincode struct {
 	rpc rpc.Rpc
@@ -44,18 +42,18 @@ func (cc *FabricChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response 
 	if len(args) == 2 {
 		err := json.Unmarshal(args[1], &param)
 		if err != nil {
-			logger.Errorf("json.Unmarshal error:%s, date:%s", err.Error(), string(args[1]))
+			log.Printf("ERR:json.Unmarshal error:%s, date:%s\n", err.Error(), string(args[1]))
 			return shim.Error(contract.ERR_JSON_UNMARSHAL)
 		}
 	}
 
 	addr, err := stb.GetAddress()
 	if err != nil {
-		logger.Errorf("auth user failed, error:%s", err.Error())
+		log.Printf("ERR:auth user failed, error:%s\n", err.Error())
 		return shim.Error("ERR_INVALID_CERT")
 	}
 
-	logger.Infof(">>> address:%s, method:%s, params:%v", addr, method, param)
+	log.Printf(">>> address:%s, method:%s, params:%v\n", addr, method, param)
 
 	req := &rpc.Request{
 		ServiceMethod: method,
@@ -75,21 +73,21 @@ func (cc *FabricChaincode) handler(stub contract.IContractStub, req *rpc.Request
 
 	ret, err = cc.recoverHandler(stub, req)
 	if err != nil {
-		logger.Errorf("response error:%s", err.Error())
+		log.Printf("ERR:response error:%s\n", err.Error())
 		return shim.Error(err.Error())
 	}
 
 	if ret == nil {
-		logger.Infof("process takes %v, response success:null", time.Since(startTime))
+		log.Printf("process takes %v, response success:null\n", time.Since(startTime))
 		return shim.Success(nil)
 	}
 
 	buf, err := json.Marshal(ret)
 	if err != nil {
-		logger.Errorf("response error:%s", err.Error())
+		log.Printf("ERR:response error:%s\n", err.Error())
 		return shim.Error(contract.ERR_JSON_MARSHAL)
 	}
-	logger.Infof("process takes %v, response success:%s", time.Since(startTime), string(buf))
+	log.Printf("process takes %v, response success:%s\n", time.Since(startTime), string(buf))
 	return shim.Success(buf)
 }
 

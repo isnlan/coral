@@ -1,8 +1,8 @@
 package contract
 
 import (
+	"errors"
 	"fmt"
-	"github.com/pkg/errors"
 	"strings"
 	"unicode/utf8"
 )
@@ -43,12 +43,12 @@ func SplitCompositeKey(compositeKey string) (string, []string, error) {
 
 func validateCompositeKeyAttribute(str string) error {
 	if !utf8.ValidString(str) {
-		return errors.Errorf("not a valid utf8 string: [%x]", str)
+		return errors.New(fmt.Sprintf("not a valid utf8 string: [%x]", str))
 	}
 	for index, runeValue := range str {
 		if runeValue == minUnicodeRuneValue || runeValue == maxUnicodeRuneValue {
-			return errors.Errorf(`input contain unicode %#U starting at position [%d]. %#U and %#U are not allowed in the input attribute of a composite key`,
-				runeValue, index, minUnicodeRuneValue, maxUnicodeRuneValue)
+			return errors.New(fmt.Sprintf(`input contain unicode %#U starting at position [%d]. %#U and %#U are not allowed in the input attribute of a composite key`,
+				runeValue, index, minUnicodeRuneValue, maxUnicodeRuneValue))
 		}
 	}
 	return nil
