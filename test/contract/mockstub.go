@@ -570,11 +570,11 @@ func getBytes(function string, args []string) [][]byte {
 }
 
 func getFuncArgs(bytes [][]byte) (string, []string) {
-	fmt.Println("getFuncArgs(%x)", bytes)
+	fmt.Printf("getFuncArgs(%x)\n", bytes)
 	function := string(bytes[0])
 	args := make([]string, len(bytes)-1)
 	for i := 1; i < len(bytes); i++ {
-		fmt.Println("getFuncArgs - i:%x, len(bytes):%x", i, len(bytes))
+		fmt.Printf("getFuncArgs - i:%x, len(bytes):%x\n", i, len(bytes))
 		args[i-1] = string(bytes[i])
 	}
 	return function, args

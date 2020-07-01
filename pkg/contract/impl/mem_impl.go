@@ -6,6 +6,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/snlansky/coral/pkg/contract/identity"
+
 	"github.com/snlansky/coral/pkg/contract"
 	"github.com/snlansky/coral/pkg/utils"
 )
@@ -28,8 +30,8 @@ func (m *memoryStub) GetChannelID() string {
 	return "mem-channel"
 }
 
-func (m *memoryStub) GetAddress() ([]byte, error) {
-	return []byte(m.address), nil
+func (m *memoryStub) GetAddress() (identity.Address, error) {
+	return identity.AddressFromHexString(m.address)
 }
 
 func (m *memoryStub) GetState(key string) ([]byte, error) {
@@ -66,6 +68,14 @@ func (m *memoryStub) GetTxTimestamp() (time.Time, error) {
 func (m *memoryStub) SetEvent(name string, payload []byte) error {
 	m.factory.events[name] = payload
 	return nil
+}
+
+func (m *memoryStub) InvokeContract(contractName string, args [][]byte, channel string) ([]byte, error) {
+	panic("implement me")
+}
+
+func (m *memoryStub) GetOriginStub() interface{} {
+	panic("implement me")
 }
 
 type MemoryFactoryChain struct {

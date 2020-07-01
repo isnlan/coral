@@ -42,18 +42,18 @@ func (cc *FabricChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response 
 	if len(args) == 2 {
 		err := json.Unmarshal(args[1], &param)
 		if err != nil {
-			log.Printf("ERR:json.Unmarshal error:%s, date:%s\n", err.Error(), string(args[1]))
+			log.Printf("ERR: json.Unmarshal error:%s, date:%s\n", err.Error(), string(args[1]))
 			return shim.Error(contract.ERR_JSON_UNMARSHAL)
 		}
 	}
 
 	addr, err := stb.GetAddress()
 	if err != nil {
-		log.Printf("ERR:auth user failed, error:%s\n", err.Error())
+		log.Printf("ERR: auth user failed, error:%s\n", err.Error())
 		return shim.Error("ERR_INVALID_CERT")
 	}
 
-	log.Printf(">>> address:%s, method:%s, params:%v\n", addr, method, param)
+	log.Printf("INFO: address:%s, method:%s, params:%v\n", addr, method, param)
 
 	req := &rpc.Request{
 		ServiceMethod: method,
@@ -78,7 +78,7 @@ func (cc *FabricChaincode) handler(stub contract.IContractStub, req *rpc.Request
 	}
 
 	if ret == nil {
-		log.Printf("process takes %v, response success:null\n", time.Since(startTime))
+		log.Printf("INFO: process takes %v, response success:null\n", time.Since(startTime))
 		return shim.Success(nil)
 	}
 
@@ -87,7 +87,7 @@ func (cc *FabricChaincode) handler(stub contract.IContractStub, req *rpc.Request
 		log.Printf("ERR:response error:%s\n", err.Error())
 		return shim.Error(contract.ERR_JSON_MARSHAL)
 	}
-	log.Printf("process takes %v, response success:%s\n", time.Since(startTime), string(buf))
+	log.Printf("INFO: process takes %v, response success:%s\n", time.Since(startTime), string(buf))
 	return shim.Success(buf)
 }
 
@@ -104,12 +104,12 @@ func (cc *FabricChaincode) recoverHandler(stub contract.IContractStub, req *rpc.
 			case string:
 				err = errors.New(v)
 			case runtime.Error:
-				fmt.Printf("runtime error:%v \nstack :%s\n", v, string(debug.Stack()))
+				fmt.Printf("ERR: runtime error:%v \nstack :%s\n", v, string(debug.Stack()))
 				err = contract.ErrRuntime
 			case error:
 				err = v
 			default:
-				err = fmt.Errorf("ohter error type:%v, value:%v", reflect.TypeOf(re), v)
+				err = fmt.Errorf("ERR: ohter error type:%v, value:%v", reflect.TypeOf(re), v)
 			}
 		}
 	}()

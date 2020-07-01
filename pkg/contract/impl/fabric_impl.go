@@ -36,12 +36,12 @@ func (f *FabricContractStub) GetChannelID() string {
 	return f.stub.GetChannelID()
 }
 
-func (f *FabricContractStub) GetAddress() ([]byte, error) {
+func (f *FabricContractStub) GetAddress() (identity.Address, error) {
 	creatorByte, err := f.stub.GetCreator()
 	if err != nil {
-		return nil, err
+		return identity.ZeroAddress, err
 	}
-	return identity.IntoIdentity(creatorByte)
+	return identity.IntoAddress(creatorByte)
 }
 
 func (f *FabricContractStub) GetState(key string) ([]byte, error) {
@@ -92,4 +92,16 @@ func (f *FabricContractStub) GetTxTimestamp() (time.Time, error) {
 
 func (f *FabricContractStub) SetEvent(name string, payload []byte) error {
 	return f.stub.SetEvent(name, payload)
+}
+
+func (f *FabricContractStub) InvokeContract(contractName string, args [][]byte, channel string) ([]byte, error) {
+	resp := f.stub.InvokeChaincode(contractName, args, channel)
+	if resp.Status != 200 {
+		return nil, errors.New(resp.Message)
+	}
+	return resp.Payload, nil
+}
+
+func (f *FabricContractStub) GetOriginStub() interface{} {
+	return f.stub
 }
