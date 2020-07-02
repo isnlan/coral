@@ -36,12 +36,17 @@ func (f *FabricContractStub) GetChannelID() string {
 	return f.stub.GetChannelID()
 }
 
-func (f *FabricContractStub) GetAddress() (identity.Address, error) {
+func (f *FabricContractStub) GetAddress() (string, error) {
 	creatorByte, err := f.stub.GetCreator()
 	if err != nil {
-		return identity.ZeroAddress, err
+		return "", err
 	}
-	return identity.IntoAddress(creatorByte)
+	addr, err := identity.IntoAddress(creatorByte)
+	if err != nil {
+		return "", err
+	}
+
+	return addr.String(), nil
 }
 
 func (f *FabricContractStub) GetState(key string) ([]byte, error) {

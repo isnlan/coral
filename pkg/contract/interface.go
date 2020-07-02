@@ -2,15 +2,13 @@ package contract
 
 import (
 	"time"
-
-	"github.com/snlansky/coral/pkg/contract/identity"
 )
 
 type IContractStub interface {
 	GetArgs() [][]byte
 	GetTxID() string
 	GetChannelID() string
-	GetAddress() (identity.Address, error)
+	GetAddress() (string, error)
 	GetState(key string) ([]byte, error)
 	PutState(key string, value []byte) error
 	DelState(key string) ([]byte, error)

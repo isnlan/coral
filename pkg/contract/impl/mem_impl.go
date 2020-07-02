@@ -30,8 +30,12 @@ func (m *memoryStub) GetChannelID() string {
 	return "mem-channel"
 }
 
-func (m *memoryStub) GetAddress() (identity.Address, error) {
-	return identity.AddressFromHexString(m.address)
+func (m *memoryStub) GetAddress() (string, error) {
+	addr, err := identity.AddressFromHexString(m.address)
+	if err != nil {
+		return "", err
+	}
+	return addr.String(), nil
 }
 
 func (m *memoryStub) GetState(key string) ([]byte, error) {
