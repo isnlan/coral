@@ -152,3 +152,27 @@ func TestNewRandomAddress(t *testing.T) {
 	address := NewRandomAddress()
 	fmt.Println(address)
 }
+
+func TestAddress_UnmarshalJSON(t *testing.T) {
+	type User struct {
+		Name string   `json:"name"`
+		Addr *Address `json:"addr,omitempty"` //`json:"addr,omitempty"`
+	}
+	type Human struct {
+		Name string `json:"name"`
+		Addr string `json:"addr"`
+	}
+
+	str := `{"name":"snlan","addr":""}`
+
+	var u User
+	err := json.Unmarshal([]byte(str), &u)
+	assert.NoError(t, err)
+	fmt.Println("user", u)
+	fmt.Println("user nil", User{Name: "s1"})
+
+	fmt.Println("-----")
+	marshal, err := json.Marshal(&User{Name: "lucy", Addr: nil})
+	assert.NoError(t, err)
+	fmt.Println(string(marshal))
+}

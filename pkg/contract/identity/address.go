@@ -51,6 +51,9 @@ func MaybeAddressFromBytes(bs []byte) (*Address, error) {
 // Returns an address consisting of the first 20 bytes of bs, return an error if the bs does not have length exactly 20
 // but will still return either: the bytes in bs padded on the right or the first 20 bytes of bs truncated in any case.
 func AddressFromBytes(bs []byte) (address Address, err error) {
+	if len(bs) == 0 {
+		return ZeroAddress, nil
+	}
 	if len(bs) != Word160Length {
 		err = fmt.Errorf("slice passed as address '%X' has %d bytes but should have %d bytes",
 			bs, len(bs), Word160Length)
@@ -117,6 +120,10 @@ func (address Address) MarshalJSON() ([]byte, error) {
 }
 
 func (address *Address) UnmarshalText(text []byte) error {
+	if len(text) == 0 {
+		return nil
+	}
+
 	if len(text) != AddressHexLength {
 		return fmt.Errorf("address hex '%s' has length %v but must have length %v to be a valid address",
 			string(text), len(text), AddressHexLength)
