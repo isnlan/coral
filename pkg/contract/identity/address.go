@@ -6,6 +6,8 @@ import (
 	bin "encoding/binary"
 	"encoding/json"
 	"fmt"
+	"math/rand"
+	"time"
 
 	"github.com/tmthrgd/go-hex"
 )
@@ -173,4 +175,13 @@ func SequenceNonce(address Address, sequence uint64) []byte {
 func NewContractAddress(caller Address, nonce []byte) (newAddr Address) {
 	copy(newAddr[:], Nonce(caller, nonce))
 	return
+}
+
+func NewRandomAddress() Address {
+	rand.Seed(time.Now().UnixNano())
+	token := make([]byte, Word160Length)
+	rand.Read(token)
+	var addr Address
+	copy(addr[:], token)
+	return addr
 }

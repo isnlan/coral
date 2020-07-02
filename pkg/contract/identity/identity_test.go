@@ -147,3 +147,8 @@ MXXw8KMx+fR4BbSs2ra7Jiga3PHYXs/B9HHy0TDtD6o=
 	assert.NoError(t, err)
 	assert.Equal(t, n1addr, address)
 }
+
+func TestNewRandomAddress(t *testing.T) {
+	address := NewRandomAddress()
+	fmt.Println(address)
+}
