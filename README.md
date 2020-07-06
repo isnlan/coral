@@ -1,4 +1,4 @@
-![](doc/logo.jpeg)
+![](doc/logo.png)
 
 [![Build Status](https://travis-ci.org/douyu/jupiter.svg?branch=master)](https://travis-ci.org/douyu/jupiter)
 [![codecov](https://codecov.io/gh/douyu/jupiter/branch/master/graph/badge.svg)](https://codecov.io/gh/douyu/jupiter)
