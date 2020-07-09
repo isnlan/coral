@@ -8,6 +8,8 @@ import (
 	"context"
 	"crypto/x509"
 	"fmt"
+	grpc_middeware "github.com/grpc-ecosystem/go-grpc-middleware"
+	"github.com/snlansky/coral/pkg/trace"
 	"time"
 
 	"github.com/golang/protobuf/proto"
@@ -167,6 +169,12 @@ func NewOrdererFromConfig(conf OrdererConfig) (*Orderer, error) {
 		grpc.WithBlock(),
 		grpc.WithDefaultCallOptions(
 			grpc.MaxCallRecvMsgSize(maxRecvMsgSize),
-			grpc.MaxCallSendMsgSize(maxSendMsgSize)))
+			grpc.MaxCallSendMsgSize(maxSendMsgSize)),
+		grpc.WithUnaryInterceptor(
+			grpc_middeware.ChainUnaryClient(
+				trace.OpenTracingClientInterceptor(),
+			),
+		),
+			)
 	return &o, nil
 }
