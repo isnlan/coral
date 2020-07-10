@@ -166,3 +166,19 @@ func HandleNotFound(c *gin.Context) {
 		"request": c.Request.Method + " " + c.Request.URL.String(),
 	})
 }
+
+func CorsMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var isAccess = true
+		if isAccess {
+			// 核心处理方式
+			c.Header("Access-Control-Allow-Origin", "*")
+			c.Header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+			c.Header("Access-Control-Allow-Methods", "GET, OPTIONS, POST, PUT, DELETE")
+			c.Set("content-type", "application/json")
+		}
+
+		c.Next()
+	}
+}
+
