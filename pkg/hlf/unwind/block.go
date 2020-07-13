@@ -1,16 +1,16 @@
-package model_utils
+package unwind
 
 import (
 
 	"github.com/hyperledger/fabric-protos-go/peer"
 	"github.com/hyperledger/fabric/protoutil"
-	"github.com/snlansky/coral/pkg/model"
+	"github.com/snlansky/coral/pkg/entity"
 
 	"github.com/hyperledger/fabric-protos-go/common"
 )
 
-func NewBlock(block *common.Block) (*model.Block, []*Transaction, error) {
-	tb := new(model.Block)
+func NewBlock(block *common.Block) (*entity.Block, []*Transaction, error) {
+	tb := new(entity.Block)
 	tb.Number = block.Header.Number
 	tb.PreviousHash = block.Header.PreviousHash
 	tb.Hash = protoutil.BlockHeaderHash(block.Header)

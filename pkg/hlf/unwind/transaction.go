@@ -1,7 +1,7 @@
-package model_utils
+package unwind
 
 import (
-	"github.com/snlansky/coral/pkg/model"
+	"github.com/snlansky/coral/pkg/entity"
 	"time"
 
 	"github.com/snlansky/coral/pkg/contract/identity"
@@ -131,8 +131,8 @@ func NewTransactionFromEnvelope(envelope *common.Envelope, validationCode int32)
 	return transaction, nil
 }
 
-func (t *Transaction) IntoTransaction() *model.Transaction {
-	tx := model.Transaction{
+func (t *Transaction) IntoTransaction() *entity.Transaction {
+	tx := entity.Transaction{
 		TxId:           t.TxId,
 		ChannelId:      t.ChannelId,
 		BlockNumber:    t.BlockNumber,
@@ -141,7 +141,7 @@ func (t *Transaction) IntoTransaction() *model.Transaction {
 		Event:          nil,
 	}
 	if t.Events != nil {
-		e := model.Event{
+		e := entity.Event{
 			Contract:  t.Events.ChaincodeId,
 			EventName: t.Events.EventName,
 			Value:     t.Events.Payload,
