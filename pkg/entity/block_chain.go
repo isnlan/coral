@@ -11,6 +11,7 @@ type Block struct {
 	DataHash         []byte    `db:"data_hash" json:"data_hash" bson:"data_hash"`                         // 数据Hash
 	TransactionCount int       `db:"transaction_count" json:"transaction_count" bson:"transaction_count"` // 当前块中交易数量
 	ChannelId        string    `db:"channel_id" json:"channel_id" bson:"channel_id"`                      // 链ID
+	Size             int       `db:"size" json:"size" bson:"size"`                                        // 区块大小
 	Timestamp        time.Time `db:"timestamp" json:"timestamp" bson:"timestamp"`                         // 时间戳
 }
 

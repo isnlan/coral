@@ -1,7 +1,6 @@
 package unwind
 
 import (
-
 	"github.com/hyperledger/fabric-protos-go/peer"
 	"github.com/hyperledger/fabric/protoutil"
 	"github.com/snlansky/coral/pkg/entity"
@@ -15,6 +14,12 @@ func NewBlock(block *common.Block) (*entity.Block, []*Transaction, error) {
 	tb.PreviousHash = block.Header.PreviousHash
 	tb.Hash = protoutil.BlockHeaderHash(block.Header)
 	tb.DataHash = block.Header.DataHash
+
+	bytes, err := protoutil.Marshal(block)
+	if err != nil {
+		return nil, nil, err
+	}
+	tb.Size = len(bytes)
 
 	var txs []*Transaction
 
