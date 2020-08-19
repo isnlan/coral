@@ -124,3 +124,10 @@ func (cc *FabricChaincode) Register(i interface{}) {
 		panic(err)
 	}
 }
+
+func (cc *FabricChaincode) Start() {
+	err := shim.Start(cc)
+	if err != nil {
+		panic("Error starting chaincode - " + err.Error())
+	}
+}
