@@ -73,6 +73,13 @@ func RecoveryWriter() gin.HandlerFunc {
 		defer func() {
 			if r := recover(); r != nil {
 				switch resp := r.(type) {
+				case runtime.Error:
+					if logger != nil {
+						stack := stack(3)
+						httprequest, _ := httputil.DumpRequest(c.Request, false)
+						logger.Errorf("runtime error:\n%s\n%s\n%s%s", string(httprequest), r, stack, reset)
+					}
+					c.AbortWithStatus(http.StatusInternalServerError)
 				case errors.CodeError:
 					c.AbortWithStatusJSON(http.StatusOK, &response.JsonResponse{
 						ErrorCode:   resp.Code(),
@@ -181,4 +188,3 @@ func CorsMiddleware() gin.HandlerFunc {
 		c.Next()
 	}
 }
-
