@@ -10,7 +10,7 @@ func Check(err error, msg ...interface{}) {
 			info = e.Error()
 			code = e.Code()
 		} else {
-			info = e.Error()
+			info = err.Error()
 			code = InternalErrorCode
 		}
 
