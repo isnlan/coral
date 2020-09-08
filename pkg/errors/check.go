@@ -14,11 +14,16 @@ func Check(err error, msg ...interface{}) {
 			code = InternalErrorCode
 		}
 
-		info = fmt.Sprintf("%s, %v", info, msg)
+		if msg != nil && len(msg) > 0 {
+			info = fmt.Sprintf("%s, %v", info, msg)
+		}
 		panic(NewWithInfo(info, code))
 	}
 }
 
 func Throw(desc string, code int, msg ...interface{}) {
-	panic(NewWithInfo(fmt.Sprintf("%s, %v", desc, msg), code))
+	if msg != nil && len(msg) > 0 {
+		desc = fmt.Sprintf("%s, %v", desc, msg)
+	}
+	panic(NewWithInfo(desc, code))
 }
