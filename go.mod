@@ -5,6 +5,7 @@ go 1.14
 require (
 	github.com/Knetic/govaluate v3.0.0+incompatible // indirect
 	github.com/codahale/hdrhistogram v0.0.0-20161010025455-3a0bb77429bd // indirect
+	github.com/elazarl/goproxy v0.0.0-20200809112317-0581fc3aee2d // indirect
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/validator/v10 v10.3.0
 	github.com/go-redis/redis/v8 v8.0.0-beta.5
@@ -23,6 +24,7 @@ require (
 	github.com/op/go-logging v0.0.0-20160315200505-970db520ece7
 	github.com/opentracing-contrib/go-stdlib v1.0.0
 	github.com/opentracing/opentracing-go v1.1.1-0.20190913142402-a7454ce5950e
+	github.com/parnurzeal/gorequest v0.2.16
 	github.com/pkg/errors v0.8.1
 	github.com/processout/grpc-go-pool v1.2.1
 	github.com/spf13/cobra v1.0.0
@@ -37,4 +39,5 @@ require (
 	golang.org/x/crypto v0.0.0-20191108234033-bd318be0434a
 	google.golang.org/grpc v1.29.1
 	gopkg.in/yaml.v2 v2.2.8
+	moul.io/http2curl v1.0.0 // indirect
 )

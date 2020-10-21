@@ -8,6 +8,8 @@ github.com/cespare/xxhash
 github.com/davecgh/go-spew/spew
 # github.com/dgryski/go-rendezvous v0.0.0-20200609043717-5ab96a526299
 github.com/dgryski/go-rendezvous
+# github.com/elazarl/goproxy v0.0.0-20200809112317-0581fc3aee2d
+## explicit
 # github.com/fsnotify/fsnotify v1.4.7
 github.com/fsnotify/fsnotify
 # github.com/gin-contrib/sse v0.1.0
@@ -128,6 +130,9 @@ github.com/opentracing-contrib/go-stdlib/nethttp
 github.com/opentracing/opentracing-go
 github.com/opentracing/opentracing-go/ext
 github.com/opentracing/opentracing-go/log
+# github.com/parnurzeal/gorequest v0.2.16
+## explicit
+github.com/parnurzeal/gorequest
 # github.com/pelletier/go-toml v1.4.0
 github.com/pelletier/go-toml
 # github.com/pkg/errors v0.8.1
@@ -258,6 +263,7 @@ golang.org/x/net/http2
 golang.org/x/net/http2/hpack
 golang.org/x/net/idna
 golang.org/x/net/internal/timeseries
+golang.org/x/net/publicsuffix
 golang.org/x/net/trace
 # golang.org/x/sync v0.0.0-20190423024810-112230192c58
 golang.org/x/sync/semaphore
@@ -316,3 +322,6 @@ google.golang.org/grpc/tap
 # gopkg.in/yaml.v2 v2.2.8
 ## explicit
 gopkg.in/yaml.v2
+# moul.io/http2curl v1.0.0
+## explicit
+moul.io/http2curl
