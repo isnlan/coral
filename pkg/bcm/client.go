@@ -19,14 +19,13 @@ func New(baseUrl string) *Client {
 	}
 }
 
-func (c *Client) AclQuery(clientId, clientSecret string) (*entity.AclClient, error) {
+func (c *Client) AclQuery(clientId string) (*entity.AclClient, error) {
 	var resp response.JsonResponse
 	var acl entity.AclClient
 	resp.Data = &acl
 
 	data := map[string]string{
-		"client_id":     clientId,
-		"client_secret": clientSecret,
+		"client_id": clientId,
 	}
 
 	_, _, errs := gorequest.New().Post(fmt.Sprintf("%s/api/private/acl/query", c.baseUrl)).
