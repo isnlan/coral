@@ -35,18 +35,18 @@ type CryptoConfig struct {
 
 // PeerConfig hold config values for Peer. ULR is in address:port notation
 type PeerConfig struct {
-	Host               string `yaml:"host"`
-	UseTLS             bool   `yaml:"useTLS"`
-	Cert               string `yaml:"cert"`
-	ServerNameOverride string `yaml:"serverNameOverride"`
+	Host               string `json:"host" yaml:"host"`
+	UseTLS             bool   `json:"useTLS" yaml:"useTLS"`
+	Cert               string `json:"cert" yaml:"cert"`
+	ServerNameOverride string `json:"serverNameOverride" yaml:"serverNameOverride"`
 }
 
 // OrdererConfig hold config values for Orderer. ULR is in address:port notation
 type OrdererConfig struct {
-	Host               string `yaml:"host"`
-	UseTLS             bool   `yaml:"useTLS"`
-	Cert               string `yaml:"cert"`
-	ServerNameOverride string `yaml:"serverNameOverride"`
+	Host               string `json:"host" yaml:"host"`
+	UseTLS             bool   `json:"useTLS" yaml:"useTLS"`
+	Cert               string `json:"cert" yaml:"cert"`
+	ServerNameOverride string `json:"serverNameOverride" yaml:"serverNameOverride"`
 }
 
 // NewFabricClientConfig create config from provided yaml file in path

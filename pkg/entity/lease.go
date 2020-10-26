@@ -1,6 +1,7 @@
 package entity
 
 import (
+	"github.com/snlansky/coral/pkg/hlf"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -28,20 +29,6 @@ type (
 		AdminPassword string `json:"adminPassword"`
 	}
 
-	PeerConfig struct {
-		Host               string `json:"host"`
-		UseTLS             bool   `json:"useTLS"`
-		Cert               string `json:"cert"`
-		ServerNameOverride string `json:"serverNameOverride"`
-	}
-
-	OrdererConfig struct {
-		Host               string `json:"host"`
-		UseTLS             bool   `json:"useTLS"`
-		Cert               string `json:"cert"`
-		ServerNameOverride string `json:"serverNameOverride"`
-	}
-
 	ChannelConfig struct {
 		Peers      []string `json:"peers"`
 		Orderers   []string `json:"orderers"`
@@ -61,11 +48,11 @@ type (
 	}
 
 	FabricConfig struct {
-		Ca       *CaConfig                 `json:"ca"`
-		Peers    map[string]*PeerConfig    `json:"peers"`
-		Orderers map[string]*OrdererConfig `json:"orderers"`
-		Channels map[string]*ChannelConfig `json:"channels"`
-		Admin    *FabricUser               `json:"admin"`
+		Ca       *CaConfig                     `json:"ca"`
+		Peers    map[string]*hlf.PeerConfig    `json:"peers"`
+		Orderers map[string]*hlf.OrdererConfig `json:"orderers"`
+		Channels map[string]*ChannelConfig     `json:"channels"`
+		Admin    *FabricUser                   `json:"admin"`
 	}
 )
 
