@@ -5,6 +5,7 @@ go 1.14
 require (
 	github.com/Knetic/govaluate v3.0.0+incompatible // indirect
 	github.com/codahale/hdrhistogram v0.0.0-20161010025455-3a0bb77429bd // indirect
+	github.com/dgraph-io/ristretto v0.0.3
 	github.com/elazarl/goproxy v0.0.0-20200809112317-0581fc3aee2d // indirect
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/validator/v10 v10.3.0
