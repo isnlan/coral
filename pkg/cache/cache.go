@@ -1,4 +1,4 @@
-package db
+package cache
 
 import (
 	"time"
@@ -10,7 +10,7 @@ type Cache struct {
 	cache *ristretto.Cache
 }
 
-func NewCache() *Cache {
+func New() *Cache {
 	c, err := ristretto.NewCache(&ristretto.Config{
 		NumCounters: 1e7,     // number of keys to track frequency of (10M).
 		MaxCost:     1 << 30, // maximum cost of cache (1GB).
