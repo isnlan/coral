@@ -21,6 +21,7 @@ type FabricClient struct {
 	Peers      map[string]*Peer
 	Orderers   map[string]*Orderer
 	EventPeers map[string]*Peer
+	close      chan struct{}
 }
 
 // CreateUpdateChannel read channel config generated (usually) from configtxgen and send it to orderer
@@ -610,7 +611,8 @@ func (c *FabricClient) ListenForFullBlock(ctx context.Context, identity Identity
 	if err != nil {
 		return err
 	}
-	listener.Listen(response, nil)
+
+	listener.Listen(response, c.Cancel)
 	return nil
 }
 
@@ -630,8 +632,44 @@ func (c *FabricClient) ListenForFilteredBlock(ctx context.Context, identity Iden
 	if err != nil {
 		return err
 	}
-	listener.Listen(response, nil)
+
+	listener.Listen(response, c.Cancel)
 	return nil
+}
+
+func (c *FabricClient) Close() {
+	select {
+	case <-c.close:
+	default:
+		close(c.close)
+	}
+
+	for _, p := range c.Peers {
+		if p.conn != nil {
+			p.conn.Close()
+		}
+	}
+
+	for _, o := range c.Orderers {
+		if o.conn != nil {
+			o.conn.Close()
+		}
+	}
+
+	for _, e := range c.EventPeers {
+		if e.conn != nil {
+			e.conn.Close()
+		}
+	}
+}
+
+func (c *FabricClient) Cancel() bool {
+	select {
+	case <-c.close:
+		return true
+	default:
+		return false
+	}
 }
 
 // NewFabricClientFromConfig create a new FabricClient from ClientConfig
@@ -678,7 +716,7 @@ func NewFabricClientFromConfig(config ClientConfig) (*FabricClient, error) {
 		newOrderer.Name = name
 		orderers[name] = newOrderer
 	}
-	client := FabricClient{Peers: peers, EventPeers: eventPeers, Orderers: orderers, Crypto: crypto}
+	client := FabricClient{Peers: peers, EventPeers: eventPeers, Orderers: orderers, Crypto: crypto, close: make(chan struct{})}
 	return &client, nil
 }
 

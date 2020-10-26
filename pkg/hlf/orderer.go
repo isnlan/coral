@@ -8,9 +8,10 @@ import (
 	"context"
 	"crypto/x509"
 	"fmt"
+	"time"
+
 	grpc_middeware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"github.com/snlansky/coral/pkg/trace"
-	"time"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/hyperledger/fabric-protos-go/common"
@@ -27,7 +28,7 @@ type Orderer struct {
 	Opts               []grpc.DialOption
 	Cert               string
 	ServerNameOverride string
-	con                *grpc.ClientConn
+	conn               *grpc.ClientConn
 	client             orderer.AtomicBroadcastClient
 }
 
@@ -35,14 +36,14 @@ const timeout = 5
 
 // Broadcast Broadcast envelope to orderer for execution.
 func (o *Orderer) Broadcast(envelope *common.Envelope) (*orderer.BroadcastResponse, error) {
-	if o.con == nil {
+	if o.conn == nil {
 		ctx, _ := context.WithTimeout(context.Background(), time.Second*5)
 		c, err := grpc.DialContext(ctx, o.Uri, o.Opts...)
 		if err != nil {
 			return nil, fmt.Errorf("cannot connect to orderer: %s err is: %v", o.Name, err)
 		}
-		o.con = c
-		o.client = orderer.NewAtomicBroadcastClient(o.con)
+		o.conn = c
+		o.client = orderer.NewAtomicBroadcastClient(o.conn)
 	}
 
 	ctx, _ := context.WithTimeout(context.Background(), time.Second*30)
@@ -175,6 +176,6 @@ func NewOrdererFromConfig(conf OrdererConfig) (*Orderer, error) {
 				trace.OpenTracingClientInterceptor(),
 			),
 		),
-			)
+	)
 	return &o, nil
 }
