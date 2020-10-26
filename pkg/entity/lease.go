@@ -30,29 +30,29 @@ type (
 	}
 
 	ChannelConfig struct {
-		Peers      []string `json:"peers"`
-		Orderers   []string `json:"orderers"`
-		Chaincodes []string `json:"chaincodes"`
-		Enable     bool     `json:"enable"`
+		Peers      []string `json:"peers" yaml:"peers"`
+		Orderers   []string `json:"orderers" yaml:"orderers"`
+		Chaincodes []string `json:"chaincodes" yaml:"chaincodes"`
+		Enable     bool     `json:"enable" yaml:"enable"`
 	}
 
 	Enrollment struct {
-		Cert       string `json:"cert"`
-		PrivateKey string `json:"privateKey"`
+		Cert       string `json:"cert" yaml:"cert"`
+		PrivateKey string `json:"privateKey" yaml:"privateKey"`
 	}
 
 	FabricUser struct {
-		Name   string     `json:"name"`
-		MspId  string     `json:"mspId"`
-		Enroll Enrollment `json:"enrollment"`
+		Name   string     `json:"name" yaml:"name"`
+		MspId  string     `json:"mspId" yaml:"mspId"`
+		Enroll Enrollment `json:"enrollment" yaml:"enrollment"`
 	}
 
 	FabricConfig struct {
-		Ca       *CaConfig                     `json:"ca"`
-		Peers    map[string]*hlf.PeerConfig    `json:"peers"`
-		Orderers map[string]*hlf.OrdererConfig `json:"orderers"`
-		Channels map[string]*ChannelConfig     `json:"channels"`
-		Admin    *FabricUser                   `json:"admin"`
+		Ca       *CaConfig                    `json:"ca" yaml:"ca"`
+		Peers    map[string]hlf.PeerConfig    `json:"peers" yaml:"peers"`
+		Orderers map[string]hlf.OrdererConfig `json:"orderers" yaml:"orderers"`
+		Channels map[string]ChannelConfig     `json:"channels" yaml:"channels"`
+		Admin    *FabricUser                  `json:"admin" yaml:"admin"`
 	}
 )
 
