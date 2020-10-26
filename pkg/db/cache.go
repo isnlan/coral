@@ -6,11 +6,11 @@ import (
 	"github.com/dgraph-io/ristretto"
 )
 
-type cache struct {
+type Cache struct {
 	cache *ristretto.Cache
 }
 
-func NewCache() *cache {
+func NewCache() *Cache {
 	c, err := ristretto.NewCache(&ristretto.Config{
 		NumCounters: 1e7,     // number of keys to track frequency of (10M).
 		MaxCost:     1 << 30, // maximum cost of cache (1GB).
@@ -21,29 +21,29 @@ func NewCache() *cache {
 		panic(err)
 	}
 
-	return &cache{cache: c}
+	return &Cache{cache: c}
 }
 
-func (c *cache) Get(key interface{}) (interface{}, bool) {
+func (c *Cache) Get(key interface{}) (interface{}, bool) {
 	return c.cache.Get(key)
 }
 
-func (c *cache) Set(key, value interface{}) bool {
+func (c *Cache) Set(key, value interface{}) bool {
 	return c.cache.Set(key, value, 1)
 }
 
-func (c cache) SetWithTTL(key, value interface{}, ttl time.Duration) bool {
+func (c *Cache) SetWithTTL(key, value interface{}, ttl time.Duration) bool {
 	return c.cache.SetWithTTL(key, value, 1, ttl)
 }
 
-func (c *cache) Del(key interface{}) {
+func (c *Cache) Del(key interface{}) {
 	c.cache.Del(key)
 }
 
-func (c *cache) Clear() {
+func (c *Cache) Clear() {
 	c.cache.Clear()
 }
 
-func (c *cache) Close() {
+func (c *Cache) Close() {
 	c.cache.Close()
 }
