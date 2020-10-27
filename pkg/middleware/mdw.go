@@ -74,21 +74,20 @@ func RecoveryWriter() gin.HandlerFunc {
 			if r := recover(); r != nil {
 				switch resp := r.(type) {
 				case runtime.Error:
-					if logger != nil {
-						stack := stack(3)
-						httprequest, _ := httputil.DumpRequest(c.Request, false)
-						logger.Errorf("runtime error:\n%s\n%s\n%s%s", string(httprequest), r, stack, reset)
-					}
+					stack := stack(3)
+					httprequest, _ := httputil.DumpRequest(c.Request, false)
+					logger.Errorf("runtime error:\n%s\n%s\n%s%s", string(httprequest), r, stack, reset)
+
 					c.AbortWithStatus(http.StatusInternalServerError)
 				case errors.CodeError:
-					logger.Errorf("request [%s]%s error, code %d, description %s", c.Request.Method, c.Request.URL.String(), resp.Code(), resp.Error())
+					logger.Errorf("request [%s]%s error, code %d, description %s, body:\n%s", c.Request.Method, c.Request.URL.String(), resp.Code(), resp.Error(), getBody(c))
 					c.AbortWithStatusJSON(http.StatusOK, &response.JsonResponse{
 						ErrorCode:   resp.Code(),
 						Description: resp.Error(),
 						Data:        nil,
 					})
 				case error:
-					logger.Errorf("request [%s]%s error, code %d, description %s", c.Request.Method, c.Request.URL.String(), errors.InternalErrorCode, resp.Error())
+					logger.Errorf("request [%s]%s error, code %d, description %s, body:\n%s", c.Request.Method, c.Request.URL.String(), errors.InternalErrorCode, resp.Error(), getBody(c))
 					c.AbortWithStatusJSON(http.StatusOK, &response.JsonResponse{
 						ErrorCode:   errors.InternalErrorCode,
 						Description: resp.Error(),
@@ -106,6 +105,15 @@ func RecoveryWriter() gin.HandlerFunc {
 		}()
 		c.Next()
 	}
+}
+
+func getBody(c *gin.Context) string {
+	body, err := ioutil.ReadAll(c.Request.Body)
+	if err != nil {
+		return ""
+	}
+
+	return string(body)
 }
 
 // stack returns a nicely formatted stack frame, skipping skip frames.
