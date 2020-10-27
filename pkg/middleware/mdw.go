@@ -80,14 +80,14 @@ func RecoveryWriter() gin.HandlerFunc {
 
 					c.AbortWithStatus(http.StatusInternalServerError)
 				case errors.CodeError:
-					logger.Errorf("request [%s]%s error, code %d, description %s, body:\n%s", c.Request.Method, c.Request.URL.String(), resp.Code(), resp.Error(), getBody(c))
+					logger.Errorf("request [%s]%s error, code %d, description %s", c.Request.Method, c.Request.URL.String(), resp.Code(), resp.Error())
 					c.AbortWithStatusJSON(http.StatusOK, &response.JsonResponse{
 						ErrorCode:   resp.Code(),
 						Description: resp.Error(),
 						Data:        nil,
 					})
 				case error:
-					logger.Errorf("request [%s]%s error, code %d, description %s, body:\n%s", c.Request.Method, c.Request.URL.String(), errors.InternalErrorCode, resp.Error(), getBody(c))
+					logger.Errorf("request [%s]%s error, code %d, description %s", c.Request.Method, c.Request.URL.String(), errors.InternalErrorCode, resp.Error())
 					c.AbortWithStatusJSON(http.StatusOK, &response.JsonResponse{
 						ErrorCode:   errors.InternalErrorCode,
 						Description: resp.Error(),
@@ -105,15 +105,6 @@ func RecoveryWriter() gin.HandlerFunc {
 		}()
 		c.Next()
 	}
-}
-
-func getBody(c *gin.Context) string {
-	body, err := ioutil.ReadAll(c.Request.Body)
-	if err != nil {
-		return ""
-	}
-
-	return string(body)
 }
 
 // stack returns a nicely formatted stack frame, skipping skip frames.
