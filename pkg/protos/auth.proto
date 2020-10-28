@@ -6,8 +6,7 @@ syntax = "proto3";
 package protos;
 
 service UserCenter {
-    rpc Auth (Validate) returns (DigitalIdentity) {
-    }
+    rpc Auth (Validate) returns (DigitalIdentity) {}
 }
 
 
@@ -49,15 +48,17 @@ message KBaasDigital {
 }
 
 message DigitalIdentity {
+    // ClientID
+    string client_id = 1;
     // 数字身份唯一标识
-    string bduid = 1;
+    string bduid = 2;
     // 服务中心的数字身份地址
-    string proxy = 2;
+    string proxy = 3;
     // 访问的区块链网络ID
-    string network_id = 3;
+    string network_id = 4;
     // 数字身份
     oneof digital {
-        FabricDigital fabric = 4;
-        KBaasDigital kbaas = 5;
+        FabricDigital fabric = 5;
+        KBaasDigital kbaas = 6;
     }
 }

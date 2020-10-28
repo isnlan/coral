@@ -59,3 +59,20 @@ func (c *Client) ChainLease(chainId string) (*entity.Lease, error) {
 
 	return &lease, nil
 }
+
+func (c *Client) CallRecord(data interface{}) error {
+	var resp response.JsonResponse
+
+	_, _, errs := gorequest.New().Post(fmt.Sprintf("%s/api/private/calls/record", c.baseUrl)).
+		Send(data).
+		EndStruct(&resp)
+	if errs != nil && len(errs) != 0 {
+		return errs[0]
+	}
+
+	if resp.ErrorCode != response.SuccessCode {
+		return errors.Errorf("request call record error: %s", resp.Description)
+	}
+
+	return nil
+}
