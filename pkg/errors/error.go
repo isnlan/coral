@@ -38,7 +38,7 @@ func (e *SvrError) Code() int {
 	return e.code
 }
 
-func NewWithCode(err error, code int) CodeError {
+func NewWithCode(code int, err error) CodeError {
 	if e, ok := err.(CodeError); ok {
 		return e
 	}
@@ -49,7 +49,7 @@ func NewWithCode(err error, code int) CodeError {
 	}
 }
 
-func NewWithInfo(info string, code int) CodeError {
+func NewWithInfo(code int, info string) CodeError {
 	return &SvrError{
 		code: code,
 		info: info,

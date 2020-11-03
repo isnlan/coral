@@ -17,7 +17,7 @@ func Check(err error, msg ...interface{}) {
 		if msg != nil && len(msg) > 0 {
 			info = fmt.Sprintf("%s, %v", info, msg)
 		}
-		panic(NewWithInfo(info, code))
+		panic(NewWithInfo(code, info))
 	}
 }
 
@@ -25,5 +25,5 @@ func Throw(desc string, code int, msg ...interface{}) {
 	if msg != nil && len(msg) > 0 {
 		desc = fmt.Sprintf("%s, %v", desc, msg)
 	}
-	panic(NewWithInfo(desc, code))
+	panic(NewWithInfo(code, desc))
 }
