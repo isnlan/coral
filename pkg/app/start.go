@@ -64,7 +64,7 @@ func (app *App) Start(svr Server) {
 		sigChan := make(chan os.Signal, 1)
 		signal.Notify(sigChan, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT)
 		for sig := range sigChan {
-			fmt.Printf("get a signal %s", sig.String())
+			fmt.Printf("get a signal %s\n", sig.String())
 			switch sig {
 			case syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT:
 				svr.Close()
