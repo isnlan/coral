@@ -22,6 +22,7 @@ var Name string
 type Server interface {
 	Initialize() error
 	Start()
+	Close()
 }
 
 var (
@@ -66,6 +67,7 @@ func (app *App) Start(svr Server) {
 			fmt.Printf("get a signal %s", sig.String())
 			switch sig {
 			case syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT:
+				svr.Close()
 				return
 			case syscall.SIGHUP:
 				//logger.Rotate(false)
