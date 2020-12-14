@@ -56,6 +56,11 @@ type (
 	}
 )
 
+type ChannelStatus struct {
+	Name   string `json:"name" yaml:"name"`
+	Enable bool   `json:"enable" yaml:"enable"`
+}
+
 type Lease struct {
 	NetworkId  string      `json:"network_id"`
 	Consensus  string      `json:"consensus"`
