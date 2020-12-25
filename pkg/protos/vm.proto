@@ -21,7 +21,7 @@ message Ips {
     repeated string ips = 1;
 }
 
-message RequestServiceList {
+message Namespaces {
     string ns = 1;
 }
 
@@ -36,6 +36,10 @@ message RequestServicePort {
 
 message ResponseServicePort {
     repeated string ports = 1;
+}
+
+message ResponseDeploymentList {
+    repeated string deployments = 1;
 }
 
 message RequestNsPods {
@@ -71,10 +75,11 @@ service VM {
     rpc Apply (Data) returns (google.protobuf.Empty) {}
     rpc Delete (Data) returns (google.protobuf.Empty) {}
     rpc GetNodeIps(google.protobuf.Empty) returns (Ips) {}
-    rpc GetServiceList(RequestServiceList) returns (ResponseServiceList) {}
+    rpc GetServiceList(Namespaces) returns (ResponseServiceList) {}
     rpc GetServicePort(RequestServicePort) returns (ResponseServicePort) {}
-    rpc GetNamespacesPods(RequestNsPods) returns (ResponseNsPods) {}
+    rpc GetDeploymentList(Namespaces) returns (ResponseDeploymentList) {}
     rpc GetDeploymentStatus(RequestDeploymentStatus) returns (ResponseStatus) {}
+    rpc GetNamespacesPods(RequestNsPods) returns (ResponseNsPods) {}
     rpc BuildImage(RequestBuildImage) returns (google.protobuf.Empty) {}
     rpc PushImage(RequestPushImage) returns (google.protobuf.Empty) {}
 }
