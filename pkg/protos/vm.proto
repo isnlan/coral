@@ -1,0 +1,80 @@
+syntax = "proto3";
+package protos;
+import "google/protobuf/empty.proto";
+
+message Data {
+    bytes data = 1;
+}
+
+message Pod {
+    string name = 1;
+    string role = 2;
+    repeated string ports = 3;
+    string host_ip = 4;
+    string status = 5;
+    int64 create_time = 6;
+    string cpu = 7;
+    string memory = 8;
+}
+
+message Ips {
+    repeated string ips = 1;
+}
+
+message RequestServiceList {
+    string ns = 1;
+}
+
+message ResponseServiceList {
+    repeated string services = 1;
+}
+
+message RequestServicePort {
+    string ns = 1;
+    string svc = 2;
+}
+
+message ResponseServicePort {
+    repeated string ports = 1;
+}
+
+message RequestNsPods {
+    string ns = 1;
+    string label = 2;
+    map<string, string> filter = 3;
+}
+
+message ResponseNsPods {
+    repeated Pod pods = 1;
+}
+
+message RequestDeploymentStatus {
+    string ns = 1;
+    string name = 2;
+}
+
+message ResponseStatus {
+    repeated string status = 1;
+}
+
+message RequestBuildImage {
+    string tag = 1;
+    bytes data = 2;
+}
+
+message RequestPushImage {
+    string name = 1;
+    string version = 2;
+}
+
+service VM {
+    rpc Apply (Data) returns (google.protobuf.Empty) {}
+    rpc Delete (Data) returns (google.protobuf.Empty) {}
+    rpc GetNodeIps(google.protobuf.Empty) returns (Ips) {}
+    rpc GetServiceList(RequestServiceList) returns (ResponseServiceList) {}
+    rpc GetServicePort(RequestServicePort) returns (ResponseServicePort) {}
+    rpc GetNamespacesPods(RequestNsPods) returns (ResponseNsPods) {}
+    rpc GetDeploymentStatus(RequestDeploymentStatus) returns (ResponseStatus) {}
+    rpc BuildImage(RequestBuildImage) returns (google.protobuf.Empty) {}
+    rpc PushImage(RequestPushImage) returns (google.protobuf.Empty) {}
+}

@@ -3,12 +3,14 @@
 //  - https://developers.google.com/protocol-buffers/
 syntax = "proto3";
 
+import "google/protobuf/empty.proto";
+
 option java_package = "org.kchain.cat.protos";
 
 package protos;
 
 service BehaviorLog {
-    rpc Recode (Record) returns (Empty) {
+    rpc Recode (Record) returns (google.protobuf.Empty) {
     }
 }
 
