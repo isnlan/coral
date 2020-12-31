@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	conn, err := net.New("192.168.2.2:8080")
+	conn, err := net.New("127.0.0.1:8081")
 	check(err)
 	client, err := conn.Get()
 	check(err)
@@ -42,7 +42,7 @@ func main() {
 
 	fmt.Println(status.Status)
 
-	list, err := vmClient.GetDeploymentList(context.Background(), &protos.Namespaces{
+	list, err := vmClient.GetDeploymentList(context.Background(), &protos.Namespace{
 		Ns: "kbcs",
 	})
 	check(err)
