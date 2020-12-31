@@ -1,0 +1,94 @@
+syntax = "proto3";
+package protos;
+import "google/protobuf/empty.proto";
+
+message Chain {
+  string name = 1;
+  string account = 2;
+  string consensus = 3;
+  int32 node_count = 4;
+  bool tls_enabled = 5;
+}
+
+message Channel {
+  Chain chain = 1;
+  string name = 2;
+}
+
+message ChainStatus {
+  bool status = 1;
+}
+
+message Artifacts {
+  bytes data = 1;
+}
+
+message Contract {
+  string name = 1;
+  string path = 2;
+  string version = 3;
+  repeated bytes args  = 4;
+  bytes data = 5;
+}
+
+message Transaction {
+  string id = 1;
+}
+
+message ContractResponse {
+  string data = 1;
+}
+
+message ResponsePods {
+  string data = 1;
+}
+
+message BlockchainInfo {
+  string data = 1;
+}
+
+message RequestQueryBlock {
+  Channel channel = 1;
+}
+
+message Block {
+  string data = 1;
+}
+
+message BlockList {
+  repeated Block blocks = 1;
+}
+
+message Resources {
+  string data = 1;
+}
+
+message User {
+  string name = 1;
+  string pwd = 2;
+}
+
+message Cert {
+  string data = 1;
+}
+
+service Network {
+  rpc BuildChain (Chain) returns (google.protobuf.Empty) {}
+  rpc BuildChannel (Channel) returns (google.protobuf.Empty) {}
+  rpc StartChain (Chain) returns (google.protobuf.Empty) {}
+  rpc IsRunning(Chain) returns (ChainStatus) {}
+  rpc StopChain (Chain) returns (google.protobuf.Empty) {}
+  rpc IsStopped(Chain) returns (ChainStatus) {}
+  rpc DeleteChainData(Chain) returns (google.protobuf.Empty) {}
+  rpc DownloadArtifacts(Chain) returns (Artifacts) {}
+  rpc Register(User) returns (Cert) {}
+  rpc InstallContract(Contract) returns (Transaction) {}
+  rpc UpdateContract(Contract) returns (Transaction) {}
+  rpc QueryContract(Contract) returns (Transaction) {}
+  rpc InvokeContract(Contract) returns (ContractResponse) {}
+  rpc QueryChainPods(Chain) returns (ResponsePods) {}
+  rpc QueryLedger(Channel) returns (BlockchainInfo) {}
+  rpc QueryLatestBlocks(Channel) returns (Block) {}
+  rpc QueryBlock(RequestQueryBlock) returns (Block) {}
+  rpc ChangeChainPodResources(Resources) returns (google.protobuf.Empty) {}
+}
