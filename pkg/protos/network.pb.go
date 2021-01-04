@@ -208,7 +208,8 @@ func (m *RequestSetupContract) GetContract() *Contract {
 type RequestQueryOrInvokeContract struct {
 	// 数字身份
 	Identity *DigitalIdentity `protobuf:"bytes,2,opt,name=Identity,proto3" json:"Identity,omitempty"`
-	Channel  *Channel         `protobuf:"bytes,1,opt,name=channel,proto3" json:"channel,omitempty"`
+	// 链名称
+	Channel *Channel `protobuf:"bytes,1,opt,name=channel,proto3" json:"channel,omitempty"`
 	// 合约名称
 	Contract string `protobuf:"bytes,3,opt,name=contract,proto3" json:"contract,omitempty"`
 	// 调用参数
