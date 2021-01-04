@@ -1,94 +1,112 @@
 syntax = "proto3";
 package protos;
+
 import "google/protobuf/empty.proto";
-
-message Chain {
-  string name = 1;
-  string account = 2;
-  string consensus = 3;
-  int32 node_count = 4;
-  bool tls_enabled = 5;
-}
-
-message Channel {
-  Chain chain = 1;
-  string name = 2;
-}
-
-message ChainStatus {
-  bool status = 1;
-}
+import "common.proto";
 
 message Artifacts {
   bytes data = 1;
 }
 
-message Contract {
-  string name = 1;
-  string path = 2;
-  string version = 3;
-  repeated bytes args  = 4;
-  bytes data = 5;
+message ResponseNodes {
+  repeated Node nodes = 1;
 }
 
-message Transaction {
-  string id = 1;
+message RequestRegister {
+  Chain chain = 1;
+  string user = 2;
+  string pwd = 3;
 }
 
-message ContractResponse {
-  string data = 1;
-}
-
-message ResponsePods {
-  string data = 1;
-}
-
-message BlockchainInfo {
-  string data = 1;
-}
-
-message RequestQueryBlock {
+message RequestSetupContract {
   Channel channel = 1;
+  Contract contract = 2;
 }
 
-message Block {
-  string data = 1;
+message RequestQueryOrInvokeContract {
+  // 数字身份
+  DigitalIdentity Identity = 2;
+  Channel channel = 1;
+  // 合约名称
+  string contract = 3;
+  // 调用参数
+  repeated string args = 4;
 }
 
-message BlockList {
-  repeated Block blocks = 1;
+message ResponseChannelList {
+  repeated string channels = 1;
 }
 
-message Resources {
-  string data = 1;
+message ResponseContractList {
+  repeated Contract contracts = 1;
 }
 
-message User {
-  string name = 1;
-  string pwd = 2;
+message RequestQueryBlockByNum {
+  Channel channel = 1;
+  uint64 num  = 2;
 }
 
-message Cert {
-  string data = 1;
+message RequestQueryBlockTxId {
+  Channel channel = 1;
+  string tx_id  = 2;
 }
+
+message RequestQueryBlockByHash {
+  Channel channel = 1;
+  bytes hash  = 2;
+}
+
+message RequestQueryTxById {
+  Channel channel = 1;
+  string tx_id  = 2;
+}
+
 
 service Network {
+  // 构建区块链网络所需要的全部文件，包括启动k8s文件
   rpc BuildChain (Chain) returns (google.protobuf.Empty) {}
+  // 创建一条链（通道）
   rpc BuildChannel (Channel) returns (google.protobuf.Empty) {}
+  // 在k8s中运行网络
   rpc StartChain (Chain) returns (google.protobuf.Empty) {}
+  // 查看网络是否完全运行
   rpc IsRunning(Chain) returns (ChainStatus) {}
+  // 停止运行
   rpc StopChain (Chain) returns (google.protobuf.Empty) {}
+  // 是否完全停止
   rpc IsStopped(Chain) returns (ChainStatus) {}
-  rpc DeleteChainData(Chain) returns (google.protobuf.Empty) {}
+  // 删除网络全部数据文件
+  rpc DeleteChain(Chain) returns (google.protobuf.Empty) {}
+  // 下载区块链网络数据
   rpc DownloadArtifacts(Chain) returns (Artifacts) {}
-  rpc Register(User) returns (Cert) {}
-  rpc InstallContract(Contract) returns (Transaction) {}
-  rpc UpdateContract(Contract) returns (Transaction) {}
-  rpc QueryContract(Contract) returns (Transaction) {}
-  rpc InvokeContract(Contract) returns (ContractResponse) {}
-  rpc QueryChainPods(Chain) returns (ResponsePods) {}
-  rpc QueryLedger(Channel) returns (BlockchainInfo) {}
-  rpc QueryLatestBlocks(Channel) returns (Block) {}
-  rpc QueryBlock(RequestQueryBlock) returns (Block) {}
-  rpc ChangeChainPodResources(Resources) returns (google.protobuf.Empty) {}
+  // 注册数字身份
+  rpc Register(RequestRegister) returns (DigitalIdentity) {}
+  // 安装合约
+  rpc InstallContract(RequestSetupContract) returns (TransactionResponse) {}
+  // 更新合约
+  rpc UpdateContract(RequestSetupContract) returns (TransactionResponse) {}
+  // 查询合约，产生交易
+  rpc QueryContract(RequestQueryOrInvokeContract) returns (TransactionResponse) {}
+  // 调用合约，产生交易
+  rpc InvokeContract(RequestQueryOrInvokeContract) returns (TransactionResponse) {}
+  // 查询网络pod资源
+  rpc QueryChainNodes(Chain) returns (ResponseNodes) {}
+  // 查询链列表
+  rpc QueryChannelList(Chain) returns (ResponseChannelList) {}
+  // 查询链信息
+  rpc QueryChannel(Channel) returns (ChannelInfo) {}
+  // 查询合约列表
+  rpc QueryContractList(Channel) returns (ResponseContractList) {}
+  // 查询链最新块
+  rpc QueryLatestBlock(Channel) returns (Block) {}
+  // 根据块高度查询块
+  rpc QueryBlockByNum(RequestQueryBlockByNum) returns (Block) {}
+  // 根据交易ID查询块
+  rpc QueryBlockByTxId(RequestQueryBlockTxId) returns (Block) {}
+  // 根据块Hash查询块
+  rpc QueryBlockByHash(RequestQueryBlockByHash) returns (Block) {}
+  // 根据交易ID查询交易
+  rpc QueryTxById(RequestQueryTxById) returns (Transaction) {}
 }
+
+

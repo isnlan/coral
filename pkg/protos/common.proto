@@ -1,0 +1,168 @@
+// 定义项目 API 的 proto 文件 可以同时描述 gRPC 和 HTTP API
+// protobuf 文件参考:
+//  - https://developers.google.com/protocol-buffers/
+syntax = "proto3";
+
+package protos;
+import "google/protobuf/timestamp.proto";
+
+
+message FabricDigital {
+  // 数字身份唯一标识
+  string bduid = 1;
+  // 区块链网络ID
+  string network_id = 2;
+  // 加密后的私钥
+  string private_key = 3;
+  // 证书
+  string cert = 4;
+  // msp id
+  string msp_id = 5;
+  // 激活状态
+  bool status = 6;
+  // 是否是组织
+  bool is_org = 7;
+}
+
+message KBaasDigital {
+  // 数字身份唯一标识
+  string bduid = 1;
+  // 区块链网络ID
+  string network_id = 2;
+  // 加密后的私钥
+  string private_key = 3;
+  // 公钥
+  string public_key = 4;
+  // 证书
+  string cert = 5;
+  // 激活状态
+  bool status = 6;
+}
+
+message DigitalIdentity {
+  // ClientID
+  string client_id = 1;
+  // 数字身份唯一标识
+  string bduid = 2;
+  // 服务中心的数字身份地址
+  string proxy = 3;
+  // 访问的区块链网络ID
+  string network_id = 4;
+  // 数字身份
+  oneof digital {
+    FabricDigital fabric = 5;
+    KBaasDigital kbaas = 6;
+  }
+}
+
+message Block {
+  // 当前块高度
+  uint64 number = 1;
+  // 前块Hash
+  bytes previous_hash = 2;
+  // 当前块Hash
+  bytes hash = 3;
+  // 数据Hash
+  bytes data_hash = 4;
+  // 当前块中交易数量
+  int32 transaction_count = 5;
+  // 链ID
+  string channel_id = 6;
+  // 区块大小
+  int32 size = 7;
+  // 时间戳
+  google.protobuf.Timestamp timestamp = 8;
+}
+
+message Transaction {
+  // 交易ID
+  string tx_id = 1;
+  // 链ID
+  string channel_id = 2;
+  // 块高度
+  uint64 BlockNumber = 3;
+  // 合约名称
+  string Contract = 4;
+  // 数字身份
+  string Creator = 5;
+  // 签名
+  string sign = 6;
+  // 交易类型
+  string TxType = 7;
+  // 时间戳
+  google.protobuf.Timestamp Timestamp = 8;
+  // 交易状态
+  string validation_code  = 9;
+  // 事件
+  Event event = 10;
+}
+
+message Event {
+  // 合约名称
+  string Contract = 1;
+  // 事件名称
+  string event_name = 2;
+  // 数据
+  bytes Value = 3;
+}
+
+message Chain {
+  // 框架id "fabric.."
+  string network_id = 1;
+  // 网络名称
+  string name = 2;
+  // 创建账户
+  string account = 3;
+  // 共识算法
+  string consensus = 4;
+  // 节点数量
+  int32 node_count = 5;
+  // tls是否开启
+  bool tls_enabled = 6;
+}
+
+message Channel {
+  Chain chain = 1;
+  string name = 2;
+}
+
+message ChainStatus {
+  bool status = 1;
+}
+
+message Contract {
+  string name = 1;
+  string path = 2;
+  string version = 3;
+  repeated bytes args  = 4;
+  bytes data = 5;
+}
+
+message ChannelInfo {
+  // 链ID
+  string channel_id = 1;
+  // 当前块高度
+  uint64 block_number = 2;
+  // 总交易数量
+  uint64 total_transactions = 3;
+  // 开始时间
+  uint64 start_time = 4;
+}
+
+message TransactionResponse {
+  string tx_id = 1;
+  bytes data = 2;
+}
+
+message Node {
+  string status = 1;
+  int64 create_time = 2;
+  string name = 3;
+  int32 port = 4;
+  string host_ip = 5;
+  string type = 6;
+  string cpu = 7;
+  string memory = 8;
+}
+
+

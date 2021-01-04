@@ -25,163 +25,6 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
-type Chain struct {
-	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Account              string   `protobuf:"bytes,2,opt,name=account,proto3" json:"account,omitempty"`
-	Consensus            string   `protobuf:"bytes,3,opt,name=consensus,proto3" json:"consensus,omitempty"`
-	NodeCount            int32    `protobuf:"varint,4,opt,name=node_count,json=nodeCount,proto3" json:"node_count,omitempty"`
-	TlsEnabled           bool     `protobuf:"varint,5,opt,name=tls_enabled,json=tlsEnabled,proto3" json:"tls_enabled,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *Chain) Reset()         { *m = Chain{} }
-func (m *Chain) String() string { return proto.CompactTextString(m) }
-func (*Chain) ProtoMessage()    {}
-func (*Chain) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8571034d60397816, []int{0}
-}
-
-func (m *Chain) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Chain.Unmarshal(m, b)
-}
-func (m *Chain) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Chain.Marshal(b, m, deterministic)
-}
-func (m *Chain) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Chain.Merge(m, src)
-}
-func (m *Chain) XXX_Size() int {
-	return xxx_messageInfo_Chain.Size(m)
-}
-func (m *Chain) XXX_DiscardUnknown() {
-	xxx_messageInfo_Chain.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_Chain proto.InternalMessageInfo
-
-func (m *Chain) GetName() string {
-	if m != nil {
-		return m.Name
-	}
-	return ""
-}
-
-func (m *Chain) GetAccount() string {
-	if m != nil {
-		return m.Account
-	}
-	return ""
-}
-
-func (m *Chain) GetConsensus() string {
-	if m != nil {
-		return m.Consensus
-	}
-	return ""
-}
-
-func (m *Chain) GetNodeCount() int32 {
-	if m != nil {
-		return m.NodeCount
-	}
-	return 0
-}
-
-func (m *Chain) GetTlsEnabled() bool {
-	if m != nil {
-		return m.TlsEnabled
-	}
-	return false
-}
-
-type Channel struct {
-	Chain                *Chain   `protobuf:"bytes,1,opt,name=chain,proto3" json:"chain,omitempty"`
-	Name                 string   `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *Channel) Reset()         { *m = Channel{} }
-func (m *Channel) String() string { return proto.CompactTextString(m) }
-func (*Channel) ProtoMessage()    {}
-func (*Channel) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8571034d60397816, []int{1}
-}
-
-func (m *Channel) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Channel.Unmarshal(m, b)
-}
-func (m *Channel) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Channel.Marshal(b, m, deterministic)
-}
-func (m *Channel) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Channel.Merge(m, src)
-}
-func (m *Channel) XXX_Size() int {
-	return xxx_messageInfo_Channel.Size(m)
-}
-func (m *Channel) XXX_DiscardUnknown() {
-	xxx_messageInfo_Channel.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_Channel proto.InternalMessageInfo
-
-func (m *Channel) GetChain() *Chain {
-	if m != nil {
-		return m.Chain
-	}
-	return nil
-}
-
-func (m *Channel) GetName() string {
-	if m != nil {
-		return m.Name
-	}
-	return ""
-}
-
-type ChainStatus struct {
-	Status               bool     `protobuf:"varint,1,opt,name=status,proto3" json:"status,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *ChainStatus) Reset()         { *m = ChainStatus{} }
-func (m *ChainStatus) String() string { return proto.CompactTextString(m) }
-func (*ChainStatus) ProtoMessage()    {}
-func (*ChainStatus) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8571034d60397816, []int{2}
-}
-
-func (m *ChainStatus) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ChainStatus.Unmarshal(m, b)
-}
-func (m *ChainStatus) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ChainStatus.Marshal(b, m, deterministic)
-}
-func (m *ChainStatus) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ChainStatus.Merge(m, src)
-}
-func (m *ChainStatus) XXX_Size() int {
-	return xxx_messageInfo_ChainStatus.Size(m)
-}
-func (m *ChainStatus) XXX_DiscardUnknown() {
-	xxx_messageInfo_ChainStatus.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_ChainStatus proto.InternalMessageInfo
-
-func (m *ChainStatus) GetStatus() bool {
-	if m != nil {
-		return m.Status
-	}
-	return false
-}
-
 type Artifacts struct {
 	Data                 []byte   `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -193,7 +36,7 @@ func (m *Artifacts) Reset()         { *m = Artifacts{} }
 func (m *Artifacts) String() string { return proto.CompactTextString(m) }
 func (*Artifacts) ProtoMessage()    {}
 func (*Artifacts) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8571034d60397816, []int{3}
+	return fileDescriptor_8571034d60397816, []int{0}
 }
 
 func (m *Artifacts) XXX_Unmarshal(b []byte) error {
@@ -221,491 +64,491 @@ func (m *Artifacts) GetData() []byte {
 	return nil
 }
 
-type Contract struct {
-	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Path                 string   `protobuf:"bytes,2,opt,name=path,proto3" json:"path,omitempty"`
-	Version              string   `protobuf:"bytes,3,opt,name=version,proto3" json:"version,omitempty"`
-	Args                 [][]byte `protobuf:"bytes,4,rep,name=args,proto3" json:"args,omitempty"`
-	Data                 []byte   `protobuf:"bytes,5,opt,name=data,proto3" json:"data,omitempty"`
+type ResponseNodes struct {
+	Nodes                []*Node  `protobuf:"bytes,1,rep,name=nodes,proto3" json:"nodes,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *Contract) Reset()         { *m = Contract{} }
-func (m *Contract) String() string { return proto.CompactTextString(m) }
-func (*Contract) ProtoMessage()    {}
-func (*Contract) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8571034d60397816, []int{4}
+func (m *ResponseNodes) Reset()         { *m = ResponseNodes{} }
+func (m *ResponseNodes) String() string { return proto.CompactTextString(m) }
+func (*ResponseNodes) ProtoMessage()    {}
+func (*ResponseNodes) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8571034d60397816, []int{1}
 }
 
-func (m *Contract) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Contract.Unmarshal(m, b)
+func (m *ResponseNodes) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ResponseNodes.Unmarshal(m, b)
 }
-func (m *Contract) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Contract.Marshal(b, m, deterministic)
+func (m *ResponseNodes) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ResponseNodes.Marshal(b, m, deterministic)
 }
-func (m *Contract) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Contract.Merge(m, src)
+func (m *ResponseNodes) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ResponseNodes.Merge(m, src)
 }
-func (m *Contract) XXX_Size() int {
-	return xxx_messageInfo_Contract.Size(m)
+func (m *ResponseNodes) XXX_Size() int {
+	return xxx_messageInfo_ResponseNodes.Size(m)
 }
-func (m *Contract) XXX_DiscardUnknown() {
-	xxx_messageInfo_Contract.DiscardUnknown(m)
+func (m *ResponseNodes) XXX_DiscardUnknown() {
+	xxx_messageInfo_ResponseNodes.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_Contract proto.InternalMessageInfo
+var xxx_messageInfo_ResponseNodes proto.InternalMessageInfo
 
-func (m *Contract) GetName() string {
+func (m *ResponseNodes) GetNodes() []*Node {
 	if m != nil {
-		return m.Name
-	}
-	return ""
-}
-
-func (m *Contract) GetPath() string {
-	if m != nil {
-		return m.Path
-	}
-	return ""
-}
-
-func (m *Contract) GetVersion() string {
-	if m != nil {
-		return m.Version
-	}
-	return ""
-}
-
-func (m *Contract) GetArgs() [][]byte {
-	if m != nil {
-		return m.Args
+		return m.Nodes
 	}
 	return nil
 }
 
-func (m *Contract) GetData() []byte {
+type RequestRegister struct {
+	Chain                *Chain   `protobuf:"bytes,1,opt,name=chain,proto3" json:"chain,omitempty"`
+	User                 string   `protobuf:"bytes,2,opt,name=user,proto3" json:"user,omitempty"`
+	Pwd                  string   `protobuf:"bytes,3,opt,name=pwd,proto3" json:"pwd,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *RequestRegister) Reset()         { *m = RequestRegister{} }
+func (m *RequestRegister) String() string { return proto.CompactTextString(m) }
+func (*RequestRegister) ProtoMessage()    {}
+func (*RequestRegister) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8571034d60397816, []int{2}
+}
+
+func (m *RequestRegister) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RequestRegister.Unmarshal(m, b)
+}
+func (m *RequestRegister) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RequestRegister.Marshal(b, m, deterministic)
+}
+func (m *RequestRegister) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RequestRegister.Merge(m, src)
+}
+func (m *RequestRegister) XXX_Size() int {
+	return xxx_messageInfo_RequestRegister.Size(m)
+}
+func (m *RequestRegister) XXX_DiscardUnknown() {
+	xxx_messageInfo_RequestRegister.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RequestRegister proto.InternalMessageInfo
+
+func (m *RequestRegister) GetChain() *Chain {
 	if m != nil {
-		return m.Data
+		return m.Chain
 	}
 	return nil
 }
 
-type Transaction struct {
-	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *Transaction) Reset()         { *m = Transaction{} }
-func (m *Transaction) String() string { return proto.CompactTextString(m) }
-func (*Transaction) ProtoMessage()    {}
-func (*Transaction) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8571034d60397816, []int{5}
-}
-
-func (m *Transaction) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Transaction.Unmarshal(m, b)
-}
-func (m *Transaction) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Transaction.Marshal(b, m, deterministic)
-}
-func (m *Transaction) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Transaction.Merge(m, src)
-}
-func (m *Transaction) XXX_Size() int {
-	return xxx_messageInfo_Transaction.Size(m)
-}
-func (m *Transaction) XXX_DiscardUnknown() {
-	xxx_messageInfo_Transaction.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_Transaction proto.InternalMessageInfo
-
-func (m *Transaction) GetId() string {
+func (m *RequestRegister) GetUser() string {
 	if m != nil {
-		return m.Id
+		return m.User
 	}
 	return ""
 }
 
-type ContractResponse struct {
-	Data                 string   `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *ContractResponse) Reset()         { *m = ContractResponse{} }
-func (m *ContractResponse) String() string { return proto.CompactTextString(m) }
-func (*ContractResponse) ProtoMessage()    {}
-func (*ContractResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8571034d60397816, []int{6}
-}
-
-func (m *ContractResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ContractResponse.Unmarshal(m, b)
-}
-func (m *ContractResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ContractResponse.Marshal(b, m, deterministic)
-}
-func (m *ContractResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ContractResponse.Merge(m, src)
-}
-func (m *ContractResponse) XXX_Size() int {
-	return xxx_messageInfo_ContractResponse.Size(m)
-}
-func (m *ContractResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_ContractResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_ContractResponse proto.InternalMessageInfo
-
-func (m *ContractResponse) GetData() string {
-	if m != nil {
-		return m.Data
-	}
-	return ""
-}
-
-type ResponsePods struct {
-	Data                 string   `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *ResponsePods) Reset()         { *m = ResponsePods{} }
-func (m *ResponsePods) String() string { return proto.CompactTextString(m) }
-func (*ResponsePods) ProtoMessage()    {}
-func (*ResponsePods) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8571034d60397816, []int{7}
-}
-
-func (m *ResponsePods) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ResponsePods.Unmarshal(m, b)
-}
-func (m *ResponsePods) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ResponsePods.Marshal(b, m, deterministic)
-}
-func (m *ResponsePods) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ResponsePods.Merge(m, src)
-}
-func (m *ResponsePods) XXX_Size() int {
-	return xxx_messageInfo_ResponsePods.Size(m)
-}
-func (m *ResponsePods) XXX_DiscardUnknown() {
-	xxx_messageInfo_ResponsePods.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_ResponsePods proto.InternalMessageInfo
-
-func (m *ResponsePods) GetData() string {
-	if m != nil {
-		return m.Data
-	}
-	return ""
-}
-
-type BlockchainInfo struct {
-	Data                 string   `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *BlockchainInfo) Reset()         { *m = BlockchainInfo{} }
-func (m *BlockchainInfo) String() string { return proto.CompactTextString(m) }
-func (*BlockchainInfo) ProtoMessage()    {}
-func (*BlockchainInfo) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8571034d60397816, []int{8}
-}
-
-func (m *BlockchainInfo) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_BlockchainInfo.Unmarshal(m, b)
-}
-func (m *BlockchainInfo) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_BlockchainInfo.Marshal(b, m, deterministic)
-}
-func (m *BlockchainInfo) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_BlockchainInfo.Merge(m, src)
-}
-func (m *BlockchainInfo) XXX_Size() int {
-	return xxx_messageInfo_BlockchainInfo.Size(m)
-}
-func (m *BlockchainInfo) XXX_DiscardUnknown() {
-	xxx_messageInfo_BlockchainInfo.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_BlockchainInfo proto.InternalMessageInfo
-
-func (m *BlockchainInfo) GetData() string {
-	if m != nil {
-		return m.Data
-	}
-	return ""
-}
-
-type RequestQueryBlock struct {
-	Channel              *Channel `protobuf:"bytes,1,opt,name=channel,proto3" json:"channel,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *RequestQueryBlock) Reset()         { *m = RequestQueryBlock{} }
-func (m *RequestQueryBlock) String() string { return proto.CompactTextString(m) }
-func (*RequestQueryBlock) ProtoMessage()    {}
-func (*RequestQueryBlock) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8571034d60397816, []int{9}
-}
-
-func (m *RequestQueryBlock) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_RequestQueryBlock.Unmarshal(m, b)
-}
-func (m *RequestQueryBlock) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_RequestQueryBlock.Marshal(b, m, deterministic)
-}
-func (m *RequestQueryBlock) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_RequestQueryBlock.Merge(m, src)
-}
-func (m *RequestQueryBlock) XXX_Size() int {
-	return xxx_messageInfo_RequestQueryBlock.Size(m)
-}
-func (m *RequestQueryBlock) XXX_DiscardUnknown() {
-	xxx_messageInfo_RequestQueryBlock.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_RequestQueryBlock proto.InternalMessageInfo
-
-func (m *RequestQueryBlock) GetChannel() *Channel {
-	if m != nil {
-		return m.Channel
-	}
-	return nil
-}
-
-type Block struct {
-	Data                 string   `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *Block) Reset()         { *m = Block{} }
-func (m *Block) String() string { return proto.CompactTextString(m) }
-func (*Block) ProtoMessage()    {}
-func (*Block) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8571034d60397816, []int{10}
-}
-
-func (m *Block) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Block.Unmarshal(m, b)
-}
-func (m *Block) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Block.Marshal(b, m, deterministic)
-}
-func (m *Block) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Block.Merge(m, src)
-}
-func (m *Block) XXX_Size() int {
-	return xxx_messageInfo_Block.Size(m)
-}
-func (m *Block) XXX_DiscardUnknown() {
-	xxx_messageInfo_Block.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_Block proto.InternalMessageInfo
-
-func (m *Block) GetData() string {
-	if m != nil {
-		return m.Data
-	}
-	return ""
-}
-
-type BlockList struct {
-	Blocks               []*Block `protobuf:"bytes,1,rep,name=blocks,proto3" json:"blocks,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *BlockList) Reset()         { *m = BlockList{} }
-func (m *BlockList) String() string { return proto.CompactTextString(m) }
-func (*BlockList) ProtoMessage()    {}
-func (*BlockList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8571034d60397816, []int{11}
-}
-
-func (m *BlockList) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_BlockList.Unmarshal(m, b)
-}
-func (m *BlockList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_BlockList.Marshal(b, m, deterministic)
-}
-func (m *BlockList) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_BlockList.Merge(m, src)
-}
-func (m *BlockList) XXX_Size() int {
-	return xxx_messageInfo_BlockList.Size(m)
-}
-func (m *BlockList) XXX_DiscardUnknown() {
-	xxx_messageInfo_BlockList.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_BlockList proto.InternalMessageInfo
-
-func (m *BlockList) GetBlocks() []*Block {
-	if m != nil {
-		return m.Blocks
-	}
-	return nil
-}
-
-type Resources struct {
-	Data                 string   `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *Resources) Reset()         { *m = Resources{} }
-func (m *Resources) String() string { return proto.CompactTextString(m) }
-func (*Resources) ProtoMessage()    {}
-func (*Resources) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8571034d60397816, []int{12}
-}
-
-func (m *Resources) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Resources.Unmarshal(m, b)
-}
-func (m *Resources) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Resources.Marshal(b, m, deterministic)
-}
-func (m *Resources) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Resources.Merge(m, src)
-}
-func (m *Resources) XXX_Size() int {
-	return xxx_messageInfo_Resources.Size(m)
-}
-func (m *Resources) XXX_DiscardUnknown() {
-	xxx_messageInfo_Resources.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_Resources proto.InternalMessageInfo
-
-func (m *Resources) GetData() string {
-	if m != nil {
-		return m.Data
-	}
-	return ""
-}
-
-type User struct {
-	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Pwd                  string   `protobuf:"bytes,2,opt,name=pwd,proto3" json:"pwd,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *User) Reset()         { *m = User{} }
-func (m *User) String() string { return proto.CompactTextString(m) }
-func (*User) ProtoMessage()    {}
-func (*User) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8571034d60397816, []int{13}
-}
-
-func (m *User) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_User.Unmarshal(m, b)
-}
-func (m *User) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_User.Marshal(b, m, deterministic)
-}
-func (m *User) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_User.Merge(m, src)
-}
-func (m *User) XXX_Size() int {
-	return xxx_messageInfo_User.Size(m)
-}
-func (m *User) XXX_DiscardUnknown() {
-	xxx_messageInfo_User.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_User proto.InternalMessageInfo
-
-func (m *User) GetName() string {
-	if m != nil {
-		return m.Name
-	}
-	return ""
-}
-
-func (m *User) GetPwd() string {
+func (m *RequestRegister) GetPwd() string {
 	if m != nil {
 		return m.Pwd
 	}
 	return ""
 }
 
-type Cert struct {
-	Data                 string   `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
+type RequestSetupContract struct {
+	Channel              *Channel  `protobuf:"bytes,1,opt,name=channel,proto3" json:"channel,omitempty"`
+	Contract             *Contract `protobuf:"bytes,2,opt,name=contract,proto3" json:"contract,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}  `json:"-"`
+	XXX_unrecognized     []byte    `json:"-"`
+	XXX_sizecache        int32     `json:"-"`
+}
+
+func (m *RequestSetupContract) Reset()         { *m = RequestSetupContract{} }
+func (m *RequestSetupContract) String() string { return proto.CompactTextString(m) }
+func (*RequestSetupContract) ProtoMessage()    {}
+func (*RequestSetupContract) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8571034d60397816, []int{3}
+}
+
+func (m *RequestSetupContract) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RequestSetupContract.Unmarshal(m, b)
+}
+func (m *RequestSetupContract) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RequestSetupContract.Marshal(b, m, deterministic)
+}
+func (m *RequestSetupContract) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RequestSetupContract.Merge(m, src)
+}
+func (m *RequestSetupContract) XXX_Size() int {
+	return xxx_messageInfo_RequestSetupContract.Size(m)
+}
+func (m *RequestSetupContract) XXX_DiscardUnknown() {
+	xxx_messageInfo_RequestSetupContract.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RequestSetupContract proto.InternalMessageInfo
+
+func (m *RequestSetupContract) GetChannel() *Channel {
+	if m != nil {
+		return m.Channel
+	}
+	return nil
+}
+
+func (m *RequestSetupContract) GetContract() *Contract {
+	if m != nil {
+		return m.Contract
+	}
+	return nil
+}
+
+type RequestQueryOrInvokeContract struct {
+	// 数字身份
+	Identity *DigitalIdentity `protobuf:"bytes,2,opt,name=Identity,proto3" json:"Identity,omitempty"`
+	Channel  *Channel         `protobuf:"bytes,1,opt,name=channel,proto3" json:"channel,omitempty"`
+	// 合约名称
+	Contract string `protobuf:"bytes,3,opt,name=contract,proto3" json:"contract,omitempty"`
+	// 调用参数
+	Args                 []string `protobuf:"bytes,4,rep,name=args,proto3" json:"args,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *Cert) Reset()         { *m = Cert{} }
-func (m *Cert) String() string { return proto.CompactTextString(m) }
-func (*Cert) ProtoMessage()    {}
-func (*Cert) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8571034d60397816, []int{14}
+func (m *RequestQueryOrInvokeContract) Reset()         { *m = RequestQueryOrInvokeContract{} }
+func (m *RequestQueryOrInvokeContract) String() string { return proto.CompactTextString(m) }
+func (*RequestQueryOrInvokeContract) ProtoMessage()    {}
+func (*RequestQueryOrInvokeContract) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8571034d60397816, []int{4}
 }
 
-func (m *Cert) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Cert.Unmarshal(m, b)
+func (m *RequestQueryOrInvokeContract) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RequestQueryOrInvokeContract.Unmarshal(m, b)
 }
-func (m *Cert) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Cert.Marshal(b, m, deterministic)
+func (m *RequestQueryOrInvokeContract) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RequestQueryOrInvokeContract.Marshal(b, m, deterministic)
 }
-func (m *Cert) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Cert.Merge(m, src)
+func (m *RequestQueryOrInvokeContract) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RequestQueryOrInvokeContract.Merge(m, src)
 }
-func (m *Cert) XXX_Size() int {
-	return xxx_messageInfo_Cert.Size(m)
+func (m *RequestQueryOrInvokeContract) XXX_Size() int {
+	return xxx_messageInfo_RequestQueryOrInvokeContract.Size(m)
 }
-func (m *Cert) XXX_DiscardUnknown() {
-	xxx_messageInfo_Cert.DiscardUnknown(m)
+func (m *RequestQueryOrInvokeContract) XXX_DiscardUnknown() {
+	xxx_messageInfo_RequestQueryOrInvokeContract.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_Cert proto.InternalMessageInfo
+var xxx_messageInfo_RequestQueryOrInvokeContract proto.InternalMessageInfo
 
-func (m *Cert) GetData() string {
+func (m *RequestQueryOrInvokeContract) GetIdentity() *DigitalIdentity {
 	if m != nil {
-		return m.Data
+		return m.Identity
+	}
+	return nil
+}
+
+func (m *RequestQueryOrInvokeContract) GetChannel() *Channel {
+	if m != nil {
+		return m.Channel
+	}
+	return nil
+}
+
+func (m *RequestQueryOrInvokeContract) GetContract() string {
+	if m != nil {
+		return m.Contract
+	}
+	return ""
+}
+
+func (m *RequestQueryOrInvokeContract) GetArgs() []string {
+	if m != nil {
+		return m.Args
+	}
+	return nil
+}
+
+type ResponseChannelList struct {
+	Channels             []string `protobuf:"bytes,1,rep,name=channels,proto3" json:"channels,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ResponseChannelList) Reset()         { *m = ResponseChannelList{} }
+func (m *ResponseChannelList) String() string { return proto.CompactTextString(m) }
+func (*ResponseChannelList) ProtoMessage()    {}
+func (*ResponseChannelList) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8571034d60397816, []int{5}
+}
+
+func (m *ResponseChannelList) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ResponseChannelList.Unmarshal(m, b)
+}
+func (m *ResponseChannelList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ResponseChannelList.Marshal(b, m, deterministic)
+}
+func (m *ResponseChannelList) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ResponseChannelList.Merge(m, src)
+}
+func (m *ResponseChannelList) XXX_Size() int {
+	return xxx_messageInfo_ResponseChannelList.Size(m)
+}
+func (m *ResponseChannelList) XXX_DiscardUnknown() {
+	xxx_messageInfo_ResponseChannelList.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ResponseChannelList proto.InternalMessageInfo
+
+func (m *ResponseChannelList) GetChannels() []string {
+	if m != nil {
+		return m.Channels
+	}
+	return nil
+}
+
+type ResponseContractList struct {
+	Contracts            []*Contract `protobuf:"bytes,1,rep,name=contracts,proto3" json:"contracts,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
+	XXX_unrecognized     []byte      `json:"-"`
+	XXX_sizecache        int32       `json:"-"`
+}
+
+func (m *ResponseContractList) Reset()         { *m = ResponseContractList{} }
+func (m *ResponseContractList) String() string { return proto.CompactTextString(m) }
+func (*ResponseContractList) ProtoMessage()    {}
+func (*ResponseContractList) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8571034d60397816, []int{6}
+}
+
+func (m *ResponseContractList) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ResponseContractList.Unmarshal(m, b)
+}
+func (m *ResponseContractList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ResponseContractList.Marshal(b, m, deterministic)
+}
+func (m *ResponseContractList) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ResponseContractList.Merge(m, src)
+}
+func (m *ResponseContractList) XXX_Size() int {
+	return xxx_messageInfo_ResponseContractList.Size(m)
+}
+func (m *ResponseContractList) XXX_DiscardUnknown() {
+	xxx_messageInfo_ResponseContractList.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ResponseContractList proto.InternalMessageInfo
+
+func (m *ResponseContractList) GetContracts() []*Contract {
+	if m != nil {
+		return m.Contracts
+	}
+	return nil
+}
+
+type RequestQueryBlockByNum struct {
+	Channel              *Channel `protobuf:"bytes,1,opt,name=channel,proto3" json:"channel,omitempty"`
+	Num                  uint64   `protobuf:"varint,2,opt,name=num,proto3" json:"num,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *RequestQueryBlockByNum) Reset()         { *m = RequestQueryBlockByNum{} }
+func (m *RequestQueryBlockByNum) String() string { return proto.CompactTextString(m) }
+func (*RequestQueryBlockByNum) ProtoMessage()    {}
+func (*RequestQueryBlockByNum) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8571034d60397816, []int{7}
+}
+
+func (m *RequestQueryBlockByNum) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RequestQueryBlockByNum.Unmarshal(m, b)
+}
+func (m *RequestQueryBlockByNum) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RequestQueryBlockByNum.Marshal(b, m, deterministic)
+}
+func (m *RequestQueryBlockByNum) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RequestQueryBlockByNum.Merge(m, src)
+}
+func (m *RequestQueryBlockByNum) XXX_Size() int {
+	return xxx_messageInfo_RequestQueryBlockByNum.Size(m)
+}
+func (m *RequestQueryBlockByNum) XXX_DiscardUnknown() {
+	xxx_messageInfo_RequestQueryBlockByNum.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RequestQueryBlockByNum proto.InternalMessageInfo
+
+func (m *RequestQueryBlockByNum) GetChannel() *Channel {
+	if m != nil {
+		return m.Channel
+	}
+	return nil
+}
+
+func (m *RequestQueryBlockByNum) GetNum() uint64 {
+	if m != nil {
+		return m.Num
+	}
+	return 0
+}
+
+type RequestQueryBlockTxId struct {
+	Channel              *Channel `protobuf:"bytes,1,opt,name=channel,proto3" json:"channel,omitempty"`
+	TxId                 string   `protobuf:"bytes,2,opt,name=tx_id,json=txId,proto3" json:"tx_id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *RequestQueryBlockTxId) Reset()         { *m = RequestQueryBlockTxId{} }
+func (m *RequestQueryBlockTxId) String() string { return proto.CompactTextString(m) }
+func (*RequestQueryBlockTxId) ProtoMessage()    {}
+func (*RequestQueryBlockTxId) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8571034d60397816, []int{8}
+}
+
+func (m *RequestQueryBlockTxId) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RequestQueryBlockTxId.Unmarshal(m, b)
+}
+func (m *RequestQueryBlockTxId) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RequestQueryBlockTxId.Marshal(b, m, deterministic)
+}
+func (m *RequestQueryBlockTxId) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RequestQueryBlockTxId.Merge(m, src)
+}
+func (m *RequestQueryBlockTxId) XXX_Size() int {
+	return xxx_messageInfo_RequestQueryBlockTxId.Size(m)
+}
+func (m *RequestQueryBlockTxId) XXX_DiscardUnknown() {
+	xxx_messageInfo_RequestQueryBlockTxId.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RequestQueryBlockTxId proto.InternalMessageInfo
+
+func (m *RequestQueryBlockTxId) GetChannel() *Channel {
+	if m != nil {
+		return m.Channel
+	}
+	return nil
+}
+
+func (m *RequestQueryBlockTxId) GetTxId() string {
+	if m != nil {
+		return m.TxId
+	}
+	return ""
+}
+
+type RequestQueryBlockByHash struct {
+	Channel              *Channel `protobuf:"bytes,1,opt,name=channel,proto3" json:"channel,omitempty"`
+	Hash                 []byte   `protobuf:"bytes,2,opt,name=hash,proto3" json:"hash,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *RequestQueryBlockByHash) Reset()         { *m = RequestQueryBlockByHash{} }
+func (m *RequestQueryBlockByHash) String() string { return proto.CompactTextString(m) }
+func (*RequestQueryBlockByHash) ProtoMessage()    {}
+func (*RequestQueryBlockByHash) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8571034d60397816, []int{9}
+}
+
+func (m *RequestQueryBlockByHash) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RequestQueryBlockByHash.Unmarshal(m, b)
+}
+func (m *RequestQueryBlockByHash) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RequestQueryBlockByHash.Marshal(b, m, deterministic)
+}
+func (m *RequestQueryBlockByHash) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RequestQueryBlockByHash.Merge(m, src)
+}
+func (m *RequestQueryBlockByHash) XXX_Size() int {
+	return xxx_messageInfo_RequestQueryBlockByHash.Size(m)
+}
+func (m *RequestQueryBlockByHash) XXX_DiscardUnknown() {
+	xxx_messageInfo_RequestQueryBlockByHash.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RequestQueryBlockByHash proto.InternalMessageInfo
+
+func (m *RequestQueryBlockByHash) GetChannel() *Channel {
+	if m != nil {
+		return m.Channel
+	}
+	return nil
+}
+
+func (m *RequestQueryBlockByHash) GetHash() []byte {
+	if m != nil {
+		return m.Hash
+	}
+	return nil
+}
+
+type RequestQueryTxById struct {
+	Channel              *Channel `protobuf:"bytes,1,opt,name=channel,proto3" json:"channel,omitempty"`
+	TxId                 string   `protobuf:"bytes,2,opt,name=tx_id,json=txId,proto3" json:"tx_id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *RequestQueryTxById) Reset()         { *m = RequestQueryTxById{} }
+func (m *RequestQueryTxById) String() string { return proto.CompactTextString(m) }
+func (*RequestQueryTxById) ProtoMessage()    {}
+func (*RequestQueryTxById) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8571034d60397816, []int{10}
+}
+
+func (m *RequestQueryTxById) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_RequestQueryTxById.Unmarshal(m, b)
+}
+func (m *RequestQueryTxById) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_RequestQueryTxById.Marshal(b, m, deterministic)
+}
+func (m *RequestQueryTxById) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_RequestQueryTxById.Merge(m, src)
+}
+func (m *RequestQueryTxById) XXX_Size() int {
+	return xxx_messageInfo_RequestQueryTxById.Size(m)
+}
+func (m *RequestQueryTxById) XXX_DiscardUnknown() {
+	xxx_messageInfo_RequestQueryTxById.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_RequestQueryTxById proto.InternalMessageInfo
+
+func (m *RequestQueryTxById) GetChannel() *Channel {
+	if m != nil {
+		return m.Channel
+	}
+	return nil
+}
+
+func (m *RequestQueryTxById) GetTxId() string {
+	if m != nil {
+		return m.TxId
 	}
 	return ""
 }
 
 func init() {
-	proto.RegisterType((*Chain)(nil), "protos.Chain")
-	proto.RegisterType((*Channel)(nil), "protos.Channel")
-	proto.RegisterType((*ChainStatus)(nil), "protos.ChainStatus")
 	proto.RegisterType((*Artifacts)(nil), "protos.Artifacts")
-	proto.RegisterType((*Contract)(nil), "protos.Contract")
-	proto.RegisterType((*Transaction)(nil), "protos.Transaction")
-	proto.RegisterType((*ContractResponse)(nil), "protos.ContractResponse")
-	proto.RegisterType((*ResponsePods)(nil), "protos.ResponsePods")
-	proto.RegisterType((*BlockchainInfo)(nil), "protos.BlockchainInfo")
-	proto.RegisterType((*RequestQueryBlock)(nil), "protos.RequestQueryBlock")
-	proto.RegisterType((*Block)(nil), "protos.Block")
-	proto.RegisterType((*BlockList)(nil), "protos.BlockList")
-	proto.RegisterType((*Resources)(nil), "protos.Resources")
-	proto.RegisterType((*User)(nil), "protos.User")
-	proto.RegisterType((*Cert)(nil), "protos.Cert")
+	proto.RegisterType((*ResponseNodes)(nil), "protos.ResponseNodes")
+	proto.RegisterType((*RequestRegister)(nil), "protos.RequestRegister")
+	proto.RegisterType((*RequestSetupContract)(nil), "protos.RequestSetupContract")
+	proto.RegisterType((*RequestQueryOrInvokeContract)(nil), "protos.RequestQueryOrInvokeContract")
+	proto.RegisterType((*ResponseChannelList)(nil), "protos.ResponseChannelList")
+	proto.RegisterType((*ResponseContractList)(nil), "protos.ResponseContractList")
+	proto.RegisterType((*RequestQueryBlockByNum)(nil), "protos.RequestQueryBlockByNum")
+	proto.RegisterType((*RequestQueryBlockTxId)(nil), "protos.RequestQueryBlockTxId")
+	proto.RegisterType((*RequestQueryBlockByHash)(nil), "protos.RequestQueryBlockByHash")
+	proto.RegisterType((*RequestQueryTxById)(nil), "protos.RequestQueryTxById")
 }
 
 func init() {
@@ -713,53 +556,58 @@ func init() {
 }
 
 var fileDescriptor_8571034d60397816 = []byte{
-	// 734 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x55, 0xdb, 0x4e, 0xdb, 0x4c,
-	0x10, 0x26, 0x27, 0x12, 0x4f, 0x42, 0x20, 0xfb, 0xff, 0xa2, 0x69, 0x28, 0x22, 0x72, 0x4b, 0x95,
-	0x4a, 0x55, 0x50, 0x69, 0x51, 0x0f, 0x17, 0x48, 0x25, 0x50, 0x29, 0x12, 0xaa, 0x5a, 0x53, 0xae,
-	0xd1, 0xc6, 0x5e, 0x82, 0x85, 0xd9, 0x75, 0xbd, 0x63, 0x10, 0xaf, 0xd0, 0xdb, 0xbe, 0x70, 0xb5,
-	0xbb, 0xb6, 0xe3, 0x04, 0x17, 0x41, 0xaf, 0xb2, 0x73, 0xf8, 0x66, 0xc6, 0x33, 0xf3, 0x4d, 0x60,
-	0x85, 0x33, 0xbc, 0x11, 0xd1, 0xe5, 0x30, 0x8c, 0x04, 0x0a, 0xb2, 0xac, 0x7f, 0x64, 0x6f, 0x63,
-	0x2a, 0xc4, 0x34, 0x60, 0x3b, 0x5a, 0x9c, 0xc4, 0xe7, 0x3b, 0xec, 0x2a, 0xc4, 0x5b, 0xe3, 0x64,
-	0xff, 0x2e, 0x41, 0x6d, 0x74, 0x41, 0x7d, 0x4e, 0x08, 0x54, 0x39, 0xbd, 0x62, 0xdd, 0x52, 0xbf,
-	0x34, 0xb0, 0x1c, 0xfd, 0x26, 0x5d, 0xa8, 0x53, 0xd7, 0x15, 0x31, 0xc7, 0x6e, 0x59, 0xab, 0x53,
-	0x91, 0x3c, 0x03, 0xcb, 0x15, 0x5c, 0x32, 0x2e, 0x63, 0xd9, 0xad, 0x68, 0xdb, 0x4c, 0x41, 0x36,
-	0x01, 0xb8, 0xf0, 0xd8, 0x99, 0x81, 0x56, 0xfb, 0xa5, 0x41, 0xcd, 0xb1, 0x94, 0x66, 0xa4, 0xc1,
-	0x5b, 0xd0, 0xc4, 0x40, 0x9e, 0x31, 0x4e, 0x27, 0x01, 0xf3, 0xba, 0xb5, 0x7e, 0x69, 0xd0, 0x70,
-	0x00, 0x03, 0x79, 0x64, 0x34, 0xf6, 0x01, 0xd4, 0x47, 0x17, 0x94, 0x73, 0x16, 0x90, 0xe7, 0x50,
-	0x73, 0x55, 0x7d, 0xba, 0xae, 0xe6, 0xee, 0x8a, 0xa9, 0x5b, 0x0e, 0x75, 0xd1, 0x8e, 0xb1, 0x65,
-	0xb5, 0x97, 0x67, 0xb5, 0xdb, 0xdb, 0xd0, 0xd4, 0x3e, 0x27, 0x48, 0x31, 0x96, 0x64, 0x1d, 0x96,
-	0xa5, 0x7e, 0xe9, 0x40, 0x0d, 0x27, 0x91, 0xec, 0x2d, 0xb0, 0x3e, 0x47, 0xe8, 0x9f, 0x53, 0x17,
-	0xa5, 0x8a, 0xe3, 0x51, 0xa4, 0xda, 0xa5, 0xe5, 0xe8, 0xb7, 0x8d, 0xd0, 0x18, 0x09, 0x8e, 0x11,
-	0x75, 0xb1, 0xb0, 0x47, 0x04, 0xaa, 0x21, 0xc5, 0x8b, 0x34, 0xb7, 0x7a, 0xab, 0xbe, 0x5d, 0xb3,
-	0x48, 0xfa, 0x82, 0x27, 0xbd, 0x49, 0x45, 0xe5, 0x4d, 0xa3, 0xa9, 0xec, 0x56, 0xfb, 0x15, 0x95,
-	0x41, 0xbd, 0xb3, 0xac, 0xb5, 0x5c, 0xd6, 0x4d, 0x68, 0xfe, 0x88, 0x28, 0x97, 0xd4, 0x45, 0x05,
-	0x6b, 0x43, 0xd9, 0xf7, 0x92, 0xb4, 0x65, 0xdf, 0xb3, 0x5f, 0xc2, 0x5a, 0x5a, 0x94, 0xc3, 0x64,
-	0xa8, 0x1a, 0x3f, 0x57, 0xbc, 0x95, 0x84, 0xb1, 0xa1, 0x95, 0xda, 0xbf, 0x09, 0x4f, 0x16, 0xfa,
-	0xbc, 0x80, 0xf6, 0x41, 0x20, 0xdc, 0x4b, 0xdd, 0xca, 0x31, 0x3f, 0x17, 0x85, 0x5e, 0xfb, 0xd0,
-	0x71, 0xd8, 0xcf, 0x98, 0x49, 0xfc, 0x1e, 0xb3, 0xe8, 0x56, 0x23, 0xc8, 0x2b, 0xa8, 0xbb, 0x66,
-	0x4e, 0xc9, 0x78, 0x56, 0x73, 0xe3, 0x51, 0x6a, 0x27, 0xb5, 0xdb, 0x1b, 0x50, 0x33, 0x98, 0xa2,
-	0xe0, 0xbb, 0x60, 0x69, 0xe3, 0xb1, 0x2f, 0x91, 0x6c, 0xc3, 0xf2, 0x44, 0x09, 0x6a, 0x52, 0x95,
-	0xfc, 0xc8, 0xb5, 0x8b, 0x93, 0x18, 0xd5, 0xe0, 0x1c, 0x26, 0x45, 0x1c, 0xb9, 0xac, 0xf8, 0xbb,
-	0x5e, 0x43, 0xf5, 0x54, 0xb2, 0xa8, 0x70, 0x68, 0x6b, 0x50, 0x09, 0x6f, 0xbc, 0x64, 0x66, 0xea,
-	0x69, 0xf7, 0xa0, 0x3a, 0x62, 0x11, 0x16, 0x45, 0xda, 0xfd, 0xd5, 0x80, 0xfa, 0x57, 0xc3, 0x2d,
-	0xb2, 0x07, 0x70, 0x10, 0xfb, 0x81, 0x67, 0x48, 0x33, 0xbf, 0x8e, 0xbd, 0xf5, 0xa1, 0xe1, 0xda,
-	0x30, 0xe5, 0xda, 0xf0, 0x48, 0x71, 0xcd, 0x5e, 0x22, 0x1f, 0xa1, 0x95, 0xc2, 0xf4, 0x5a, 0x2f,
-	0x36, 0xea, 0x1e, 0xe8, 0x1e, 0xc0, 0x09, 0xd2, 0x08, 0x1f, 0x99, 0xf1, 0x0d, 0x58, 0x63, 0xe9,
-	0xc4, 0x9c, 0xfb, 0x7c, 0xba, 0x88, 0xfa, 0x6f, 0x4e, 0x34, 0x0c, 0xb1, 0x97, 0xc8, 0x3b, 0xb0,
-	0x4e, 0x50, 0x84, 0xff, 0x92, 0x48, 0xe1, 0x42, 0xe6, 0x3d, 0x30, 0xd1, 0x27, 0x58, 0x3d, 0x64,
-	0x01, 0x43, 0xa6, 0xd5, 0x87, 0x14, 0xe9, 0xc3, 0xd3, 0xbd, 0x87, 0xce, 0xa1, 0xb8, 0xe1, 0x81,
-	0xa0, 0xde, 0x8c, 0xb8, 0x0b, 0xe8, 0x4e, 0x2a, 0x66, 0x1e, 0xf6, 0x12, 0x19, 0x40, 0xc3, 0x61,
-	0x53, 0x5f, 0x22, 0x8b, 0x48, 0x2b, 0x75, 0x50, 0x1b, 0xd2, 0xcb, 0x24, 0xb5, 0x01, 0xa6, 0xbc,
-	0x31, 0x97, 0x48, 0x83, 0x20, 0x63, 0xfe, 0x5a, 0xe6, 0x92, 0x68, 0x66, 0x9f, 0x96, 0xe3, 0xa9,
-	0x1e, 0x74, 0xfb, 0x34, 0xf4, 0x28, 0xb2, 0xc7, 0x43, 0x3f, 0xc0, 0x8a, 0xe6, 0xd6, 0xe3, 0x91,
-	0xfb, 0xd0, 0x1e, 0xf3, 0x6b, 0x71, 0x79, 0x5f, 0xd2, 0xee, 0xa2, 0x26, 0x3d, 0x0c, 0xba, 0xa7,
-	0x6d, 0x93, 0x59, 0x75, 0x4f, 0x1f, 0x8a, 0x85, 0x86, 0xfe, 0x9f, 0x8a, 0xf9, 0x6b, 0xa2, 0x4b,
-	0x6e, 0x6a, 0xe0, 0x31, 0xf3, 0xa6, 0x2c, 0x2a, 0xda, 0xea, 0x3c, 0x77, 0xb3, 0x0b, 0xa3, 0xb7,
-	0xba, 0x63, 0x90, 0x14, 0x99, 0x44, 0x6d, 0x96, 0x77, 0xf1, 0xf3, 0xdc, 0xd7, 0x09, 0x21, 0x77,
-	0x7f, 0x9e, 0xce, 0xca, 0x5a, 0x38, 0x4d, 0x77, 0x91, 0x5f, 0xe0, 0x89, 0x8a, 0x3a, 0x65, 0xe9,
-	0x47, 0xce, 0xae, 0x47, 0x27, 0xf7, 0x75, 0x46, 0xf5, 0xf7, 0xfd, 0x9b, 0x98, 0xbf, 0xd5, 0xb7,
-	0x7f, 0x02, 0x00, 0x00, 0xff, 0xff, 0x73, 0x6f, 0x00, 0xa8, 0x6e, 0x07, 0x00, 0x00,
+	// 801 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x96, 0x6f, 0x6f, 0x3a, 0x45,
+	0x10, 0xc7, 0x0f, 0xa1, 0xfe, 0xca, 0x00, 0x85, 0x2e, 0xb6, 0x25, 0xb4, 0x5a, 0xb2, 0xfa, 0xa0,
+	0x26, 0x86, 0xa6, 0xd4, 0x6a, 0xfa, 0xc4, 0x54, 0x8a, 0x46, 0x92, 0x8a, 0xf1, 0xa0, 0xd1, 0x07,
+	0x26, 0x66, 0x7b, 0xb7, 0x85, 0x4b, 0x8f, 0xdd, 0xf3, 0x76, 0xcf, 0xc2, 0x7b, 0xf0, 0xb5, 0xf8,
+	0x1a, 0xcd, 0xee, 0xfd, 0xe1, 0xb8, 0xa3, 0x55, 0xfc, 0xf5, 0x51, 0x77, 0x77, 0x66, 0x3e, 0x33,
+	0xcc, 0xec, 0x7e, 0xaf, 0x50, 0x63, 0x54, 0x3e, 0x73, 0xff, 0xa9, 0xeb, 0xf9, 0x5c, 0x72, 0xf4,
+	0xa1, 0xfe, 0x23, 0xda, 0xc7, 0x53, 0xce, 0xa7, 0x2e, 0x3d, 0xd7, 0xdb, 0x87, 0xe0, 0xf1, 0x9c,
+	0xce, 0x3d, 0xb9, 0x0c, 0x9d, 0xda, 0x55, 0x8b, 0xcf, 0xe7, 0x9c, 0x85, 0x3b, 0x7c, 0x0a, 0xe5,
+	0x6f, 0x7d, 0xe9, 0x3c, 0x12, 0x4b, 0x0a, 0x84, 0xa0, 0x64, 0x13, 0x49, 0x5a, 0x85, 0x4e, 0xe1,
+	0xac, 0x6a, 0xea, 0x35, 0xbe, 0x84, 0x9a, 0x49, 0x85, 0xc7, 0x99, 0xa0, 0x23, 0x6e, 0x53, 0x81,
+	0x30, 0xec, 0x30, 0xb5, 0x68, 0x15, 0x3a, 0xc5, 0xb3, 0x4a, 0xaf, 0x1a, 0x82, 0x44, 0x57, 0x59,
+	0xcd, 0xd0, 0x84, 0x7f, 0x83, 0xba, 0x49, 0xff, 0x08, 0xa8, 0x90, 0x26, 0x9d, 0x3a, 0x42, 0x52,
+	0x1f, 0x7d, 0x0a, 0x3b, 0xd6, 0x8c, 0x38, 0x4c, 0xc3, 0x2b, 0xbd, 0x5a, 0x1c, 0x76, 0xab, 0x0e,
+	0xcd, 0xd0, 0xa6, 0x0a, 0x08, 0x04, 0xf5, 0x5b, 0x1f, 0x74, 0x0a, 0x67, 0x65, 0x53, 0xaf, 0x51,
+	0x03, 0x8a, 0xde, 0xb3, 0xdd, 0x2a, 0xea, 0x23, 0xb5, 0xc4, 0x1c, 0x3e, 0x8a, 0xe8, 0x63, 0x2a,
+	0x03, 0xef, 0x96, 0x33, 0xe9, 0x13, 0x4b, 0xa2, 0xcf, 0xe1, 0x9d, 0x35, 0x23, 0x8c, 0x51, 0x37,
+	0x4a, 0x52, 0x4f, 0x25, 0x51, 0xc7, 0x66, 0x6c, 0x47, 0x5f, 0xc0, 0xae, 0x15, 0x85, 0xe9, 0x64,
+	0x95, 0x5e, 0x23, 0xf1, 0x8d, 0xce, 0xcd, 0xc4, 0x03, 0xff, 0x5d, 0x80, 0x93, 0x28, 0xe3, 0xcf,
+	0x01, 0xf5, 0x97, 0x3f, 0xf9, 0x43, 0xf6, 0x27, 0x7f, 0xa2, 0x49, 0xe6, 0x4b, 0xd8, 0x1d, 0xda,
+	0x94, 0x49, 0x47, 0x2e, 0x23, 0xdc, 0x51, 0x8c, 0x1b, 0x38, 0x53, 0x47, 0x12, 0x37, 0x36, 0x9b,
+	0x89, 0xe3, 0x36, 0xe5, 0xb6, 0x53, 0xe5, 0x86, 0x8d, 0x48, 0xf6, 0xaa, 0x67, 0xc4, 0x9f, 0x8a,
+	0x56, 0xa9, 0x53, 0x54, 0x3d, 0x53, 0x6b, 0x7c, 0x01, 0xcd, 0x78, 0x68, 0x11, 0xeb, 0xce, 0x11,
+	0x52, 0x63, 0xc2, 0x6d, 0x38, 0x3d, 0x85, 0x89, 0xf6, 0xf8, 0x7b, 0xd5, 0xd4, 0x28, 0x24, 0x42,
+	0xeb, 0x98, 0x2e, 0x94, 0xe3, 0x54, 0xf1, 0xc8, 0xf3, 0xad, 0x5a, 0xb9, 0xe0, 0x7b, 0x38, 0x4c,
+	0xb7, 0xaa, 0xef, 0x72, 0xeb, 0xa9, 0xbf, 0x1c, 0x05, 0xf3, 0x6d, 0x7e, 0x6f, 0x03, 0x8a, 0x2c,
+	0x98, 0xeb, 0x56, 0x96, 0x4c, 0xb5, 0xc4, 0xbf, 0xc0, 0x41, 0x0e, 0x3b, 0x59, 0x0c, 0xed, 0x6d,
+	0xa8, 0x4d, 0xd8, 0x91, 0x8b, 0xdf, 0x1d, 0x3b, 0xbe, 0x5e, 0x72, 0x31, 0xb4, 0xf1, 0xaf, 0x70,
+	0xb4, 0xa1, 0xde, 0x1f, 0x88, 0x98, 0x6d, 0x83, 0x46, 0x50, 0x9a, 0x11, 0x31, 0xd3, 0xe4, 0xaa,
+	0xa9, 0xd7, 0x78, 0x02, 0x28, 0x4d, 0x9e, 0x2c, 0xfa, 0xcb, 0xf7, 0xaf, 0xb7, 0xf7, 0x57, 0x05,
+	0xde, 0x8d, 0xc2, 0x57, 0x8f, 0xae, 0x00, 0xfa, 0x81, 0xe3, 0xda, 0xfa, 0x0d, 0xa1, 0xf5, 0x27,
+	0xd5, 0x3e, 0xec, 0x86, 0x2a, 0xd0, 0x8d, 0x55, 0xa0, 0xfb, 0x9d, 0x52, 0x01, 0x6c, 0xa0, 0x6b,
+	0xa8, 0xc6, 0x61, 0x3a, 0x4f, 0xb6, 0x82, 0x57, 0x42, 0xaf, 0x00, 0xc6, 0x92, 0xf8, 0x72, 0xcb,
+	0x8c, 0x17, 0x50, 0x1e, 0x0a, 0x33, 0x60, 0xcc, 0x61, 0xd3, 0x6c, 0x54, 0x73, 0x6d, 0x3b, 0x96,
+	0x44, 0x06, 0x02, 0x1b, 0xe8, 0x4b, 0x28, 0x8f, 0x25, 0xf7, 0xfe, 0x4f, 0x22, 0x15, 0xe7, 0x51,
+	0xfb, 0x3f, 0x26, 0xfa, 0x0a, 0x2a, 0x03, 0xea, 0x52, 0x49, 0xb7, 0x4c, 0xf5, 0x35, 0xec, 0x0f,
+	0xf8, 0x33, 0x73, 0x39, 0xb1, 0x57, 0x0a, 0x9a, 0x89, 0xde, 0x8f, 0xb7, 0x89, 0x07, 0x36, 0xd0,
+	0x37, 0xb0, 0x9b, 0xa8, 0x62, 0x22, 0x13, 0x19, 0xb9, 0x6c, 0xbf, 0xa4, 0x1f, 0xd8, 0x40, 0x23,
+	0xa8, 0x0f, 0x99, 0x90, 0xc4, 0x75, 0x13, 0xfd, 0x39, 0xc9, 0x60, 0xd6, 0x74, 0xb1, 0x7d, 0x1c,
+	0x5b, 0x27, 0x3e, 0x61, 0x82, 0x58, 0xd2, 0xe1, 0x2c, 0x7e, 0xeb, 0xd8, 0x40, 0x3f, 0xc2, 0xde,
+	0xbd, 0x67, 0x13, 0x49, 0xdf, 0x06, 0x37, 0x81, 0x9a, 0xbe, 0xef, 0x09, 0xed, 0xb3, 0x0c, 0x6d,
+	0xa3, 0x84, 0xfe, 0x1b, 0xf5, 0x1e, 0xf6, 0x32, 0x9a, 0xfb, 0x26, 0xd8, 0x6b, 0xa8, 0x87, 0xc5,
+	0xaa, 0x71, 0x85, 0xdf, 0xb7, 0xcc, 0x08, 0x0f, 0x56, 0x69, 0x52, 0x5f, 0x41, 0x6c, 0xa0, 0x1b,
+	0x68, 0xc4, 0xa1, 0x89, 0xc0, 0x66, 0x62, 0x8f, 0xb3, 0xb1, 0x29, 0x5f, 0x7d, 0xf3, 0xaa, 0x69,
+	0x42, 0xfe, 0x1d, 0x36, 0x33, 0x07, 0x43, 0xf6, 0xc8, 0xb1, 0x81, 0x06, 0xb0, 0xbf, 0xd6, 0x61,
+	0x9d, 0x3a, 0x17, 0x7c, 0x92, 0x4b, 0x9e, 0x72, 0xd7, 0x0f, 0x2c, 0xac, 0xff, 0x8e, 0x48, 0x2a,
+	0xa4, 0xd6, 0xbd, 0x3c, 0x24, 0xf9, 0x41, 0xda, 0x8e, 0x0d, 0xd4, 0x8f, 0x1a, 0x96, 0xd2, 0xf5,
+	0x4f, 0x36, 0x0d, 0x62, 0x65, 0xdf, 0xc4, 0x68, 0xa4, 0x7d, 0xb4, 0x8c, 0x7f, 0xfc, 0x22, 0x44,
+	0x99, 0xf3, 0x8c, 0xc1, 0x3a, 0x43, 0xeb, 0xf5, 0xe9, 0x2b, 0x85, 0x28, 0x87, 0x3c, 0xe5, 0x06,
+	0x2a, 0x69, 0x6d, 0x6e, 0x6f, 0x02, 0x84, 0xb6, 0xd5, 0x2c, 0x52, 0x17, 0x09, 0x1b, 0x0f, 0xe1,
+	0xbf, 0x5c, 0x97, 0xff, 0x04, 0x00, 0x00, 0xff, 0xff, 0xa7, 0x59, 0x7e, 0x42, 0x8a, 0x09, 0x00,
+	0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -774,24 +622,50 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type NetworkClient interface {
+	// 构建区块链网络所需要的全部文件，包括启动k8s文件
 	BuildChain(ctx context.Context, in *Chain, opts ...grpc.CallOption) (*empty.Empty, error)
+	// 创建一条链（通道）
 	BuildChannel(ctx context.Context, in *Channel, opts ...grpc.CallOption) (*empty.Empty, error)
+	// 在k8s中运行网络
 	StartChain(ctx context.Context, in *Chain, opts ...grpc.CallOption) (*empty.Empty, error)
+	// 查看网络是否完全运行
 	IsRunning(ctx context.Context, in *Chain, opts ...grpc.CallOption) (*ChainStatus, error)
+	// 停止运行
 	StopChain(ctx context.Context, in *Chain, opts ...grpc.CallOption) (*empty.Empty, error)
+	// 是否完全停止
 	IsStopped(ctx context.Context, in *Chain, opts ...grpc.CallOption) (*ChainStatus, error)
-	DeleteChainData(ctx context.Context, in *Chain, opts ...grpc.CallOption) (*empty.Empty, error)
+	// 删除网络全部数据文件
+	DeleteChain(ctx context.Context, in *Chain, opts ...grpc.CallOption) (*empty.Empty, error)
+	// 下载区块链网络数据
 	DownloadArtifacts(ctx context.Context, in *Chain, opts ...grpc.CallOption) (*Artifacts, error)
-	Register(ctx context.Context, in *User, opts ...grpc.CallOption) (*Cert, error)
-	InstallContract(ctx context.Context, in *Contract, opts ...grpc.CallOption) (*Transaction, error)
-	UpdateContract(ctx context.Context, in *Contract, opts ...grpc.CallOption) (*Transaction, error)
-	QueryContract(ctx context.Context, in *Contract, opts ...grpc.CallOption) (*Transaction, error)
-	InvokeContract(ctx context.Context, in *Contract, opts ...grpc.CallOption) (*ContractResponse, error)
-	QueryChainPods(ctx context.Context, in *Chain, opts ...grpc.CallOption) (*ResponsePods, error)
-	QueryLedger(ctx context.Context, in *Channel, opts ...grpc.CallOption) (*BlockchainInfo, error)
-	QueryLatestBlocks(ctx context.Context, in *Channel, opts ...grpc.CallOption) (*Block, error)
-	QueryBlock(ctx context.Context, in *RequestQueryBlock, opts ...grpc.CallOption) (*Block, error)
-	ChangeChainPodResources(ctx context.Context, in *Resources, opts ...grpc.CallOption) (*empty.Empty, error)
+	// 注册数字身份
+	Register(ctx context.Context, in *RequestRegister, opts ...grpc.CallOption) (*DigitalIdentity, error)
+	// 安装合约
+	InstallContract(ctx context.Context, in *RequestSetupContract, opts ...grpc.CallOption) (*TransactionResponse, error)
+	// 更新合约
+	UpdateContract(ctx context.Context, in *RequestSetupContract, opts ...grpc.CallOption) (*TransactionResponse, error)
+	// 查询合约，产生交易
+	QueryContract(ctx context.Context, in *RequestQueryOrInvokeContract, opts ...grpc.CallOption) (*TransactionResponse, error)
+	// 调用合约，产生交易
+	InvokeContract(ctx context.Context, in *RequestQueryOrInvokeContract, opts ...grpc.CallOption) (*TransactionResponse, error)
+	// 查询网络pod资源
+	QueryChainNodes(ctx context.Context, in *Chain, opts ...grpc.CallOption) (*ResponseNodes, error)
+	// 查询链列表
+	QueryChannelList(ctx context.Context, in *Chain, opts ...grpc.CallOption) (*ResponseChannelList, error)
+	// 查询链信息
+	QueryChannel(ctx context.Context, in *Channel, opts ...grpc.CallOption) (*ChannelInfo, error)
+	// 查询合约列表
+	QueryContractList(ctx context.Context, in *Channel, opts ...grpc.CallOption) (*ResponseContractList, error)
+	// 查询链最新块
+	QueryLatestBlock(ctx context.Context, in *Channel, opts ...grpc.CallOption) (*Block, error)
+	// 根据块高度查询块
+	QueryBlockByNum(ctx context.Context, in *RequestQueryBlockByNum, opts ...grpc.CallOption) (*Block, error)
+	// 根据交易ID查询块
+	QueryBlockByTxId(ctx context.Context, in *RequestQueryBlockTxId, opts ...grpc.CallOption) (*Block, error)
+	// 根据块Hash查询块
+	QueryBlockByHash(ctx context.Context, in *RequestQueryBlockByHash, opts ...grpc.CallOption) (*Block, error)
+	// 根据交易ID查询交易
+	QueryTxById(ctx context.Context, in *RequestQueryTxById, opts ...grpc.CallOption) (*Transaction, error)
 }
 
 type networkClient struct {
@@ -856,9 +730,9 @@ func (c *networkClient) IsStopped(ctx context.Context, in *Chain, opts ...grpc.C
 	return out, nil
 }
 
-func (c *networkClient) DeleteChainData(ctx context.Context, in *Chain, opts ...grpc.CallOption) (*empty.Empty, error) {
+func (c *networkClient) DeleteChain(ctx context.Context, in *Chain, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, "/protos.Network/DeleteChainData", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/protos.Network/DeleteChain", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -874,8 +748,8 @@ func (c *networkClient) DownloadArtifacts(ctx context.Context, in *Chain, opts .
 	return out, nil
 }
 
-func (c *networkClient) Register(ctx context.Context, in *User, opts ...grpc.CallOption) (*Cert, error) {
-	out := new(Cert)
+func (c *networkClient) Register(ctx context.Context, in *RequestRegister, opts ...grpc.CallOption) (*DigitalIdentity, error) {
+	out := new(DigitalIdentity)
 	err := c.cc.Invoke(ctx, "/protos.Network/Register", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -883,8 +757,8 @@ func (c *networkClient) Register(ctx context.Context, in *User, opts ...grpc.Cal
 	return out, nil
 }
 
-func (c *networkClient) InstallContract(ctx context.Context, in *Contract, opts ...grpc.CallOption) (*Transaction, error) {
-	out := new(Transaction)
+func (c *networkClient) InstallContract(ctx context.Context, in *RequestSetupContract, opts ...grpc.CallOption) (*TransactionResponse, error) {
+	out := new(TransactionResponse)
 	err := c.cc.Invoke(ctx, "/protos.Network/InstallContract", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -892,8 +766,8 @@ func (c *networkClient) InstallContract(ctx context.Context, in *Contract, opts 
 	return out, nil
 }
 
-func (c *networkClient) UpdateContract(ctx context.Context, in *Contract, opts ...grpc.CallOption) (*Transaction, error) {
-	out := new(Transaction)
+func (c *networkClient) UpdateContract(ctx context.Context, in *RequestSetupContract, opts ...grpc.CallOption) (*TransactionResponse, error) {
+	out := new(TransactionResponse)
 	err := c.cc.Invoke(ctx, "/protos.Network/UpdateContract", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -901,8 +775,8 @@ func (c *networkClient) UpdateContract(ctx context.Context, in *Contract, opts .
 	return out, nil
 }
 
-func (c *networkClient) QueryContract(ctx context.Context, in *Contract, opts ...grpc.CallOption) (*Transaction, error) {
-	out := new(Transaction)
+func (c *networkClient) QueryContract(ctx context.Context, in *RequestQueryOrInvokeContract, opts ...grpc.CallOption) (*TransactionResponse, error) {
+	out := new(TransactionResponse)
 	err := c.cc.Invoke(ctx, "/protos.Network/QueryContract", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -910,8 +784,8 @@ func (c *networkClient) QueryContract(ctx context.Context, in *Contract, opts ..
 	return out, nil
 }
 
-func (c *networkClient) InvokeContract(ctx context.Context, in *Contract, opts ...grpc.CallOption) (*ContractResponse, error) {
-	out := new(ContractResponse)
+func (c *networkClient) InvokeContract(ctx context.Context, in *RequestQueryOrInvokeContract, opts ...grpc.CallOption) (*TransactionResponse, error) {
+	out := new(TransactionResponse)
 	err := c.cc.Invoke(ctx, "/protos.Network/InvokeContract", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -919,45 +793,81 @@ func (c *networkClient) InvokeContract(ctx context.Context, in *Contract, opts .
 	return out, nil
 }
 
-func (c *networkClient) QueryChainPods(ctx context.Context, in *Chain, opts ...grpc.CallOption) (*ResponsePods, error) {
-	out := new(ResponsePods)
-	err := c.cc.Invoke(ctx, "/protos.Network/QueryChainPods", in, out, opts...)
+func (c *networkClient) QueryChainNodes(ctx context.Context, in *Chain, opts ...grpc.CallOption) (*ResponseNodes, error) {
+	out := new(ResponseNodes)
+	err := c.cc.Invoke(ctx, "/protos.Network/QueryChainNodes", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *networkClient) QueryLedger(ctx context.Context, in *Channel, opts ...grpc.CallOption) (*BlockchainInfo, error) {
-	out := new(BlockchainInfo)
-	err := c.cc.Invoke(ctx, "/protos.Network/QueryLedger", in, out, opts...)
+func (c *networkClient) QueryChannelList(ctx context.Context, in *Chain, opts ...grpc.CallOption) (*ResponseChannelList, error) {
+	out := new(ResponseChannelList)
+	err := c.cc.Invoke(ctx, "/protos.Network/QueryChannelList", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *networkClient) QueryLatestBlocks(ctx context.Context, in *Channel, opts ...grpc.CallOption) (*Block, error) {
+func (c *networkClient) QueryChannel(ctx context.Context, in *Channel, opts ...grpc.CallOption) (*ChannelInfo, error) {
+	out := new(ChannelInfo)
+	err := c.cc.Invoke(ctx, "/protos.Network/QueryChannel", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *networkClient) QueryContractList(ctx context.Context, in *Channel, opts ...grpc.CallOption) (*ResponseContractList, error) {
+	out := new(ResponseContractList)
+	err := c.cc.Invoke(ctx, "/protos.Network/QueryContractList", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *networkClient) QueryLatestBlock(ctx context.Context, in *Channel, opts ...grpc.CallOption) (*Block, error) {
 	out := new(Block)
-	err := c.cc.Invoke(ctx, "/protos.Network/QueryLatestBlocks", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/protos.Network/QueryLatestBlock", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *networkClient) QueryBlock(ctx context.Context, in *RequestQueryBlock, opts ...grpc.CallOption) (*Block, error) {
+func (c *networkClient) QueryBlockByNum(ctx context.Context, in *RequestQueryBlockByNum, opts ...grpc.CallOption) (*Block, error) {
 	out := new(Block)
-	err := c.cc.Invoke(ctx, "/protos.Network/QueryBlock", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/protos.Network/QueryBlockByNum", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *networkClient) ChangeChainPodResources(ctx context.Context, in *Resources, opts ...grpc.CallOption) (*empty.Empty, error) {
-	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, "/protos.Network/ChangeChainPodResources", in, out, opts...)
+func (c *networkClient) QueryBlockByTxId(ctx context.Context, in *RequestQueryBlockTxId, opts ...grpc.CallOption) (*Block, error) {
+	out := new(Block)
+	err := c.cc.Invoke(ctx, "/protos.Network/QueryBlockByTxId", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *networkClient) QueryBlockByHash(ctx context.Context, in *RequestQueryBlockByHash, opts ...grpc.CallOption) (*Block, error) {
+	out := new(Block)
+	err := c.cc.Invoke(ctx, "/protos.Network/QueryBlockByHash", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *networkClient) QueryTxById(ctx context.Context, in *RequestQueryTxById, opts ...grpc.CallOption) (*Transaction, error) {
+	out := new(Transaction)
+	err := c.cc.Invoke(ctx, "/protos.Network/QueryTxById", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -966,24 +876,50 @@ func (c *networkClient) ChangeChainPodResources(ctx context.Context, in *Resourc
 
 // NetworkServer is the server API for Network service.
 type NetworkServer interface {
+	// 构建区块链网络所需要的全部文件，包括启动k8s文件
 	BuildChain(context.Context, *Chain) (*empty.Empty, error)
+	// 创建一条链（通道）
 	BuildChannel(context.Context, *Channel) (*empty.Empty, error)
+	// 在k8s中运行网络
 	StartChain(context.Context, *Chain) (*empty.Empty, error)
+	// 查看网络是否完全运行
 	IsRunning(context.Context, *Chain) (*ChainStatus, error)
+	// 停止运行
 	StopChain(context.Context, *Chain) (*empty.Empty, error)
+	// 是否完全停止
 	IsStopped(context.Context, *Chain) (*ChainStatus, error)
-	DeleteChainData(context.Context, *Chain) (*empty.Empty, error)
+	// 删除网络全部数据文件
+	DeleteChain(context.Context, *Chain) (*empty.Empty, error)
+	// 下载区块链网络数据
 	DownloadArtifacts(context.Context, *Chain) (*Artifacts, error)
-	Register(context.Context, *User) (*Cert, error)
-	InstallContract(context.Context, *Contract) (*Transaction, error)
-	UpdateContract(context.Context, *Contract) (*Transaction, error)
-	QueryContract(context.Context, *Contract) (*Transaction, error)
-	InvokeContract(context.Context, *Contract) (*ContractResponse, error)
-	QueryChainPods(context.Context, *Chain) (*ResponsePods, error)
-	QueryLedger(context.Context, *Channel) (*BlockchainInfo, error)
-	QueryLatestBlocks(context.Context, *Channel) (*Block, error)
-	QueryBlock(context.Context, *RequestQueryBlock) (*Block, error)
-	ChangeChainPodResources(context.Context, *Resources) (*empty.Empty, error)
+	// 注册数字身份
+	Register(context.Context, *RequestRegister) (*DigitalIdentity, error)
+	// 安装合约
+	InstallContract(context.Context, *RequestSetupContract) (*TransactionResponse, error)
+	// 更新合约
+	UpdateContract(context.Context, *RequestSetupContract) (*TransactionResponse, error)
+	// 查询合约，产生交易
+	QueryContract(context.Context, *RequestQueryOrInvokeContract) (*TransactionResponse, error)
+	// 调用合约，产生交易
+	InvokeContract(context.Context, *RequestQueryOrInvokeContract) (*TransactionResponse, error)
+	// 查询网络pod资源
+	QueryChainNodes(context.Context, *Chain) (*ResponseNodes, error)
+	// 查询链列表
+	QueryChannelList(context.Context, *Chain) (*ResponseChannelList, error)
+	// 查询链信息
+	QueryChannel(context.Context, *Channel) (*ChannelInfo, error)
+	// 查询合约列表
+	QueryContractList(context.Context, *Channel) (*ResponseContractList, error)
+	// 查询链最新块
+	QueryLatestBlock(context.Context, *Channel) (*Block, error)
+	// 根据块高度查询块
+	QueryBlockByNum(context.Context, *RequestQueryBlockByNum) (*Block, error)
+	// 根据交易ID查询块
+	QueryBlockByTxId(context.Context, *RequestQueryBlockTxId) (*Block, error)
+	// 根据块Hash查询块
+	QueryBlockByHash(context.Context, *RequestQueryBlockByHash) (*Block, error)
+	// 根据交易ID查询交易
+	QueryTxById(context.Context, *RequestQueryTxById) (*Transaction, error)
 }
 
 // UnimplementedNetworkServer can be embedded to have forward compatible implementations.
@@ -1008,41 +944,53 @@ func (*UnimplementedNetworkServer) StopChain(ctx context.Context, req *Chain) (*
 func (*UnimplementedNetworkServer) IsStopped(ctx context.Context, req *Chain) (*ChainStatus, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IsStopped not implemented")
 }
-func (*UnimplementedNetworkServer) DeleteChainData(ctx context.Context, req *Chain) (*empty.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteChainData not implemented")
+func (*UnimplementedNetworkServer) DeleteChain(ctx context.Context, req *Chain) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteChain not implemented")
 }
 func (*UnimplementedNetworkServer) DownloadArtifacts(ctx context.Context, req *Chain) (*Artifacts, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DownloadArtifacts not implemented")
 }
-func (*UnimplementedNetworkServer) Register(ctx context.Context, req *User) (*Cert, error) {
+func (*UnimplementedNetworkServer) Register(ctx context.Context, req *RequestRegister) (*DigitalIdentity, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
-func (*UnimplementedNetworkServer) InstallContract(ctx context.Context, req *Contract) (*Transaction, error) {
+func (*UnimplementedNetworkServer) InstallContract(ctx context.Context, req *RequestSetupContract) (*TransactionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method InstallContract not implemented")
 }
-func (*UnimplementedNetworkServer) UpdateContract(ctx context.Context, req *Contract) (*Transaction, error) {
+func (*UnimplementedNetworkServer) UpdateContract(ctx context.Context, req *RequestSetupContract) (*TransactionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateContract not implemented")
 }
-func (*UnimplementedNetworkServer) QueryContract(ctx context.Context, req *Contract) (*Transaction, error) {
+func (*UnimplementedNetworkServer) QueryContract(ctx context.Context, req *RequestQueryOrInvokeContract) (*TransactionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method QueryContract not implemented")
 }
-func (*UnimplementedNetworkServer) InvokeContract(ctx context.Context, req *Contract) (*ContractResponse, error) {
+func (*UnimplementedNetworkServer) InvokeContract(ctx context.Context, req *RequestQueryOrInvokeContract) (*TransactionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method InvokeContract not implemented")
 }
-func (*UnimplementedNetworkServer) QueryChainPods(ctx context.Context, req *Chain) (*ResponsePods, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method QueryChainPods not implemented")
+func (*UnimplementedNetworkServer) QueryChainNodes(ctx context.Context, req *Chain) (*ResponseNodes, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryChainNodes not implemented")
 }
-func (*UnimplementedNetworkServer) QueryLedger(ctx context.Context, req *Channel) (*BlockchainInfo, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method QueryLedger not implemented")
+func (*UnimplementedNetworkServer) QueryChannelList(ctx context.Context, req *Chain) (*ResponseChannelList, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryChannelList not implemented")
 }
-func (*UnimplementedNetworkServer) QueryLatestBlocks(ctx context.Context, req *Channel) (*Block, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method QueryLatestBlocks not implemented")
+func (*UnimplementedNetworkServer) QueryChannel(ctx context.Context, req *Channel) (*ChannelInfo, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryChannel not implemented")
 }
-func (*UnimplementedNetworkServer) QueryBlock(ctx context.Context, req *RequestQueryBlock) (*Block, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method QueryBlock not implemented")
+func (*UnimplementedNetworkServer) QueryContractList(ctx context.Context, req *Channel) (*ResponseContractList, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryContractList not implemented")
 }
-func (*UnimplementedNetworkServer) ChangeChainPodResources(ctx context.Context, req *Resources) (*empty.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ChangeChainPodResources not implemented")
+func (*UnimplementedNetworkServer) QueryLatestBlock(ctx context.Context, req *Channel) (*Block, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryLatestBlock not implemented")
+}
+func (*UnimplementedNetworkServer) QueryBlockByNum(ctx context.Context, req *RequestQueryBlockByNum) (*Block, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryBlockByNum not implemented")
+}
+func (*UnimplementedNetworkServer) QueryBlockByTxId(ctx context.Context, req *RequestQueryBlockTxId) (*Block, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryBlockByTxId not implemented")
+}
+func (*UnimplementedNetworkServer) QueryBlockByHash(ctx context.Context, req *RequestQueryBlockByHash) (*Block, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryBlockByHash not implemented")
+}
+func (*UnimplementedNetworkServer) QueryTxById(ctx context.Context, req *RequestQueryTxById) (*Transaction, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method QueryTxById not implemented")
 }
 
 func RegisterNetworkServer(s *grpc.Server, srv NetworkServer) {
@@ -1157,20 +1105,20 @@ func _Network_IsStopped_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Network_DeleteChainData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Network_DeleteChain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Chain)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(NetworkServer).DeleteChainData(ctx, in)
+		return srv.(NetworkServer).DeleteChain(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.Network/DeleteChainData",
+		FullMethod: "/protos.Network/DeleteChain",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NetworkServer).DeleteChainData(ctx, req.(*Chain))
+		return srv.(NetworkServer).DeleteChain(ctx, req.(*Chain))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1194,7 +1142,7 @@ func _Network_DownloadArtifacts_Handler(srv interface{}, ctx context.Context, de
 }
 
 func _Network_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(User)
+	in := new(RequestRegister)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1206,13 +1154,13 @@ func _Network_Register_Handler(srv interface{}, ctx context.Context, dec func(in
 		FullMethod: "/protos.Network/Register",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NetworkServer).Register(ctx, req.(*User))
+		return srv.(NetworkServer).Register(ctx, req.(*RequestRegister))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Network_InstallContract_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Contract)
+	in := new(RequestSetupContract)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1224,13 +1172,13 @@ func _Network_InstallContract_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: "/protos.Network/InstallContract",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NetworkServer).InstallContract(ctx, req.(*Contract))
+		return srv.(NetworkServer).InstallContract(ctx, req.(*RequestSetupContract))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Network_UpdateContract_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Contract)
+	in := new(RequestSetupContract)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1242,13 +1190,13 @@ func _Network_UpdateContract_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: "/protos.Network/UpdateContract",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NetworkServer).UpdateContract(ctx, req.(*Contract))
+		return srv.(NetworkServer).UpdateContract(ctx, req.(*RequestSetupContract))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Network_QueryContract_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Contract)
+	in := new(RequestQueryOrInvokeContract)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1260,13 +1208,13 @@ func _Network_QueryContract_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: "/protos.Network/QueryContract",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NetworkServer).QueryContract(ctx, req.(*Contract))
+		return srv.(NetworkServer).QueryContract(ctx, req.(*RequestQueryOrInvokeContract))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Network_InvokeContract_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Contract)
+	in := new(RequestQueryOrInvokeContract)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1278,97 +1226,169 @@ func _Network_InvokeContract_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: "/protos.Network/InvokeContract",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NetworkServer).InvokeContract(ctx, req.(*Contract))
+		return srv.(NetworkServer).InvokeContract(ctx, req.(*RequestQueryOrInvokeContract))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Network_QueryChainPods_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Network_QueryChainNodes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Chain)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(NetworkServer).QueryChainPods(ctx, in)
+		return srv.(NetworkServer).QueryChainNodes(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.Network/QueryChainPods",
+		FullMethod: "/protos.Network/QueryChainNodes",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NetworkServer).QueryChainPods(ctx, req.(*Chain))
+		return srv.(NetworkServer).QueryChainNodes(ctx, req.(*Chain))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Network_QueryLedger_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Network_QueryChannelList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Chain)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NetworkServer).QueryChannelList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/protos.Network/QueryChannelList",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NetworkServer).QueryChannelList(ctx, req.(*Chain))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Network_QueryChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Channel)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(NetworkServer).QueryLedger(ctx, in)
+		return srv.(NetworkServer).QueryChannel(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.Network/QueryLedger",
+		FullMethod: "/protos.Network/QueryChannel",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NetworkServer).QueryLedger(ctx, req.(*Channel))
+		return srv.(NetworkServer).QueryChannel(ctx, req.(*Channel))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Network_QueryLatestBlocks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Network_QueryContractList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Channel)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(NetworkServer).QueryLatestBlocks(ctx, in)
+		return srv.(NetworkServer).QueryContractList(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.Network/QueryLatestBlocks",
+		FullMethod: "/protos.Network/QueryContractList",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NetworkServer).QueryLatestBlocks(ctx, req.(*Channel))
+		return srv.(NetworkServer).QueryContractList(ctx, req.(*Channel))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Network_QueryBlock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RequestQueryBlock)
+func _Network_QueryLatestBlock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Channel)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(NetworkServer).QueryBlock(ctx, in)
+		return srv.(NetworkServer).QueryLatestBlock(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.Network/QueryBlock",
+		FullMethod: "/protos.Network/QueryLatestBlock",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NetworkServer).QueryBlock(ctx, req.(*RequestQueryBlock))
+		return srv.(NetworkServer).QueryLatestBlock(ctx, req.(*Channel))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Network_ChangeChainPodResources_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Resources)
+func _Network_QueryBlockByNum_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RequestQueryBlockByNum)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(NetworkServer).ChangeChainPodResources(ctx, in)
+		return srv.(NetworkServer).QueryBlockByNum(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protos.Network/ChangeChainPodResources",
+		FullMethod: "/protos.Network/QueryBlockByNum",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(NetworkServer).ChangeChainPodResources(ctx, req.(*Resources))
+		return srv.(NetworkServer).QueryBlockByNum(ctx, req.(*RequestQueryBlockByNum))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Network_QueryBlockByTxId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RequestQueryBlockTxId)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NetworkServer).QueryBlockByTxId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/protos.Network/QueryBlockByTxId",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NetworkServer).QueryBlockByTxId(ctx, req.(*RequestQueryBlockTxId))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Network_QueryBlockByHash_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RequestQueryBlockByHash)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NetworkServer).QueryBlockByHash(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/protos.Network/QueryBlockByHash",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NetworkServer).QueryBlockByHash(ctx, req.(*RequestQueryBlockByHash))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Network_QueryTxById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RequestQueryTxById)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NetworkServer).QueryTxById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/protos.Network/QueryTxById",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NetworkServer).QueryTxById(ctx, req.(*RequestQueryTxById))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1402,8 +1422,8 @@ var _Network_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Network_IsStopped_Handler,
 		},
 		{
-			MethodName: "DeleteChainData",
-			Handler:    _Network_DeleteChainData_Handler,
+			MethodName: "DeleteChain",
+			Handler:    _Network_DeleteChain_Handler,
 		},
 		{
 			MethodName: "DownloadArtifacts",
@@ -1430,24 +1450,40 @@ var _Network_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Network_InvokeContract_Handler,
 		},
 		{
-			MethodName: "QueryChainPods",
-			Handler:    _Network_QueryChainPods_Handler,
+			MethodName: "QueryChainNodes",
+			Handler:    _Network_QueryChainNodes_Handler,
 		},
 		{
-			MethodName: "QueryLedger",
-			Handler:    _Network_QueryLedger_Handler,
+			MethodName: "QueryChannelList",
+			Handler:    _Network_QueryChannelList_Handler,
 		},
 		{
-			MethodName: "QueryLatestBlocks",
-			Handler:    _Network_QueryLatestBlocks_Handler,
+			MethodName: "QueryChannel",
+			Handler:    _Network_QueryChannel_Handler,
 		},
 		{
-			MethodName: "QueryBlock",
-			Handler:    _Network_QueryBlock_Handler,
+			MethodName: "QueryContractList",
+			Handler:    _Network_QueryContractList_Handler,
 		},
 		{
-			MethodName: "ChangeChainPodResources",
-			Handler:    _Network_ChangeChainPodResources_Handler,
+			MethodName: "QueryLatestBlock",
+			Handler:    _Network_QueryLatestBlock_Handler,
+		},
+		{
+			MethodName: "QueryBlockByNum",
+			Handler:    _Network_QueryBlockByNum_Handler,
+		},
+		{
+			MethodName: "QueryBlockByTxId",
+			Handler:    _Network_QueryBlockByTxId_Handler,
+		},
+		{
+			MethodName: "QueryBlockByHash",
+			Handler:    _Network_QueryBlockByHash_Handler,
+		},
+		{
+			MethodName: "QueryTxById",
+			Handler:    _Network_QueryTxById_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
