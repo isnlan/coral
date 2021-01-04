@@ -26,6 +26,7 @@ message RequestSetupContract {
 message RequestQueryOrInvokeContract {
   // 数字身份
   DigitalIdentity Identity = 2;
+  // 链名称
   Channel channel = 1;
   // 合约名称
   string contract = 3;
