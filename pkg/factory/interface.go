@@ -20,9 +20,9 @@ type INetwork interface {
 	QueryChannelList() ([]string, error)
 	QueryChannel() (*protos.ChannelInfo, error)
 	QueryContractList() ([]*protos.Contract, error)
-	QueryLatestBlock() (*protos.Block, error)
-	QueryBlockByNum(unm uint64) (*protos.Block, error)
-	QueryBlockByTxId(txId string) (*protos.Block, error)
-	QueryBlockByHash(hash []byte) (*protos.Block, error)
+	QueryLatestBlock() (*protos.Block, []*protos.Transaction, error)
+	QueryBlockByNum(unm uint64) (*protos.Block, []*protos.Transaction, error)
+	QueryBlockByTxId(txId string) (*protos.Block, []*protos.Transaction, error)
+	QueryBlockByHash(hash []byte) (*protos.Block, []*protos.Transaction, error)
 	QueryTxById(txId string) (*protos.Transaction, error)
 }
