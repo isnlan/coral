@@ -138,7 +138,7 @@ message Contract {
   bytes data = 5;
 }
 
-message ChannelInfo {
+message ChannelInformation {
   // 链ID
   string channel_id = 1;
   // 当前块高度

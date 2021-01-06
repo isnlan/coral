@@ -2,7 +2,7 @@ syntax = "proto3";
 package protos;
 
 import "google/protobuf/empty.proto";
-import "model.proto";
+import "common.proto";
 
 message Artifacts {
   bytes data = 1;
@@ -100,7 +100,7 @@ service Network {
   // 查询链列表
   rpc QueryChannelList(Chain) returns (ResponseChannelList) {}
   // 查询链信息
-  rpc QueryChannel(Channel) returns (ChannelInfo) {}
+  rpc QueryChannel(Channel) returns (ChannelInformation) {}
   // 查询合约列表
   rpc QueryContractList(Channel) returns (ResponseContractList) {}
   // 查询链最新块

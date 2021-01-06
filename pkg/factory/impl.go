@@ -182,7 +182,7 @@ func (n *network) QueryChannelList() ([]string, error) {
 	return list.Channels, nil
 }
 
-func (n *network) QueryChannel() (*protos.ChannelInfo, error) {
+func (n *network) QueryChannel() (*protos.ChannelInformation, error) {
 	defer n.closer()
 	c := &protos.Channel{
 		Chain: n.chain,

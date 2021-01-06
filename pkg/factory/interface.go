@@ -18,7 +18,7 @@ type INetwork interface {
 	InvokeContract(identity *protos.DigitalIdentity, contract string, arg []string) (string, []byte, error)
 	QueryChainNodes() ([]*protos.Node, error)
 	QueryChannelList() ([]string, error)
-	QueryChannel() (*protos.ChannelInfo, error)
+	QueryChannel() (*protos.ChannelInformation, error)
 	QueryContractList() ([]*protos.Contract, error)
 	QueryLatestBlock() (*protos.Block, []*protos.Transaction, error)
 	QueryBlockByNum(unm uint64) (*protos.Block, []*protos.Transaction, error)
