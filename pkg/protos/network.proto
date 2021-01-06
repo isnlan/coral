@@ -2,7 +2,7 @@ syntax = "proto3";
 package protos;
 
 import "google/protobuf/empty.proto";
-import "common.proto";
+import "model.proto";
 
 message Artifacts {
   bytes data = 1;

@@ -5,7 +5,7 @@ syntax = "proto3";
 
 package protos;
 
-import "common.proto";
+import "model.proto";
 
 message Validate {
     string access_token = 1;
