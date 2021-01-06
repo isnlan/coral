@@ -17,6 +17,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"time"
 )
 
 // RegistrationRequest holds all data needed for new registration of new user in Certificate Authority
@@ -1214,7 +1215,10 @@ func (f *FabricCAClient) getTransport() *http.Transport {
 	var tr *http.Transport
 	if f.Transport == nil {
 		tr = &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: f.SkipTLSVerification},
+			MaxIdleConns:       10,
+			IdleConnTimeout:    30 * time.Second,
+			DisableCompression: true,
+			TLSClientConfig:    &tls.Config{InsecureSkipVerify: f.SkipTLSVerification},
 		}
 	} else {
 		tr = f.Transport
