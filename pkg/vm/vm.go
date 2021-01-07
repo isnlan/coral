@@ -46,7 +46,7 @@ func (v *vm) Apply(data [][]byte) error {
 	for _, d := range data {
 		_, err = cli.Apply(v.getContext(), &protos.Data{Data: d})
 		if err != nil {
-			return err
+			return errors.Wrapf(err, "apply date: \n %s", string(d))
 		}
 	}
 
