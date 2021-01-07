@@ -158,10 +158,6 @@ func TestAddress_UnmarshalJSON(t *testing.T) {
 		Name string   `json:"name"`
 		Addr *Address `json:"addr,omitempty"` //`json:"addr,omitempty"`
 	}
-	type Human struct {
-		Name string `json:"name"`
-		Addr string `json:"addr"`
-	}
 
 	str := `{"name":"snlan","addr":""}`
 

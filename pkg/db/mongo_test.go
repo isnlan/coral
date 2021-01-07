@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	err := InitMongo("mongodb://root:uMKxr0EClp@127.0.0.1:27017/admin?authSource=admin")
+	err := InitMongo("mongodb://root:dJSt9bmxFk@mongo-mongodb:27017/admin?authSource=admin")
 	if err != nil {
 		panic(err)
 	}

@@ -75,7 +75,7 @@ func (d *Dao) UpdateOne(ctx context.Context, condition map[string]interface{}, d
 	ctx, _ = context.WithTimeout(ctx, 5*time.Second)
 	filter := bson.M(condition)
 	update := bson.D{
-		{"$set", doc},
+		{Key: "$set", Value: doc},
 	}
 	_, err := d.coll.UpdateOne(ctx, filter, update)
 	return err
