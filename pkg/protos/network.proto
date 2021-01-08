@@ -4,6 +4,7 @@ package protos;
 import "google/protobuf/empty.proto";
 import "common.proto";
 
+option go_package = ".;protos";
 message Artifacts {
   bytes data = 1;
 }
@@ -62,12 +63,6 @@ message RequestQueryTxById {
   string tx_id  = 2;
 }
 
-message FullBlock {
-  Block block = 1;
-  repeated Transaction txs = 2;
-}
-
-
 service Network {
   // 构建区块链网络所需要的全部文件，包括启动k8s文件
   rpc BuildChain (Chain) returns (google.protobuf.Empty) {}
@@ -104,13 +99,13 @@ service Network {
   // 查询合约列表
   rpc QueryContractList(Channel) returns (ResponseContractList) {}
   // 查询链最新块
-  rpc QueryLatestBlock(Channel) returns (FullBlock) {}
+  rpc QueryLatestBlock(Channel) returns (Block) {}
   // 根据块高度查询块
-  rpc QueryBlockByNum(RequestQueryBlockByNum) returns (FullBlock) {}
+  rpc QueryBlockByNum(RequestQueryBlockByNum) returns (Block) {}
   // 根据交易ID查询块
-  rpc QueryBlockByTxId(RequestQueryBlockTxId) returns (FullBlock) {}
+  rpc QueryBlockByTxId(RequestQueryBlockTxId) returns (Block) {}
   // 根据块Hash查询块
-  rpc QueryBlockByHash(RequestQueryBlockByHash) returns (FullBlock) {}
+  rpc QueryBlockByHash(RequestQueryBlockByHash) returns (Block) {}
   // 根据交易ID查询交易
   rpc QueryTxById(RequestQueryTxById) returns (Transaction) {}
 }

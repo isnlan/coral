@@ -4,8 +4,8 @@
 syntax = "proto3";
 
 package protos;
-import "google/protobuf/timestamp.proto";
 
+option go_package = ".;protos";
 
 message FabricDigital {
   // 数字身份唯一标识
@@ -65,13 +65,13 @@ message Block {
   // 数据Hash
   bytes data_hash = 4;
   // 当前块中交易数量
-  int32 transaction_count = 5;
+  repeated Transaction transactions = 5;
   // 链ID
   string channel_id = 6;
   // 区块大小
   int32 size = 7;
   // 时间戳
-  google.protobuf.Timestamp timestamp = 8;
+  int64 timestamp = 8;
 }
 
 message Transaction {
@@ -90,7 +90,7 @@ message Transaction {
   // 交易类型
   string TxType = 7;
   // 时间戳
-  google.protobuf.Timestamp Timestamp = 8;
+  int64 Timestamp = 8;
   // 交易状态
   string validation_code  = 9;
   // 事件

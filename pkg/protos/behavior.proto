@@ -7,6 +7,8 @@ import "google/protobuf/empty.proto";
 
 option java_package = "org.kchain.cat.protos";
 
+option go_package = ".;protos";
+
 package protos;
 
 service BehaviorLog {

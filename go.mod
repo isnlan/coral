@@ -6,13 +6,14 @@ require (
 	github.com/Knetic/govaluate v3.0.0+incompatible // indirect
 	github.com/codahale/hdrhistogram v0.0.0-20161010025455-3a0bb77429bd // indirect
 	github.com/dgraph-io/ristretto v0.0.3
+	github.com/docker/docker v1.4.2-0.20191101170500-ac7306503d23
 	github.com/elazarl/goproxy v0.0.0-20200809112317-0581fc3aee2d // indirect
 	github.com/fsouza/go-dockerclient v1.6.0
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/validator/v10 v10.3.0
 	github.com/go-redis/redis/v8 v8.0.0-beta.5
 	github.com/go-sql-driver/mysql v1.5.0
-	github.com/golang/protobuf v1.3.3
+	github.com/golang/protobuf v1.4.1
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.0
 	github.com/hashicorp/go-version v1.2.1 // indirect
 	github.com/hyperledger/fabric v2.1.1+incompatible
@@ -40,6 +41,7 @@ require (
 	go.uber.org/zap v1.15.0
 	golang.org/x/crypto v0.0.0-20191108234033-bd318be0434a
 	google.golang.org/grpc v1.29.1
+	google.golang.org/protobuf v1.25.0
 	gopkg.in/yaml.v2 v2.2.8
 	moul.io/http2curl v1.0.0 // indirect
 )

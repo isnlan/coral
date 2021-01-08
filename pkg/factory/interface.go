@@ -24,9 +24,9 @@ type INetwork interface {
 	QueryChannelList(ctx context.Context) ([]string, error)
 	QueryChannel(ctx context.Context) (*protos.ChannelInformation, error)
 	QueryContractList(ctx context.Context) ([]*protos.Contract, error)
-	QueryLatestBlock(ctx context.Context) (*protos.Block, []*protos.Transaction, error)
-	QueryBlockByNum(ctx context.Context, unm uint64) (*protos.Block, []*protos.Transaction, error)
-	QueryBlockByTxId(ctx context.Context, txId string) (*protos.Block, []*protos.Transaction, error)
-	QueryBlockByHash(ctx context.Context, hash []byte) (*protos.Block, []*protos.Transaction, error)
+	QueryLatestBlock(ctx context.Context) (*protos.Block, error)
+	QueryBlockByNum(ctx context.Context, unm uint64) (*protos.Block, error)
+	QueryBlockByTxId(ctx context.Context, txId string) (*protos.Block, error)
+	QueryBlockByHash(ctx context.Context, hash []byte) (*protos.Block, error)
 	QueryTxById(ctx context.Context, txId string) (*protos.Transaction, error)
 }

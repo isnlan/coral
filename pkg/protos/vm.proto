@@ -2,6 +2,8 @@ syntax = "proto3";
 package protos;
 import "google/protobuf/empty.proto";
 
+option go_package = ".;protos";
+
 message Data {
     bytes data = 1;
 }

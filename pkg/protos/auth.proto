@@ -7,6 +7,8 @@ package protos;
 
 import "common.proto";
 
+option go_package = ".;protos";
+
 message Validate {
     string access_token = 1;
     string bduid = 2;

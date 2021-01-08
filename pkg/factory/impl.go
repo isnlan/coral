@@ -198,20 +198,20 @@ func (n *network) QueryContractList(ctx context.Context) ([]*protos.Contract, er
 	return list.Contracts, nil
 }
 
-func (n *network) QueryLatestBlock(ctx context.Context) (*protos.Block, []*protos.Transaction, error) {
+func (n *network) QueryLatestBlock(ctx context.Context) (*protos.Block, error) {
 	defer n.closer()
 	c := &protos.Channel{
 		Chain: n.chain,
 		Name:  n.channel,
 	}
-	fullBlock, err := n.cli.QueryLatestBlock(ctx, c)
+	block, err := n.cli.QueryLatestBlock(ctx, c)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
-	return fullBlock.Block, fullBlock.Txs, nil
+	return block, nil
 }
 
-func (n *network) QueryBlockByNum(ctx context.Context, unm uint64) (*protos.Block, []*protos.Transaction, error) {
+func (n *network) QueryBlockByNum(ctx context.Context, unm uint64) (*protos.Block, error) {
 	defer n.closer()
 	c := &protos.Channel{
 		Chain: n.chain,
@@ -221,14 +221,14 @@ func (n *network) QueryBlockByNum(ctx context.Context, unm uint64) (*protos.Bloc
 		Channel: c,
 		Num:     unm,
 	}
-	fullBlock, err := n.cli.QueryBlockByNum(ctx, req)
+	block, err := n.cli.QueryBlockByNum(ctx, req)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
-	return fullBlock.Block, fullBlock.Txs, nil
+	return block, nil
 }
 
-func (n *network) QueryBlockByTxId(ctx context.Context, txId string) (*protos.Block, []*protos.Transaction, error) {
+func (n *network) QueryBlockByTxId(ctx context.Context, txId string) (*protos.Block, error) {
 	defer n.closer()
 	c := &protos.Channel{
 		Chain: n.chain,
@@ -238,14 +238,14 @@ func (n *network) QueryBlockByTxId(ctx context.Context, txId string) (*protos.Bl
 		Channel: c,
 		TxId:    txId,
 	}
-	fullBlock, err := n.cli.QueryBlockByTxId(ctx, req)
+	block, err := n.cli.QueryBlockByTxId(ctx, req)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
-	return fullBlock.Block, fullBlock.Txs, nil
+	return block, nil
 }
 
-func (n *network) QueryBlockByHash(ctx context.Context, hash []byte) (*protos.Block, []*protos.Transaction, error) {
+func (n *network) QueryBlockByHash(ctx context.Context, hash []byte) (*protos.Block, error) {
 	defer n.closer()
 	c := &protos.Channel{
 		Chain: n.chain,
@@ -255,11 +255,11 @@ func (n *network) QueryBlockByHash(ctx context.Context, hash []byte) (*protos.Bl
 		Channel: c,
 		Hash:    hash,
 	}
-	fullBlock, err := n.cli.QueryBlockByHash(ctx, req)
+	block, err := n.cli.QueryBlockByHash(ctx, req)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
-	return fullBlock.Block, fullBlock.Txs, nil
+	return block, nil
 }
 
 func (n *network) QueryTxById(ctx context.Context, txId string) (*protos.Transaction, error) {
