@@ -115,10 +115,12 @@ message Chain {
   string account = 3;
   // 共识算法
   string consensus = 4;
+  // 签名算法
+  string signature_algorithm = 5;
   // 节点数量
-  int32 node_count = 5;
+  int32 node_count = 6;
   // tls是否开启
-  bool tls_enabled = 6;
+  bool tls_enabled = 7;
 }
 
 message Channel {
