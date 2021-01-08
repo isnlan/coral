@@ -21,7 +21,7 @@ message Record {
     string service = 1;
 
     // 区块链网络ID,取值包括"fabric"、"kbaas"
-    string network_id = 2;
+    string network_type = 2;
 
     // 区块链网络中的指定链
     string channel = 3;

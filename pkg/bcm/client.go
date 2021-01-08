@@ -31,7 +31,7 @@ func (c *Client) AclQuery(clientId string) (*entity.AclClient, error) {
 	_, _, errs := gorequest.New().Post(fmt.Sprintf("%s/api/private/acl/query", c.baseUrl)).
 		Send(data).
 		EndStruct(&resp)
-	if errs != nil && len(errs) != 0 {
+	if len(errs) != 0 {
 		return nil, errs[0]
 	}
 
@@ -49,7 +49,7 @@ func (c *Client) ChainLease(chainId string) (*entity.Lease, error) {
 
 	_, _, errs := gorequest.New().Get(fmt.Sprintf("%s/api/private/chains/lease?chain_id=%s", c.baseUrl, chainId)).
 		EndStruct(&resp)
-	if errs != nil && len(errs) != 0 {
+	if len(errs) != 0 {
 		return nil, errs[0]
 	}
 
@@ -66,7 +66,7 @@ func (c *Client) CallRecord(data interface{}) error {
 	_, _, errs := gorequest.New().Post(fmt.Sprintf("%s/api/private/calls/record", c.baseUrl)).
 		Send(data).
 		EndStruct(&resp)
-	if errs != nil && len(errs) != 0 {
+	if len(errs) != 0 {
 		return errs[0]
 	}
 

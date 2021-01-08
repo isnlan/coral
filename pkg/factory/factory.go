@@ -13,14 +13,14 @@ import (
 
 type Factory struct {
 	lock sync.RWMutex
-	n    map[string]*net.Client
+	nets map[string]*net.Client
 }
 
 func New() *Factory {
-	return &Factory{lock: sync.RWMutex{}, n: map[string]*net.Client{}}
+	return &Factory{lock: sync.RWMutex{}, nets: map[string]*net.Client{}}
 }
 
-func (mgr *Factory) Register(networkId string, addr string) error {
+func (mgr *Factory) Register(networkType string, addr string) error {
 	cli, err := net.New(addr)
 	if err != nil {
 		return err
@@ -29,7 +29,7 @@ func (mgr *Factory) Register(networkId string, addr string) error {
 	mgr.lock.Lock()
 	defer mgr.lock.Unlock()
 
-	mgr.n[networkId] = cli
+	mgr.nets[networkType] = cli
 	return nil
 }
 
@@ -37,9 +37,9 @@ func (mgr *Factory) Builder(chain *protos.Chain) (*Builder, error) {
 	mgr.lock.RLock()
 	defer mgr.lock.RUnlock()
 
-	client, find := mgr.n[chain.NetworkId]
+	client, find := mgr.nets[chain.NetworkType]
 	if !find {
-		return nil, errors.New(fmt.Sprintf("network %s not register", chain.NetworkId))
+		return nil, errors.New(fmt.Sprintf("network %s not register", chain.NetworkType))
 	}
 
 	conn, err := client.Get()

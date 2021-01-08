@@ -107,20 +107,22 @@ message Event {
 }
 
 message Chain {
-  // 框架id "fabric.."
-  string network_id = 1;
+  // 网络ID
+  string id = 1;
+  // 网络类型 "fabric/fisco bcos"
+  string network_type = 2;
   // 网络名称
-  string name = 2;
+  string name = 3;
   // 创建账户
-  string account = 3;
+  string account = 4;
   // 共识算法
-  string consensus = 4;
+  string consensus = 5;
   // 签名算法
-  string signature_algorithm = 5;
+  string signature_algorithm = 6;
   // 节点数量
-  int32 node_count = 6;
+  int32 node_count = 7;
   // tls是否开启
-  bool tls_enabled = 7;
+  bool tls_enabled = 8;
 }
 
 message Channel {

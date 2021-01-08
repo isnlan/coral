@@ -20,7 +20,9 @@ type Client struct {
 
 func New(url string) (*Client, error) {
 	factory := func() (conn *grpc.ClientConn, err error) {
-		ctx, _ := context.WithTimeout(context.Background(), time.Second*5)
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+		defer cancel()
+
 		conn, err = grpc.DialContext(ctx,
 			url,
 			grpc.WithInsecure(),
@@ -49,7 +51,9 @@ func New(url string) (*Client, error) {
 }
 
 func (c *Client) Get() (*grpcpool.ClientConn, error) {
-	ctx, _ := context.WithTimeout(context.Background(), time.Second*5)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
+
 	conn, err := c.pool.Get(ctx)
 	if err != nil {
 		return nil, errors.WithMessage(err, "get grpc connection error")
