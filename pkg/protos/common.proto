@@ -87,7 +87,7 @@ message Transaction {
   // 数字身份
   string creator = 5;
   // 签名
-  string sign = 6;
+  bytes sign = 6;
   // 交易类型
   string tx_type = 7;
   // 时间戳

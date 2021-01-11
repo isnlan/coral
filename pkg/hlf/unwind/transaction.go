@@ -1,8 +1,10 @@
 package unwind
 
 import (
-	"github.com/snlansky/coral/pkg/entity"
 	"time"
+
+	"github.com/golang/protobuf/ptypes"
+	"github.com/snlansky/coral/pkg/protos"
 
 	"github.com/snlansky/coral/pkg/contract/identity"
 
@@ -131,17 +133,19 @@ func NewTransactionFromEnvelope(envelope *common.Envelope, validationCode int32)
 	return transaction, nil
 }
 
-func (t *Transaction) IntoTransaction() *entity.Transaction {
-	tx := entity.Transaction{
+func (t *Transaction) IntoTransaction() *protos.Transaction {
+	timestamp, _ := ptypes.TimestampProto(t.Timestamp)
+
+	tx := protos.Transaction{
 		TxId:           t.TxId,
 		ChannelId:      t.ChannelId,
 		BlockNumber:    t.BlockNumber,
-		Timestamp:      t.Timestamp,
+		Timestamp:      timestamp,
 		ValidationCode: t.ValidationCode,
 		Event:          nil,
 	}
 	if t.Events != nil {
-		e := entity.Event{
+		e := protos.Event{
 			Contract:  t.Events.ChaincodeId,
 			EventName: t.Events.EventName,
 			Value:     t.Events.Payload,

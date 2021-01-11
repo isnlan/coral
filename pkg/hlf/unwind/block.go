@@ -1,15 +1,16 @@
 package unwind
 
 import (
+	"github.com/golang/protobuf/ptypes"
 	"github.com/hyperledger/fabric-protos-go/peer"
 	"github.com/hyperledger/fabric/protoutil"
-	"github.com/snlansky/coral/pkg/entity"
+	"github.com/snlansky/coral/pkg/protos"
 
 	"github.com/hyperledger/fabric-protos-go/common"
 )
 
-func NewBlock(block *common.Block) (*entity.Block, []*Transaction, error) {
-	tb := new(entity.Block)
+func NewBlock(block *common.Block) (*protos.Block, []*Transaction, error) {
+	tb := new(protos.Block)
 	tb.Number = block.Header.Number
 	tb.PreviousHash = block.Header.PreviousHash
 	tb.Hash = protoutil.BlockHeaderHash(block.Header)
@@ -19,7 +20,7 @@ func NewBlock(block *common.Block) (*entity.Block, []*Transaction, error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	tb.Size = len(bytes)
+	tb.Size = int32(len(bytes))
 
 	var txs []*Transaction
 
@@ -38,7 +39,10 @@ func NewBlock(block *common.Block) (*entity.Block, []*Transaction, error) {
 		}
 
 		tb.ChannelId = transaction.ChannelId
-		tb.Timestamp = transaction.Timestamp
+		tb.Timestamp, err = ptypes.TimestampProto(transaction.Timestamp)
+		if err != nil {
+			return nil, nil, err
+		}
 
 		// 只保存验证通过的
 		if transaction.ValidationCode != peer.TxValidationCode_name[0] {
@@ -54,6 +58,5 @@ func NewBlock(block *common.Block) (*entity.Block, []*Transaction, error) {
 		txs = append(txs, transaction)
 	}
 
-	tb.TransactionCount = len(txs)
 	return tb, txs, nil
 }
