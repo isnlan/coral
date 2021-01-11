@@ -9,7 +9,7 @@ import (
 	"github.com/hyperledger/fabric-protos-go/common"
 )
 
-func NewBlock(block *common.Block) (*protos.Block, []*Transaction, error) {
+func NewBlock(block *common.Block) (*protos.Block, error) {
 	tb := new(protos.Block)
 	tb.Number = block.Header.Number
 	tb.PreviousHash = block.Header.PreviousHash
@@ -18,11 +18,11 @@ func NewBlock(block *common.Block) (*protos.Block, []*Transaction, error) {
 
 	bytes, err := protoutil.Marshal(block)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 	tb.Size = int32(len(bytes))
 
-	var txs []*Transaction
+	var txs []*protos.Transaction
 
 	for idx, pl := range block.Data.Data {
 		var status byte
@@ -35,13 +35,13 @@ func NewBlock(block *common.Block) (*protos.Block, []*Transaction, error) {
 
 		transaction, err := NewTransactionFromPayload(pl, int32(status))
 		if err != nil {
-			return nil, nil, err
+			return nil, err
 		}
 
 		tb.ChannelId = transaction.ChannelId
 		tb.Timestamp, err = ptypes.TimestampProto(transaction.Timestamp)
 		if err != nil {
-			return nil, nil, err
+			return nil, err
 		}
 
 		// 只保存验证通过的
@@ -55,8 +55,10 @@ func NewBlock(block *common.Block) (*protos.Block, []*Transaction, error) {
 		}
 
 		transaction.BlockNumber = tb.Number
-		txs = append(txs, transaction)
+		txs = append(txs, transaction.IntoTransaction())
 	}
 
-	return tb, txs, nil
+	tb.Transactions = txs
+
+	return tb, nil
 }
