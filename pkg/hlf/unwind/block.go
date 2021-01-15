@@ -9,8 +9,8 @@ import (
 	"github.com/hyperledger/fabric-protos-go/common"
 )
 
-func NewBlock(block *common.Block) (*protos.Block, error) {
-	tb := new(protos.Block)
+func NewBlock(block *common.Block) (*protos.InnerBlock, error) {
+	tb := new(protos.InnerBlock)
 	tb.Number = block.Header.Number
 	tb.PreviousHash = block.Header.PreviousHash
 	tb.Hash = protoutil.BlockHeaderHash(block.Header)
@@ -22,7 +22,7 @@ func NewBlock(block *common.Block) (*protos.Block, error) {
 	}
 	tb.Size = int32(len(bytes))
 
-	var txs []*protos.Transaction
+	var txs []*protos.InnerTransaction
 
 	for idx, pl := range block.Data.Data {
 		var status byte

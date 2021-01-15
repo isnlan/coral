@@ -434,6 +434,9 @@ func (f *FabricCAClient) Register(identity *Identity, req *CARegistrationRequest
 	}
 
 	httpReq, err := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/register", f.Url), bytes.NewBuffer(reqJson))
+	if err != nil {
+		return "", err
+	}
 
 	httpReq.Header.Set("Content-Type", "application/json")
 

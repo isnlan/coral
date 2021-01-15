@@ -99,15 +99,15 @@ service Network {
   // 查询合约列表
   rpc QueryContractList(Channel) returns (ResponseContractList) {}
   // 查询链最新块
-  rpc QueryLatestBlock(Channel) returns (Block) {}
+  rpc QueryLatestBlock(Channel) returns (InnerBlock) {}
   // 根据块高度查询块
-  rpc QueryBlockByNum(RequestQueryBlockByNum) returns (Block) {}
+  rpc QueryBlockByNum(RequestQueryBlockByNum) returns (InnerBlock) {}
   // 根据交易ID查询块
-  rpc QueryBlockByTxId(RequestQueryBlockTxId) returns (Block) {}
+  rpc QueryBlockByTxId(RequestQueryBlockTxId) returns (InnerBlock) {}
   // 根据块Hash查询块
-  rpc QueryBlockByHash(RequestQueryBlockByHash) returns (Block) {}
+  rpc QueryBlockByHash(RequestQueryBlockByHash) returns (InnerBlock) {}
   // 根据交易ID查询交易
-  rpc QueryTxById(RequestQueryTxById) returns (Transaction) {}
+  rpc QueryTxById(RequestQueryTxById) returns (InnerTransaction) {}
 }
 
 

@@ -35,6 +35,7 @@ func main() {
 			),
 		),
 	)
+	errors.Check(err)
 
 	spanA := opentracing.StartSpan("A7")
 	time.Sleep(time.Second)

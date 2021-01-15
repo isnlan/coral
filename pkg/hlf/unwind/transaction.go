@@ -133,10 +133,10 @@ func NewTransactionFromEnvelope(envelope *common.Envelope, validationCode int32)
 	return transaction, nil
 }
 
-func (t *Transaction) IntoTransaction() *protos.Transaction {
+func (t *Transaction) IntoTransaction() *protos.InnerTransaction {
 	timestamp, _ := ptypes.TimestampProto(t.Timestamp)
 
-	tx := protos.Transaction{
+	tx := protos.InnerTransaction{
 		TxId:           t.TxId,
 		ChannelId:      t.ChannelId,
 		BlockNumber:    t.BlockNumber,

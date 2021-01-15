@@ -56,7 +56,7 @@ message DigitalIdentity {
   }
 }
 
-message Block {
+message InnerBlock {
   // 当前块高度
   uint64 number = 1;
   // 前块Hash
@@ -66,7 +66,7 @@ message Block {
   // 数据Hash
   bytes data_hash = 4;
   // 当前块中的交易
-  repeated Transaction transactions = 5;
+  repeated InnerTransaction transactions = 5;
   // 链ID
   string channel_id = 6;
   // 区块大小
@@ -75,7 +75,7 @@ message Block {
   google.protobuf.Timestamp timestamp = 8;
 }
 
-message Transaction {
+message InnerTransaction {
   // 交易ID
   string tx_id = 1;
   // 通道ID
