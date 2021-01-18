@@ -40,7 +40,7 @@ message ResponseChannelList {
 }
 
 message ResponseContractList {
-  repeated Contract contracts = 1;
+  repeated string contracts = 1;
 }
 
 message RequestQueryBlockByNum {

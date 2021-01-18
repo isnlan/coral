@@ -23,7 +23,7 @@ type INetwork interface {
 	QueryChainNodes(ctx context.Context) ([]*protos.Node, error)
 	QueryChannelList(ctx context.Context) ([]string, error)
 	QueryChannel(ctx context.Context) (*protos.ChannelInformation, error)
-	QueryContractList(ctx context.Context) ([]*protos.Contract, error)
+	QueryContractList(ctx context.Context) ([]string, error)
 	QueryLatestBlock(ctx context.Context) (*protos.InnerBlock, error)
 	QueryBlockByNum(ctx context.Context, unm uint64) (*protos.InnerBlock, error)
 	QueryBlockByTxId(ctx context.Context, txId string) (*protos.InnerBlock, error)

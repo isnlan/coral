@@ -184,7 +184,7 @@ func (n *network) QueryChannel(ctx context.Context) (*protos.ChannelInformation,
 	return n.cli.QueryChannel(ctx, c)
 }
 
-func (n *network) QueryContractList(ctx context.Context) ([]*protos.Contract, error) {
+func (n *network) QueryContractList(ctx context.Context) ([]string, error) {
 	defer n.closer()
 	c := &protos.Channel{
 		Chain: n.chain,
