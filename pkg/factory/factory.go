@@ -23,7 +23,7 @@ func New() *Factory {
 }
 
 func (mgr *Factory) Register(networkType string, addr string) error {
-	cli, err := net.New(addr, grpc.WithMaxMsgSize(20*1024*1024))
+	cli, err := net.New(addr, grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(20*1024*1024)))
 	if err != nil {
 		return err
 	}
