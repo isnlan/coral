@@ -53,7 +53,7 @@ func OpenTracingServerInterceptor() grpc.UnaryServerInterceptor {
 		switch err {
 		case nil:
 		case opentracing.ErrSpanContextNotFound:
-			logger.Infof("Parent span not found, will start new one. span: %v", ctx)
+			logger.Debugf("Parent span not found, will start new one. span: %v", ctx)
 		default:
 			logger.Errorf("Failed to extract trace span: %v, error: %v", ctx, err)
 		}
