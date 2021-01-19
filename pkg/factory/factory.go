@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"sync"
 
+	"google.golang.org/grpc"
+
 	grpcpool "github.com/processout/grpc-go-pool"
 	"github.com/snlansky/coral/pkg/errors"
 	"github.com/snlansky/coral/pkg/protos"
@@ -21,7 +23,7 @@ func New() *Factory {
 }
 
 func (mgr *Factory) Register(networkType string, addr string) error {
-	cli, err := net.New(addr)
+	cli, err := net.New(addr, grpc.WithMaxMsgSize(20*1024*1024))
 	if err != nil {
 		return err
 	}
