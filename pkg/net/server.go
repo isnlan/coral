@@ -16,13 +16,12 @@ type Server struct {
 	svr      *grpc.Server
 }
 
-func NewServer(addr string) (*Server, error) {
+func NewServer(addr string, opts ...grpc.ServerOption) (*Server, error) {
 	listener, err := net.Listen("tcp", addr)
 	if err != nil {
 		return nil, errors.WithMessage(err, "failed to listen")
 	}
 
-	var opts []grpc.ServerOption
 	opts = append(opts, grpc.UnaryInterceptor(trace.OpenTracingServerInterceptor()))
 
 	s := &Server{
