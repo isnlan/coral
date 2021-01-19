@@ -18,21 +18,21 @@ type Client struct {
 	pool *grpcpool.Pool
 }
 
-func New(url string) (*Client, error) {
+func New(url string, opts ...grpc.DialOption) (*Client, error) {
+	opts = append(opts, grpc.WithInsecure(),
+		grpc.WithBlock(),
+		grpc.WithUnaryInterceptor(
+			grpc_middeware.ChainUnaryClient(
+				trace.OpenTracingClientInterceptor(),
+			),
+		),
+	)
+
 	factory := func() (conn *grpc.ClientConn, err error) {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 		defer cancel()
 
-		conn, err = grpc.DialContext(ctx,
-			url,
-			grpc.WithInsecure(),
-			grpc.WithBlock(),
-			grpc.WithUnaryInterceptor(
-				grpc_middeware.ChainUnaryClient(
-					trace.OpenTracingClientInterceptor(),
-				),
-			),
-		)
+		conn, err = grpc.DialContext(ctx, url, opts...)
 		if err != nil {
 			return nil, errors.WithStack(err)
 		}
