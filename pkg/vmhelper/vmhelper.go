@@ -1,4 +1,4 @@
-package vm
+package vmhelper
 
 import (
 	"context"
@@ -15,7 +15,7 @@ import (
 	"github.com/snlansky/coral/pkg/protos"
 )
 
-type IVm interface {
+type IVM interface {
 	Apply(data [][]byte) error
 	Delete(data [][]byte) error
 	GetNodeIps() ([]string, error)
