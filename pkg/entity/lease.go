@@ -62,11 +62,11 @@ type ChannelStatus struct {
 }
 
 type Lease struct {
-	NetworkID   string                    `json:"network_id"`
-	NetworkType string                    `json:"network_type"`
-	Account     string                    `json:"account"`
-	Team        string                    `json:"team"`
-	Enable      bool                      `json:"enable"`
-	Channels    map[string]*ChannelStatus `json:"channels"`
-	ExpireTime  int64                     `json:"expire_time"`
+	NetworkID   string           `json:"network_id"`
+	NetworkType string           `json:"network_type"`
+	Account     string           `json:"account"`
+	Team        string           `json:"team"`
+	Enable      bool             `json:"enable"`
+	Channels    []*ChannelStatus `json:"channels"`
+	ExpireTime  int64            `json:"expire_time"`
 }
