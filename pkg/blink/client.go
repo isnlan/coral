@@ -1,4 +1,4 @@
-package bcm
+package blink
 
 import (
 	"fmt"
