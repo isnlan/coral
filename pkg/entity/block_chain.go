@@ -2,6 +2,8 @@ package entity
 
 import (
 	"time"
+
+	"github.com/snlansky/coral/pkg/protos"
 )
 
 type Block struct {
@@ -34,4 +36,47 @@ type Event struct {
 	Contract  string `json:"contract" bson:"contract"`
 	EventName string `json:"event_name" bson:"event_name"`
 	Value     []byte `json:"value" bson:"value"`
+}
+
+func FromInnerBlock(b *protos.InnerBlock) (*Block, []*Transaction) {
+	block := &Block{
+		Number:           b.Number,
+		PreviousHash:     b.PreviousHash,
+		Hash:             b.Hash,
+		DataHash:         b.DataHash,
+		TransactionCount: len(b.Transactions),
+		ChannelId:        b.ChannelId,
+		Size:             int(b.Size),
+		Timestamp:        b.Timestamp.AsTime(),
+	}
+
+	var txs []*Transaction
+	for _, tx := range b.Transactions {
+		txs = append(txs, FromInnerTransaction(tx))
+	}
+
+	return block, txs
+}
+
+func FromInnerTransaction(t *protos.InnerTransaction) *Transaction {
+	var event *Event
+	if t.Event != nil {
+		event = &Event{
+			Contract:  t.Event.Contract,
+			EventName: t.Event.EventName,
+			Value:     t.Event.Value,
+		}
+	}
+	return &Transaction{
+		TxId:           t.TxId,
+		ChannelId:      t.ChannelId,
+		BlockNumber:    t.BlockNumber,
+		Contract:       t.Contract,
+		Creator:        t.Creator,
+		Sign:           t.Sign,
+		TxType:         t.TxType,
+		Timestamp:      t.Timestamp.AsTime(),
+		ValidationCode: t.ValidationCode,
+		Event:          event,
+	}
 }
