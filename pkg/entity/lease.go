@@ -64,6 +64,7 @@ type ChannelStatus struct {
 type Lease struct {
 	NetworkID   string           `json:"network_id"`
 	NetworkType string           `json:"network_type"`
+	NetworkName string           `json:"network_name"`
 	Account     string           `json:"account"`
 	Team        string           `json:"team"`
 	Enable      bool             `json:"enable"`
