@@ -1,4 +1,4 @@
-package service_discovery
+package discovery
 
 import (
 	"context"
@@ -17,14 +17,10 @@ type ServiceInfo struct {
 
 type Deregister func()
 
-type ServiceListener interface {
-	Handle([]*ServiceInfo)
-}
-
 type ServiceDiscover interface {
 	RegisterHealthServer(s *grpc.Server)
 	ServiceRegister(name, address string, port int, tags ...string) (Deregister, error)
-	WatchService(ctx context.Context, name string, tag string, listener ServiceListener)
+	WatchService(ctx context.Context, name string, tag string, ch chan<- []*ServiceInfo)
 }
 
 func MakeTypeName(tpy interface{}) string {

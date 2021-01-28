@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/snlansky/coral/pkg/service_discovery"
+	"github.com/snlansky/coral/pkg/discovery"
 
 	"github.com/snlansky/coral/pkg/net"
 	"github.com/stretchr/testify/assert"
@@ -17,7 +17,7 @@ import (
 
 func TestNew(t *testing.T) {
 	var vms *protos.VMServer
-	sname := service_discovery.MakeTypeName(vms)
+	sname := discovery.MakeTypeName(vms)
 	fmt.Println(sname)
 
 	tags := []string{"fabric", "silk", "fisco"}
@@ -33,7 +33,7 @@ func TestNew(t *testing.T) {
 
 			client.RegisterHealthServer(server.Server())
 
-			ip, err := service_discovery.GetLocalIP()
+			ip, err := discovery.GetLocalIP()
 			assert.NoError(t, err)
 
 			cancel, err := client.ServiceRegister(sname, ip, port, tags[rand.Intn(len(tags))])
@@ -49,24 +49,24 @@ func TestNew(t *testing.T) {
 		}
 	}()
 
+	handler := make(chan []*discovery.ServiceInfo)
+
 	go func() {
 		client, err := New("127.0.0.1:8500")
 		assert.NoError(t, err)
 
-		handler := &mockHandler{}
 		time.Sleep(time.Second)
-		client.WatchService(context.Background(), sname, "", handler)
+		client.WatchService(context.Background(), sname, "silk", handler)
+	}()
+
+	go func() {
+		for infos := range handler {
+			for _, e := range infos {
+				fmt.Printf("%v ", e)
+			}
+			fmt.Println()
+		}
 	}()
 
 	time.Sleep(time.Minute)
-}
-
-type mockHandler struct {
-}
-
-func (m *mockHandler) Handle(infos []*service_discovery.ServiceInfo) {
-	for _, e := range infos {
-		fmt.Printf("%v ", e)
-	}
-	fmt.Println()
 }

@@ -7,7 +7,7 @@ import (
 
 	"github.com/snlansky/coral/pkg/logging"
 
-	"github.com/snlansky/coral/pkg/service_discovery"
+	"github.com/snlansky/coral/pkg/discovery"
 
 	"google.golang.org/grpc"
 
@@ -24,13 +24,13 @@ var logger = logging.MustGetLogger("factory")
 
 type Factory struct {
 	lock      sync.RWMutex
-	discovery service_discovery.ServiceDiscover
+	discovery discovery.ServiceDiscover
 	nets      map[string]*net.Client
 	opts      []grpc.DialOption
 	cancels   []context.CancelFunc
 }
 
-func New(discovery service_discovery.ServiceDiscover) *Factory {
+func New(discovery discovery.ServiceDiscover) *Factory {
 	return &Factory{
 		lock:      sync.RWMutex{},
 		discovery: discovery,
@@ -80,9 +80,12 @@ func (mgr *Factory) getNetwork(netType string) (*net.Client, error) {
 	}
 
 	var svr *protos.NetworkServer
-	resolver := NewResolver()
+
+	ch := make(chan []*discovery.ServiceInfo)
 	ctx, cancel := context.WithCancel(context.Background())
-	mgr.discovery.WatchService(ctx, service_discovery.MakeTypeName(svr), netType, resolver)
+	mgr.discovery.WatchService(ctx, discovery.MakeTypeName(svr), netType, ch)
+	resolver := NewResolver(ch)
+
 	client, err := net.NewWithResolver(resolver, mgr.opts...)
 	if err != nil {
 		cancel()

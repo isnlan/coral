@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/snlansky/coral/pkg/service_discovery"
+	"github.com/snlansky/coral/pkg/discovery"
 
 	"github.com/snlansky/coral/pkg/logging"
 
@@ -32,7 +32,7 @@ func New(url string) (*Client, error) {
 	return &Client{client: client}, nil
 }
 
-func (c *Client) ServiceRegister(name, address string, port int, tags ...string) (service_discovery.Deregister, error) {
+func (c *Client) ServiceRegister(name, address string, port int, tags ...string) (discovery.Deregister, error) {
 	svr := &api.AgentServiceRegistration{
 		Name:    name,
 		ID:      fmt.Sprintf("%s-%s:%d", name, address, port),
@@ -66,7 +66,7 @@ func (c *Client) RegisterHealthServer(s *grpc.Server) {
 	grpc_health_v1.RegisterHealthServer(s, health.NewServer())
 }
 
-func (c *Client) WatchService(ctx context.Context, name string, tag string, listener service_discovery.ServiceListener) {
+func (c *Client) WatchService(ctx context.Context, name string, tag string, ch chan<- []*discovery.ServiceInfo) {
 	var waitIndex uint64
 
 	go func() {
@@ -79,7 +79,7 @@ func (c *Client) WatchService(ctx context.Context, name string, tag string, list
 			}
 			if waitIndex != lastIndex {
 				waitIndex = lastIndex
-				listener.Handle(entries)
+				ch <- entries
 			}
 
 			select {
@@ -91,7 +91,7 @@ func (c *Client) WatchService(ctx context.Context, name string, tag string, list
 	}()
 }
 
-func (c *Client) serviceEntriesWatch(name, tag string, waitIndex uint64) ([]*service_discovery.ServiceInfo, uint64, error) {
+func (c *Client) serviceEntriesWatch(name, tag string, waitIndex uint64) ([]*discovery.ServiceInfo, uint64, error) {
 	opt := &api.QueryOptions{
 		RequireConsistent: true,
 		WaitIndex:         waitIndex,
@@ -103,12 +103,12 @@ func (c *Client) serviceEntriesWatch(name, tag string, waitIndex uint64) ([]*ser
 		return nil, 0, err
 	}
 
-	var list []*service_discovery.ServiceInfo
+	var list []*discovery.ServiceInfo
 	for _, entry := range entries {
 		if entry.Service == nil {
 			continue
 		}
-		info := &service_discovery.ServiceInfo{
+		info := &discovery.ServiceInfo{
 			ID:      entry.Service.ID,
 			Address: fmt.Sprintf("%s:%d", entry.Service.Address, entry.Service.Port),
 			Tags:    entry.Service.Tags,
