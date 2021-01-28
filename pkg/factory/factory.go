@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/snlansky/coral/pkg/logging"
+
 	"github.com/snlansky/coral/pkg/service_discovery"
 
 	"google.golang.org/grpc"
@@ -17,6 +19,8 @@ import (
 )
 
 const maxCallRecvMsgSize = 20 * 1024 * 1024
+
+var logger = logging.MustGetLogger("factory")
 
 type Factory struct {
 	lock      sync.RWMutex
@@ -89,7 +93,7 @@ func (mgr *Factory) getNetwork(netType string) (*net.Client, error) {
 	defer mgr.lock.Unlock()
 	mgr.nets[netType] = client
 	mgr.cancels = append(mgr.cancels, cancel)
-
+	logger.Infof("find service: %v", netType)
 	return client, nil
 }
 
