@@ -4,6 +4,8 @@ import (
 	"context"
 	"time"
 
+	"google.golang.org/grpc/connectivity"
+
 	grpc_middeware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"github.com/snlansky/coral/pkg/trace"
 
@@ -14,11 +16,16 @@ import (
 )
 
 type Client struct {
-	url  string
-	pool *grpcpool.Pool
+	resolver Resolver
+	pool     *grpcpool.Pool
 }
 
 func New(url string, opts ...grpc.DialOption) (*Client, error) {
+	r := NewUrlResolver(url)
+	return NewWithResolver(r, opts...)
+}
+
+func NewWithResolver(r Resolver, opts ...grpc.DialOption) (*Client, error) {
 	opts = append(opts, grpc.WithInsecure(),
 		grpc.WithBlock(),
 		grpc.WithUnaryInterceptor(
@@ -32,6 +39,11 @@ func New(url string, opts ...grpc.DialOption) (*Client, error) {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 		defer cancel()
 
+		url, err := r.Resolve()
+		if err != nil {
+			return nil, errors.WithMessage(err, "resolve url error")
+		}
+
 		conn, err = grpc.DialContext(ctx, url, opts...)
 		if err != nil {
 			return nil, errors.WithStack(err)
@@ -44,19 +56,23 @@ func New(url string, opts ...grpc.DialOption) (*Client, error) {
 		return nil, err
 	}
 	m := &Client{
-		url:  url,
-		pool: pool,
+		resolver: r,
+		pool:     pool,
 	}
 	return m, nil
 }
 
 func (c *Client) Get() (*grpcpool.ClientConn, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
-	defer cancel()
-
-	conn, err := c.pool.Get(ctx)
-	if err != nil {
-		return nil, errors.WithMessage(err, "get grpc connection error")
+	for {
+		conn, err := c.pool.Get(context.Background())
+		if err != nil {
+			return nil, errors.WithMessage(err, "get grpc connection error")
+		}
+		if conn.GetState() != connectivity.Ready {
+			conn.Unhealthy()
+			conn.Close()
+			continue
+		}
+		return conn, err
 	}
-	return conn, err
 }

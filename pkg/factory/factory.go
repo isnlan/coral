@@ -1,8 +1,11 @@
 package factory
 
 import (
+	"context"
 	"fmt"
 	"sync"
+
+	"github.com/snlansky/coral/pkg/service_discovery"
 
 	"google.golang.org/grpc"
 
@@ -13,17 +16,27 @@ import (
 	"github.com/snlansky/coral/pkg/net"
 )
 
+const maxCallRecvMsgSize = 20 * 1024 * 1024
+
 type Factory struct {
-	lock sync.RWMutex
-	nets map[string]*net.Client
+	lock      sync.RWMutex
+	discovery service_discovery.ServiceDiscover
+	nets      map[string]*net.Client
+	opts      []grpc.DialOption
+	cancels   []context.CancelFunc
 }
 
-func New() *Factory {
-	return &Factory{lock: sync.RWMutex{}, nets: map[string]*net.Client{}}
+func New(discovery service_discovery.ServiceDiscover) *Factory {
+	return &Factory{
+		lock:      sync.RWMutex{},
+		discovery: discovery,
+		nets:      map[string]*net.Client{},
+		opts:      []grpc.DialOption{grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(maxCallRecvMsgSize))},
+	}
 }
 
 func (mgr *Factory) Register(networkType string, addr string) error {
-	cli, err := net.New(addr, grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(20*1024*1024)))
+	cli, err := net.New(addr, mgr.opts...)
 	if err != nil {
 		return err
 	}
@@ -36,12 +49,9 @@ func (mgr *Factory) Register(networkType string, addr string) error {
 }
 
 func (mgr *Factory) Builder(chain *protos.Chain) (*Builder, error) {
-	mgr.lock.RLock()
-	defer mgr.lock.RUnlock()
-
-	client, find := mgr.nets[chain.NetworkType]
-	if !find {
-		return nil, errors.New(fmt.Sprintf("network %s not register", chain.NetworkType))
+	client, err := mgr.getNetwork(chain.NetworkType)
+	if err != nil {
+		return nil, errors.WithMessage(err, "get network error")
 	}
 
 	conn, err := client.Get()
@@ -50,6 +60,46 @@ func (mgr *Factory) Builder(chain *protos.Chain) (*Builder, error) {
 	}
 
 	return &Builder{chain: chain, conn: conn}, nil
+}
+
+func (mgr *Factory) getNetwork(netType string) (*net.Client, error) {
+	mgr.lock.RLock()
+	client, find := mgr.nets[netType]
+	mgr.lock.RUnlock()
+
+	if find {
+		return client, nil
+	}
+
+	if mgr.discovery == nil {
+		return nil, errors.New(fmt.Sprintf("network %s not register", netType))
+	}
+
+	var svr *protos.NetworkServer
+	resolver := NewResolver()
+	ctx, cancel := context.WithCancel(context.Background())
+	mgr.discovery.WatchService(ctx, service_discovery.MakeTypeName(svr), netType, resolver)
+	client, err := net.NewWithResolver(resolver, mgr.opts...)
+	if err != nil {
+		cancel()
+		return nil, err
+	}
+
+	mgr.lock.Lock()
+	defer mgr.lock.Unlock()
+	mgr.nets[netType] = client
+	mgr.cancels = append(mgr.cancels, cancel)
+
+	return client, nil
+}
+
+func (mgr *Factory) Close() {
+	mgr.lock.Lock()
+	defer mgr.lock.Unlock()
+	for _, c := range mgr.cancels {
+		c()
+	}
+	mgr.cancels = nil
 }
 
 type Builder struct {

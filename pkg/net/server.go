@@ -43,3 +43,7 @@ func (s *Server) Start() {
 		log.Fatalf("failed to serve: %v", err)
 	}
 }
+
+func (s *Server) Close() {
+	s.svr.Stop()
+}
