@@ -58,7 +58,7 @@ func (c *Client) ServiceRegister(name, address string, port int, tags ...string)
 		}
 	}
 
-	logger.Infof("service:%s register success!", svr.ID)
+	logger.Infof("service: %s register success!", svr.ID)
 	return f, nil
 }
 
