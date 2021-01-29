@@ -63,7 +63,7 @@ func (mgr *Factory) getNetwork(netType string) (*net.Client, error) {
 
 	var svr *protos.NetworkServer
 
-	client, err := net.New(fmt.Sprintf("%s/%s?wait=3s&tag=%s", mgr.url, discovery.MakeTypeName(svr), netType), mgr.opts...)
+	client, err := net.New(fmt.Sprintf("consul://%s/%s?wait=3s&tag=%s", mgr.url, discovery.MakeTypeName(svr), netType), mgr.opts...)
 	if err != nil {
 		return nil, err
 	}

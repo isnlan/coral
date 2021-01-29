@@ -10,7 +10,7 @@ import (
 )
 
 func TestNew(t *testing.T) {
-	factory := New("consul://127.0.0.1:8500")
+	factory := New("127.0.0.1:8500")
 	chain := &protos.Chain{
 		Id:                 "5ffbe60730a09d3ccb722477",
 		NetworkType:        "fabric",
