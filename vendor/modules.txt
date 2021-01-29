@@ -8,7 +8,7 @@ github.com/Microsoft/go-winio
 github.com/Microsoft/go-winio/pkg/guid
 # github.com/Microsoft/hcsshim v0.8.7-0.20191101173118-65519b62243c
 github.com/Microsoft/hcsshim/osversion
-# github.com/armon/go-metrics v0.0.0-20180917152333-f0300d1749da
+# github.com/armon/go-metrics v0.3.2
 github.com/armon/go-metrics
 # github.com/cespare/xxhash v1.1.0
 github.com/cespare/xxhash
@@ -78,6 +78,8 @@ github.com/gin-gonic/gin/binding
 github.com/gin-gonic/gin/internal/bytesconv
 github.com/gin-gonic/gin/internal/json
 github.com/gin-gonic/gin/render
+# github.com/go-playground/form v3.1.4+incompatible
+github.com/go-playground/form
 # github.com/go-playground/locales v0.13.0
 github.com/go-playground/locales
 github.com/go-playground/locales/currency
@@ -121,13 +123,13 @@ github.com/hashicorp/consul/api
 github.com/hashicorp/go-cleanhttp
 # github.com/hashicorp/go-hclog v0.12.0
 github.com/hashicorp/go-hclog
-# github.com/hashicorp/go-immutable-radix v1.0.0
+# github.com/hashicorp/go-immutable-radix v1.1.0
 github.com/hashicorp/go-immutable-radix
 # github.com/hashicorp/go-rootcerts v1.0.2
 github.com/hashicorp/go-rootcerts
 # github.com/hashicorp/go-version v1.2.1
 ## explicit
-# github.com/hashicorp/golang-lru v0.5.3
+# github.com/hashicorp/golang-lru v0.5.4
 github.com/hashicorp/golang-lru/simplelru
 # github.com/hashicorp/hcl v1.0.0
 github.com/hashicorp/hcl
@@ -166,6 +168,8 @@ github.com/inconshreveable/mousetrap
 ## explicit
 github.com/jmoiron/sqlx
 github.com/jmoiron/sqlx/reflectx
+# github.com/jpillora/backoff v1.0.0
+github.com/jpillora/backoff
 # github.com/json-iterator/go v1.1.9
 github.com/json-iterator/go
 # github.com/klauspost/compress v1.9.5
@@ -184,6 +188,9 @@ github.com/magiconair/properties
 github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.12
 github.com/mattn/go-isatty
+# github.com/mbobakov/grpc-consul-resolver v1.4.3
+## explicit
+github.com/mbobakov/grpc-consul-resolver
 # github.com/micro/go-micro v1.18.0
 ## explicit
 github.com/micro/go-micro/metadata
@@ -224,7 +231,7 @@ github.com/opentracing/opentracing-go/log
 github.com/parnurzeal/gorequest
 # github.com/pelletier/go-toml v1.4.0
 github.com/pelletier/go-toml
-# github.com/pkg/errors v0.8.1
+# github.com/pkg/errors v0.9.1
 ## explicit
 github.com/pkg/errors
 # github.com/pmezard/go-difflib v1.0.0
@@ -348,7 +355,7 @@ go.uber.org/zap/zapgrpc
 ## explicit
 golang.org/x/crypto/pbkdf2
 golang.org/x/crypto/sha3
-# golang.org/x/net v0.0.0-20191109021931-daa7c04131f5
+# golang.org/x/net v0.0.0-20200202094626-16171245cfb2
 golang.org/x/net/http/httpguts
 golang.org/x/net/http2
 golang.org/x/net/http2/hpack
@@ -356,7 +363,7 @@ golang.org/x/net/idna
 golang.org/x/net/internal/timeseries
 golang.org/x/net/publicsuffix
 golang.org/x/net/trace
-# golang.org/x/sync v0.0.0-20190423024810-112230192c58
+# golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
 golang.org/x/sync/errgroup
 golang.org/x/sync/semaphore
 # golang.org/x/sys v0.0.0-20200223170610-d5e6a3e2c0ae

@@ -16,16 +16,10 @@ import (
 )
 
 type Client struct {
-	resolver Resolver
-	pool     *grpcpool.Pool
+	pool *grpcpool.Pool
 }
 
 func New(url string, opts ...grpc.DialOption) (*Client, error) {
-	r := NewUrlResolver(url)
-	return NewWithResolver(r, opts...)
-}
-
-func NewWithResolver(r Resolver, opts ...grpc.DialOption) (*Client, error) {
 	opts = append(opts, grpc.WithInsecure(),
 		grpc.WithBlock(),
 		grpc.WithUnaryInterceptor(
@@ -39,11 +33,6 @@ func NewWithResolver(r Resolver, opts ...grpc.DialOption) (*Client, error) {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 		defer cancel()
 
-		url, err := r.Resolve()
-		if err != nil {
-			return nil, errors.WithMessage(err, "resolve url error")
-		}
-
 		conn, err = grpc.DialContext(ctx, url, opts...)
 		if err != nil {
 			return nil, errors.WithStack(err)
@@ -56,8 +45,7 @@ func NewWithResolver(r Resolver, opts ...grpc.DialOption) (*Client, error) {
 		return nil, err
 	}
 	m := &Client{
-		resolver: r,
-		pool:     pool,
+		pool: pool,
 	}
 	return m, nil
 }

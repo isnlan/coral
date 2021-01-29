@@ -22,6 +22,7 @@ require (
 	github.com/hyperledger/fabric-chaincode-go v0.0.0-20200511190512-bcfeb58dd83a
 	github.com/hyperledger/fabric-protos-go v0.0.0-20191121202242-f5500d5e3e85
 	github.com/jmoiron/sqlx v1.2.0
+	github.com/mbobakov/grpc-consul-resolver v1.4.3
 	github.com/micro/go-micro v1.18.0
 	github.com/miekg/pkcs11 v1.0.3 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
@@ -29,7 +30,7 @@ require (
 	github.com/opentracing-contrib/go-stdlib v1.0.0
 	github.com/opentracing/opentracing-go v1.1.1-0.20190913142402-a7454ce5950e
 	github.com/parnurzeal/gorequest v0.2.16
-	github.com/pkg/errors v0.8.1
+	github.com/pkg/errors v0.9.1
 	github.com/processout/grpc-go-pool v1.2.1
 	github.com/spf13/cobra v1.0.0
 	github.com/spf13/viper v1.4.0

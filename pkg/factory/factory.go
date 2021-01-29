@@ -1,21 +1,20 @@
 package factory
 
 import (
-	"context"
 	"fmt"
 	"sync"
 
-	"github.com/snlansky/coral/pkg/logging"
-
 	"github.com/snlansky/coral/pkg/discovery"
+
+	"github.com/snlansky/coral/pkg/logging"
 
 	"google.golang.org/grpc"
 
+	_ "github.com/mbobakov/grpc-consul-resolver"
 	grpcpool "github.com/processout/grpc-go-pool"
 	"github.com/snlansky/coral/pkg/errors"
-	"github.com/snlansky/coral/pkg/protos"
-
 	"github.com/snlansky/coral/pkg/net"
+	"github.com/snlansky/coral/pkg/protos"
 )
 
 const maxCallRecvMsgSize = 20 * 1024 * 1024
@@ -23,33 +22,20 @@ const maxCallRecvMsgSize = 20 * 1024 * 1024
 var logger = logging.MustGetLogger("factory")
 
 type Factory struct {
-	lock      sync.RWMutex
-	discovery discovery.ServiceDiscover
-	nets      map[string]*net.Client
-	opts      []grpc.DialOption
-	cancels   []context.CancelFunc
+	lock sync.RWMutex
+	url  string
+	nets map[string]*net.Client
+	opts []grpc.DialOption
 }
 
-func New(discovery discovery.ServiceDiscover) *Factory {
+func New(url string) *Factory {
 	return &Factory{
-		lock:      sync.RWMutex{},
-		discovery: discovery,
-		nets:      map[string]*net.Client{},
-		opts:      []grpc.DialOption{grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(maxCallRecvMsgSize))},
+		lock: sync.RWMutex{},
+		url:  url,
+		nets: map[string]*net.Client{},
+		opts: []grpc.DialOption{grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(maxCallRecvMsgSize)),
+			grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy": "round_robin"}`)},
 	}
-}
-
-func (mgr *Factory) Register(networkType string, addr string) error {
-	cli, err := net.New(addr, mgr.opts...)
-	if err != nil {
-		return err
-	}
-
-	mgr.lock.Lock()
-	defer mgr.lock.Unlock()
-
-	mgr.nets[networkType] = cli
-	return nil
 }
 
 func (mgr *Factory) Builder(chain *protos.Chain) (*Builder, error) {
@@ -75,38 +61,21 @@ func (mgr *Factory) getNetwork(netType string) (*net.Client, error) {
 		return client, nil
 	}
 
-	if mgr.discovery == nil {
-		return nil, errors.New(fmt.Sprintf("network %s not register", netType))
-	}
-
 	var svr *protos.NetworkServer
 
-	ch := make(chan []*discovery.ServiceInfo)
-	ctx, cancel := context.WithCancel(context.Background())
-	mgr.discovery.WatchService(ctx, discovery.MakeTypeName(svr), netType, ch)
-	resolver := NewResolver(ch)
-
-	client, err := net.NewWithResolver(resolver, mgr.opts...)
+	client, err := net.New(fmt.Sprintf("%s/%s?wait=3s&tag=%s", mgr.url, discovery.MakeTypeName(svr), netType), mgr.opts...)
 	if err != nil {
-		cancel()
 		return nil, err
 	}
 
 	mgr.lock.Lock()
 	defer mgr.lock.Unlock()
 	mgr.nets[netType] = client
-	mgr.cancels = append(mgr.cancels, cancel)
 	logger.Infof("find service: %v", netType)
 	return client, nil
 }
 
 func (mgr *Factory) Close() {
-	mgr.lock.Lock()
-	defer mgr.lock.Unlock()
-	for _, c := range mgr.cancels {
-		c()
-	}
-	mgr.cancels = nil
 }
 
 type Builder struct {
