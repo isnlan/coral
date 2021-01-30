@@ -13,8 +13,8 @@ import (
 	_ "github.com/mbobakov/grpc-consul-resolver"
 	grpcpool "github.com/processout/grpc-go-pool"
 	"github.com/snlansky/coral/pkg/errors"
-	"github.com/snlansky/coral/pkg/net"
 	"github.com/snlansky/coral/pkg/protos"
+	"github.com/snlansky/coral/pkg/xgrpc"
 )
 
 const maxCallRecvMsgSize = 20 * 1024 * 1024
@@ -24,7 +24,7 @@ var logger = logging.MustGetLogger("factory")
 type Factory struct {
 	lock sync.RWMutex
 	url  string
-	nets map[string]*net.Client
+	nets map[string]*xgrpc.Client
 	opts []grpc.DialOption
 }
 
@@ -32,7 +32,7 @@ func New(url string) *Factory {
 	return &Factory{
 		lock: sync.RWMutex{},
 		url:  url,
-		nets: map[string]*net.Client{},
+		nets: map[string]*xgrpc.Client{},
 		opts: []grpc.DialOption{grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(maxCallRecvMsgSize)),
 			grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy": "round_robin"}`)},
 	}
@@ -52,7 +52,7 @@ func (mgr *Factory) Builder(chain *protos.Chain) (*Builder, error) {
 	return &Builder{chain: chain, conn: conn}, nil
 }
 
-func (mgr *Factory) getNetwork(netType string) (*net.Client, error) {
+func (mgr *Factory) getNetwork(netType string) (*xgrpc.Client, error) {
 	mgr.lock.RLock()
 	client, find := mgr.nets[netType]
 	mgr.lock.RUnlock()
@@ -63,7 +63,7 @@ func (mgr *Factory) getNetwork(netType string) (*net.Client, error) {
 
 	var svr *protos.NetworkServer
 
-	client, err := net.New(fmt.Sprintf("consul://%s/%s?wait=3s&tag=%s", mgr.url, discovery.MakeTypeName(svr), netType), mgr.opts...)
+	client, err := xgrpc.NewClient(fmt.Sprintf("consul://%s/%s?wait=3s&tag=%s", mgr.url, discovery.MakeTypeName(svr), netType), mgr.opts...)
 	if err != nil {
 		return nil, err
 	}

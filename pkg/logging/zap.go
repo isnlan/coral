@@ -86,8 +86,8 @@ func (f *GlibsLogger) Notice(args ...interface{})                     { f.s.Info
 func (f *GlibsLogger) Noticef(template string, args ...interface{})   { f.s.Infof(template, args...) }
 
 func (f *GlibsLogger) Named(name string) *GlibsLogger { return &GlibsLogger{s: f.s.Named(name)} }
-func (f *GlibsLogger) Sync() error                     { return f.s.Sync() }
-func (f *GlibsLogger) Zap() *zap.Logger                { return f.s.Desugar() }
+func (f *GlibsLogger) Sync() error                    { return f.s.Sync() }
+func (f *GlibsLogger) Zap() *zap.Logger               { return f.s.Desugar() }
 
 func (f *GlibsLogger) IsEnabledFor(level zapcore.Level) bool {
 	return f.s.Desugar().Core().Enabled(level)

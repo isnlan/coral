@@ -9,7 +9,7 @@ import (
 
 	"github.com/snlansky/coral/pkg/discovery"
 
-	"github.com/snlansky/coral/pkg/net"
+	"github.com/snlansky/coral/pkg/xgrpc"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/snlansky/coral/pkg/protos"
@@ -28,7 +28,7 @@ func TestNew(t *testing.T) {
 			assert.NoError(t, err)
 
 			port := 7000 + i
-			server, err := net.NewServer(fmt.Sprintf("0.0.0.0:%d", port))
+			server, err := xgrpc.NewServer(fmt.Sprintf("0.0.0.0:%d", port))
 			assert.NoError(t, err)
 
 			client.RegisterHealthServer(server.Server())

@@ -6,12 +6,12 @@ import (
 
 	"github.com/golang/protobuf/ptypes/empty"
 
-	"github.com/snlansky/coral/pkg/net"
 	"github.com/snlansky/coral/pkg/protos"
+	"github.com/snlansky/coral/pkg/xgrpc"
 )
 
 func main() {
-	conn, err := net.New("127.0.0.1:8081")
+	conn, err := xgrpc.NewClient("127.0.0.1:8081")
 	check(err)
 	client, err := conn.Get()
 	check(err)

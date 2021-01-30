@@ -4,13 +4,13 @@ import (
 	"context"
 	"time"
 
-	"github.com/snlansky/coral/pkg/app"
+	"github.com/snlansky/coral/pkg/application"
 
 	"github.com/snlansky/coral/pkg/logging"
 	"github.com/snlansky/coral/pkg/trace"
 
-	"github.com/snlansky/coral/pkg/net"
 	"github.com/snlansky/coral/pkg/protos"
+	"github.com/snlansky/coral/pkg/xgrpc"
 )
 
 var _record *recorder
@@ -19,11 +19,11 @@ var logger = logging.MustGetLogger("record")
 
 type recorder struct {
 	url string
-	cli *net.Client
+	cli *xgrpc.Client
 }
 
 func NewRecorder(url string) (*recorder, error) {
-	client, err := net.New(url)
+	client, err := xgrpc.NewClient(url)
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +64,7 @@ func AsyncRecode(ctx context.Context, record *protos.Record) {
 
 		record.Url = trace.GetUrlFromContext(ctx)
 		record.TraceId = trace.GetTraceIDFromContext(ctx)
-		record.Service = app.Name
+		record.Service = application.Name
 
 		err := _record.Record(record)
 		if err != nil {

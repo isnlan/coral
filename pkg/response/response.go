@@ -42,5 +42,4 @@ func Err(err error) *JsonResponse {
 		ErrorCode:   errors.InternalErrorCode,
 		Description: err.Error(),
 	}
-
 }

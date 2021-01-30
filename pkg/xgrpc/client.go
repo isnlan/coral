@@ -1,4 +1,4 @@
-package net
+package xgrpc
 
 import (
 	"context"
@@ -19,7 +19,7 @@ type Client struct {
 	pool *grpcpool.Pool
 }
 
-func New(url string, opts ...grpc.DialOption) (*Client, error) {
+func NewClient(url string, opts ...grpc.DialOption) (*Client, error) {
 	opts = append(opts, grpc.WithInsecure(),
 		grpc.WithBlock(),
 		grpc.WithUnaryInterceptor(

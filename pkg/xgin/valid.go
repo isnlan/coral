@@ -1,4 +1,4 @@
-package valid
+package xgin
 
 import (
 	"regexp"
@@ -9,7 +9,7 @@ import (
 
 var _validate *validator.Validate
 
-func Init() {
+func init() {
 	_validate = validator.New()
 }
 

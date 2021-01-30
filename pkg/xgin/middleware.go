@@ -1,4 +1,4 @@
-package middleware
+package xgin
 
 import (
 	"bytes"
@@ -13,10 +13,7 @@ import (
 	"github.com/snlansky/coral/pkg/response"
 
 	"github.com/gin-gonic/gin"
-	"github.com/snlansky/coral/pkg/logging"
 )
-
-var logger = logging.MustGetLogger("http")
 
 // LoggerWithWriter instance a Logger middleware with the specified writter buffer.
 // Example: os.Stdout, a file opened in write mode, a socket...

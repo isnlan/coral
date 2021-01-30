@@ -1,4 +1,4 @@
-package app
+package application
 
 import (
 	"encoding/json"
@@ -26,16 +26,16 @@ type Server interface {
 }
 
 var (
-	logger  = logging.MustGetLogger("App")
+	logger  = logging.MustGetLogger("Application")
 	cfgFile = ""
 )
 
-type App struct {
+type Application struct {
 	name string
 	cmd  *cobra.Command
 }
 
-func New(name string) *App {
+func New(name string) *Application {
 	cmd := &cobra.Command{
 		Use: name,
 		Run: nil,
@@ -47,13 +47,13 @@ func New(name string) *App {
 
 	Name = name
 
-	return &App{
+	return &Application{
 		name: name,
 		cmd:  cmd,
 	}
 }
 
-func (app *App) Start(svr Server) {
+func (app *Application) Start(svr Server) {
 	app.cmd.Run = func(cmd *cobra.Command, args []string) {
 		err := svr.Initialize()
 		if err != nil {

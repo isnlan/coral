@@ -11,8 +11,8 @@ import (
 
 	"github.com/snlansky/coral/pkg/errors"
 
-	"github.com/snlansky/coral/pkg/net"
 	"github.com/snlansky/coral/pkg/protos"
+	"github.com/snlansky/coral/pkg/xgrpc"
 )
 
 type IVM interface {
@@ -31,7 +31,7 @@ type IVM interface {
 }
 
 type vm struct {
-	cli        *net.Client
+	cli        *xgrpc.Client
 	repository string
 }
 
@@ -234,7 +234,7 @@ func (v *vm) getContext() context.Context {
 }
 
 func New(url, repository string) (*vm, error) {
-	cli, err := net.New(url)
+	cli, err := xgrpc.NewClient(url)
 	if err != nil {
 		return nil, err
 	}
