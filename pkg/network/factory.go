@@ -16,29 +16,29 @@ import (
 	"github.com/snlansky/coral/pkg/xgrpc"
 )
 
-const maxCallRecvMsgSize = 20 * 1024 * 1024
+const maxCallRecvMsgSize = 1024 * 1024 * 20
 
 var logger = logging.MustGetLogger("network")
 
 type Factory struct {
-	lock *sync.RWMutex
-	url  string
-	nets map[string]*grpc.ClientConn
-	opts []grpc.DialOption
+	mu      *sync.RWMutex
+	url     string
+	clients map[string]*grpc.ClientConn
+	opts    []grpc.DialOption
 }
 
 func New(url string) *Factory {
 	return &Factory{
-		lock: new(sync.RWMutex),
-		url:  url,
-		nets: map[string]*grpc.ClientConn{},
+		mu:      new(sync.RWMutex),
+		url:     url,
+		clients: map[string]*grpc.ClientConn{},
 		opts: []grpc.DialOption{grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(maxCallRecvMsgSize)),
 			grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy": "round_robin"}`)},
 	}
 }
 
 func (f *Factory) Builder(chain *protos.Chain) (*Builder, error) {
-	client, err := f.getNetwork(chain.NetworkType)
+	client, err := f.getClient(chain.NetworkType)
 	if err != nil {
 		return nil, errors.WithMessage(err, "get network error")
 	}
@@ -46,10 +46,10 @@ func (f *Factory) Builder(chain *protos.Chain) (*Builder, error) {
 	return &Builder{chain: chain, client: client}, nil
 }
 
-func (f *Factory) getNetwork(netType string) (*grpc.ClientConn, error) {
-	f.lock.RLock()
-	client, find := f.nets[netType]
-	f.lock.RUnlock()
+func (f *Factory) getClient(netType string) (*grpc.ClientConn, error) {
+	f.mu.RLock()
+	client, find := f.clients[netType]
+	f.mu.RUnlock()
 
 	if find {
 		return client, nil
@@ -60,9 +60,9 @@ func (f *Factory) getNetwork(netType string) (*grpc.ClientConn, error) {
 		return nil, err
 	}
 
-	f.lock.Lock()
-	defer f.lock.Unlock()
-	f.nets[netType] = client
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	f.clients[netType] = client
 	logger.Infof("find service: %v", netType)
 	return client, nil
 }
@@ -74,9 +74,9 @@ func (f *Factory) makeConsulResolver(netType string) string {
 }
 
 func (f *Factory) Close() {
-	f.lock.Lock()
-	defer f.lock.Unlock()
-	for _, client := range f.nets {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	for _, client := range f.clients {
 		_ = client.Close()
 	}
 }
