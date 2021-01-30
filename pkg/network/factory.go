@@ -90,9 +90,5 @@ func (b *Builder) SetChannel(channel string) *Builder {
 }
 
 func (b *Builder) Build() Network {
-	return &networkImpl{
-		chain:   b.chain,
-		channel: b.channel,
-		client:  protos.NewNetworkClient(b.client),
-	}
+	return newNetworkImpl(b.chain, b.channel, protos.NewNetworkClient(b.client))
 }

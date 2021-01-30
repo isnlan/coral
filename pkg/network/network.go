@@ -37,6 +37,14 @@ type networkImpl struct {
 	client  protos.NetworkClient
 }
 
+func newNetworkImpl(chain *protos.Chain, channel string, client protos.NetworkClient) *networkImpl {
+	return &networkImpl{
+		chain:   chain,
+		channel: channel,
+		client:  client,
+	}
+}
+
 func (n *networkImpl) BuildChain(ctx context.Context) error {
 	_, err := n.client.BuildChain(ctx, n.chain)
 	return err
