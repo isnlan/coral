@@ -9,17 +9,23 @@ import (
 	"github.com/snlansky/coral/pkg/response"
 )
 
-type client struct {
+type Blink interface {
+	AclQuery(clientId string) (*entity.AclClient, error)
+	ChainLease(chainId string) (*entity.Lease, error)
+	CallRecord(data interface{}) error
+}
+
+type blinkImpl struct {
 	baseUrl string
 }
 
-func New(baseUrl string) *client {
-	return &client{
+func New(baseUrl string) *blinkImpl {
+	return &blinkImpl{
 		baseUrl: baseUrl,
 	}
 }
 
-func (c *client) AclQuery(clientId string) (*entity.AclClient, error) {
+func (c *blinkImpl) AclQuery(clientId string) (*entity.AclClient, error) {
 	var resp response.Response
 	var acl entity.AclClient
 	resp.Data = &acl
@@ -42,7 +48,7 @@ func (c *client) AclQuery(clientId string) (*entity.AclClient, error) {
 	return &acl, nil
 }
 
-func (c *client) ChainLease(chainId string) (*entity.Lease, error) {
+func (c *blinkImpl) ChainLease(chainId string) (*entity.Lease, error) {
 	var resp response.Response
 	var lease entity.Lease
 	resp.Data = &lease
@@ -60,7 +66,7 @@ func (c *client) ChainLease(chainId string) (*entity.Lease, error) {
 	return &lease, nil
 }
 
-func (c *client) CallRecord(data interface{}) error {
+func (c *blinkImpl) CallRecord(data interface{}) error {
 	var resp response.Response
 
 	_, _, errs := gorequest.New().Post(fmt.Sprintf("%s/api/private/calls/record", c.baseUrl)).

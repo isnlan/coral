@@ -18,21 +18,21 @@ import (
 
 var logger = logging.MustGetLogger("consul")
 
-type Client struct {
+type consulImpl struct {
 	client *api.Client
 }
 
-func New(url string) (*Client, error) {
+func New(url string) (*consulImpl, error) {
 	config := api.DefaultConfig()
 	config.Address = url
 	client, err := api.NewClient(config)
 	if err != nil {
 		return nil, err
 	}
-	return &Client{client: client}, nil
+	return &consulImpl{client: client}, nil
 }
 
-func (c *Client) ServiceRegister(name, address string, port int, tags ...string) (discovery.Deregister, error) {
+func (c *consulImpl) ServiceRegister(name, address string, port int, tags ...string) (discovery.Deregister, error) {
 	svr := &api.AgentServiceRegistration{
 		Name:    name,
 		ID:      fmt.Sprintf("%s-%s:%d", name, address, port),
@@ -62,11 +62,11 @@ func (c *Client) ServiceRegister(name, address string, port int, tags ...string)
 	return f, nil
 }
 
-func (c *Client) RegisterHealthServer(s *grpc.Server) {
+func (c *consulImpl) RegisterHealthServer(s *grpc.Server) {
 	grpc_health_v1.RegisterHealthServer(s, health.NewServer())
 }
 
-func (c *Client) WatchService(ctx context.Context, name string, tag string, ch chan<- []*discovery.ServiceInfo) {
+func (c *consulImpl) WatchService(ctx context.Context, name string, tag string, ch chan<- []*discovery.ServiceInfo) {
 	go func() {
 		var waitIndex uint64
 		for {
@@ -90,7 +90,7 @@ func (c *Client) WatchService(ctx context.Context, name string, tag string, ch c
 	}()
 }
 
-func (c *Client) serviceEntriesWatch(name, tag string, waitIndex uint64) ([]*discovery.ServiceInfo, uint64, error) {
+func (c *consulImpl) serviceEntriesWatch(name, tag string, waitIndex uint64) ([]*discovery.ServiceInfo, uint64, error) {
 	opt := &api.QueryOptions{
 		RequireConsistent: true,
 		WaitIndex:         waitIndex,
