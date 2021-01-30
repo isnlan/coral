@@ -174,7 +174,7 @@ func (stub *MockStub) PutPrivateData(collection string, key string, value []byte
 	m, in := stub.PvtState[collection]
 	if !in {
 		stub.PvtState[collection] = make(map[string][]byte)
-		m, in = stub.PvtState[collection]
+		m = stub.PvtState[collection]
 	}
 
 	m[key] = value
@@ -404,7 +404,7 @@ func (stub *MockStub) SetPrivateDataValidationParameter(collection, key string, 
 	m, in := stub.EndorsementPolicies[collection]
 	if !in {
 		stub.EndorsementPolicies[collection] = make(map[string][]byte)
-		m, in = stub.EndorsementPolicies[collection]
+		m = stub.EndorsementPolicies[collection]
 	}
 
 	m[key] = ep
@@ -492,13 +492,13 @@ func (iter *MockStateRangeQueryIterator) HasNext() bool {
 
 // Next returns the next key and value in the range query iterator.
 func (iter *MockStateRangeQueryIterator) Next() (*queryresult.KV, error) {
-	if iter.Closed == true {
+	if iter.Closed {
 		err := errors.New("MockStateRangeQueryIterator.Next() called after Close()")
 		fmt.Println("ERR:", err)
 		return nil, err
 	}
 
-	if iter.HasNext() == false {
+	if !iter.HasNext() {
 		err := errors.New("MockStateRangeQueryIterator.Next() called when it does not HaveNext()")
 		fmt.Println("ERR:", err)
 		return nil, err
@@ -525,7 +525,7 @@ func (iter *MockStateRangeQueryIterator) Next() (*queryresult.KV, error) {
 // Close closes the range query iterator. This should be called when done
 // reading from the iterator to free up resources.
 func (iter *MockStateRangeQueryIterator) Close() error {
-	if iter.Closed == true {
+	if iter.Closed {
 		err := errors.New("MockStateRangeQueryIterator.Close() called after Close()")
 		fmt.Println("ERR:", err)
 		return err
@@ -544,38 +544,4 @@ func (iter *MockStateRangeQueryIterator) Print() {
 	fmt.Println("Current", iter.Current)
 	fmt.Println("HasNext?", iter.HasNext())
 	fmt.Println("}")
-}
-
-func NewMockStateRangeQueryIterator(stub *MockStub, startKey string, endKey string) *MockStateRangeQueryIterator {
-	fmt.Println("NewMockStateRangeQueryIterator(", stub, startKey, endKey, ")")
-	iter := new(MockStateRangeQueryIterator)
-	iter.Closed = false
-	iter.Stub = stub
-	iter.StartKey = startKey
-	iter.EndKey = endKey
-	iter.Current = stub.Keys.Front()
-
-	iter.Print()
-
-	return iter
-}
-
-func getBytes(function string, args []string) [][]byte {
-	bytes := make([][]byte, 0, len(args)+1)
-	bytes = append(bytes, []byte(function))
-	for _, s := range args {
-		bytes = append(bytes, []byte(s))
-	}
-	return bytes
-}
-
-func getFuncArgs(bytes [][]byte) (string, []string) {
-	fmt.Printf("getFuncArgs(%x)\n", bytes)
-	function := string(bytes[0])
-	args := make([]string, len(bytes)-1)
-	for i := 1; i < len(bytes); i++ {
-		fmt.Printf("getFuncArgs - i:%x, len(bytes):%x\n", i, len(bytes))
-		args[i-1] = string(bytes[i])
-	}
-	return function, args
 }

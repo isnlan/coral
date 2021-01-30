@@ -20,7 +20,7 @@ var logger = logging.MustGetLogger("trace")
 // ContextWithSpan 返回context
 func GetContextFrom(c *gin.Context) (ctx context.Context) {
 	v, exist := c.Get(_ContextTracerKey)
-	if exist == false {
+	if !exist {
 		ctx = context.Background()
 		return
 	}

@@ -39,7 +39,7 @@ func (s *DockerVM) BuildImage(tag string, reader io.Reader) (string, error) {
 	if err != nil {
 		return "", errors.WithStack(err)
 	}
-	return string(buf.Bytes()), nil
+	return buf.String(), nil
 }
 
 // tag必须小写字母+数字
@@ -61,7 +61,7 @@ func (s *DockerVM) BuildImageBySource(tag, src string) (string, error) {
 	if err != nil {
 		return "", errors.WithStack(err)
 	}
-	return string(buf.Bytes()), nil
+	return buf.String(), nil
 }
 
 func (s *DockerVM) PushImage(name string, tag string) (string, error) {
@@ -77,5 +77,5 @@ func (s *DockerVM) PushImage(name string, tag string) (string, error) {
 		return "", err
 	}
 
-	return string(buf.Bytes()), nil
+	return buf.String(), nil
 }

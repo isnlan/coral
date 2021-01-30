@@ -13,10 +13,8 @@ import (
 func main() {
 	conn, err := xgrpc.NewClient("127.0.0.1:8081")
 	check(err)
-	client, err := conn.Get()
-	check(err)
 
-	vmClient := protos.NewVMClient(client)
+	vmClient := protos.NewVMClient(conn)
 	ips, err := vmClient.GetNodeIps(context.Background(), &empty.Empty{})
 	check(err)
 

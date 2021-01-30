@@ -3,7 +3,6 @@ package vm
 import (
 	"context"
 	"io/ioutil"
-	"time"
 
 	"github.com/snlansky/coral/pkg/utils"
 
@@ -16,35 +15,28 @@ import (
 )
 
 type IVM interface {
-	Apply(data [][]byte) error
-	Delete(data [][]byte) error
-	GetNodeIps() ([]string, error)
-	GetNsList() ([]string, error)
-	GetServiceList(ns string) ([]string, error)
-	GetServicePort(ns string, service string) ([]string, error)
-	GetDeploymentList(ns string) ([]string, error)
-	GetDeploymentStatus(ns string, deployment string) error
-	GetNamespacesPods(ns string, label string, filter map[string]string) ([]*protos.Pod, error)
-	BuildImage(name string, src string) error
-	PushImage(name string, version string) error
-	GetRepositoryUrl() string
+	Apply(ctx context.Context, data [][]byte) error
+	Delete(ctx context.Context, data [][]byte) error
+	GetNodeIps(ctx context.Context) ([]string, error)
+	GetNsList(ctx context.Context) ([]string, error)
+	GetServiceList(ctx context.Context, ns string) ([]string, error)
+	GetServicePort(ctx context.Context, ns string, service string) ([]string, error)
+	GetDeploymentList(ctx context.Context, ns string) ([]string, error)
+	GetDeploymentStatus(ctx context.Context, ns string, deployment string) error
+	GetNamespacesPods(ctx context.Context, ns string, label string, filter map[string]string) ([]*protos.Pod, error)
+	BuildImage(ctx context.Context, name string, src string) error
+	PushImage(ctx context.Context, name string, version string) error
+	GetRepositoryUrl(ctx context.Context) string
 }
 
 type vm struct {
-	cli        *xgrpc.Client
+	client     protos.VMClient
 	repository string
 }
 
-func (v *vm) Apply(data [][]byte) error {
-	conn, err := v.cli.Get()
-	if err != nil {
-		return errors.WithStack(err)
-	}
-	defer conn.Close()
-
-	cli := protos.NewVMClient(conn.ClientConn)
+func (v *vm) Apply(ctx context.Context, data [][]byte) error {
 	for _, d := range data {
-		_, err = cli.Apply(v.getContext(), &protos.Data{Data: d})
+		_, err := v.client.Apply(ctx, &protos.Data{Data: d})
 		if err != nil {
 			return errors.Wrapf(err, "apply date: \n %s", string(d))
 		}
@@ -53,18 +45,10 @@ func (v *vm) Apply(data [][]byte) error {
 	return nil
 }
 
-func (v *vm) Delete(data [][]byte) error {
-	conn, err := v.cli.Get()
-	if err != nil {
-		return errors.WithStack(err)
-	}
-	defer conn.Close()
-
-	cli := protos.NewVMClient(conn.ClientConn)
-
+func (v *vm) Delete(ctx context.Context, data [][]byte) error {
 	for i := range data {
 		// 资源删除顺序与资源创建顺序相反
-		_, err = cli.Delete(v.getContext(), &protos.Data{Data: data[len(data)-1-i]})
+		_, err := v.client.Delete(ctx, &protos.Data{Data: data[len(data)-1-i]})
 		if err != nil {
 			return err
 		}
@@ -74,15 +58,8 @@ func (v *vm) Delete(data [][]byte) error {
 
 }
 
-func (v *vm) GetNodeIps() ([]string, error) {
-	conn, err := v.cli.Get()
-	if err != nil {
-		return nil, errors.WithStack(err)
-	}
-	defer conn.Close()
-
-	cli := protos.NewVMClient(conn.ClientConn)
-	ips, err := cli.GetNodeIps(v.getContext(), &empty.Empty{})
+func (v *vm) GetNodeIps(ctx context.Context) ([]string, error) {
+	ips, err := v.client.GetNodeIps(ctx, &empty.Empty{})
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
@@ -90,75 +67,40 @@ func (v *vm) GetNodeIps() ([]string, error) {
 	return ips.Ips, nil
 }
 
-func (v *vm) GetNsList() ([]string, error) {
-	conn, err := v.cli.Get()
-	if err != nil {
-		return nil, errors.WithStack(err)
-	}
-	defer conn.Close()
-
-	cli := protos.NewVMClient(conn.ClientConn)
-	list, err := cli.GetNamespacesList(v.getContext(), &empty.Empty{})
+func (v *vm) GetNsList(ctx context.Context) ([]string, error) {
+	list, err := v.client.GetNamespacesList(ctx, &empty.Empty{})
 	if err != nil {
 		return nil, err
 	}
 	return list.Namespaces, nil
 }
 
-func (v *vm) GetServiceList(ns string) ([]string, error) {
-	conn, err := v.cli.Get()
-	if err != nil {
-		return nil, errors.WithStack(err)
-	}
-	defer conn.Close()
-
-	cli := protos.NewVMClient(conn.ClientConn)
-	list, err := cli.GetServiceList(v.getContext(), &protos.Namespace{Ns: ns})
+func (v *vm) GetServiceList(ctx context.Context, ns string) ([]string, error) {
+	list, err := v.client.GetServiceList(ctx, &protos.Namespace{Ns: ns})
 	if err != nil {
 		return nil, err
 	}
 	return list.Services, nil
 }
 
-func (v *vm) GetServicePort(ns string, service string) ([]string, error) {
-	conn, err := v.cli.Get()
-	if err != nil {
-		return nil, errors.WithStack(err)
-	}
-	defer conn.Close()
-
-	cli := protos.NewVMClient(conn.ClientConn)
-	ret, err := cli.GetServicePort(v.getContext(), &protos.RequestServicePort{Ns: ns, Svc: service})
+func (v *vm) GetServicePort(ctx context.Context, ns string, service string) ([]string, error) {
+	ret, err := v.client.GetServicePort(ctx, &protos.RequestServicePort{Ns: ns, Svc: service})
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
 	return ret.Ports, nil
 }
 
-func (v *vm) GetDeploymentList(ns string) ([]string, error) {
-	conn, err := v.cli.Get()
-	if err != nil {
-		return nil, errors.WithStack(err)
-	}
-	defer conn.Close()
-
-	cli := protos.NewVMClient(conn.ClientConn)
-	list, err := cli.GetDeploymentList(v.getContext(), &protos.Namespace{Ns: ns})
+func (v *vm) GetDeploymentList(ctx context.Context, ns string) ([]string, error) {
+	list, err := v.client.GetDeploymentList(ctx, &protos.Namespace{Ns: ns})
 	if err != nil {
 		return nil, err
 	}
 	return list.Deployments, err
 }
 
-func (v *vm) GetDeploymentStatus(ns string, deployment string) error {
-	conn, err := v.cli.Get()
-	if err != nil {
-		return errors.WithStack(err)
-	}
-	defer conn.Close()
-
-	cli := protos.NewVMClient(conn.ClientConn)
-	status, err := cli.GetDeploymentStatus(v.getContext(), &protos.RequestDeploymentStatus{Ns: ns, Name: deployment})
+func (v *vm) GetDeploymentStatus(ctx context.Context, ns string, deployment string) error {
+	status, err := v.client.GetDeploymentStatus(ctx, &protos.RequestDeploymentStatus{Ns: ns, Name: deployment})
 	if err != nil {
 		return errors.WithStack(err)
 	}
@@ -170,15 +112,8 @@ func (v *vm) GetDeploymentStatus(ns string, deployment string) error {
 	return nil
 }
 
-func (v *vm) GetNamespacesPods(ns string, label string, filter map[string]string) ([]*protos.Pod, error) {
-	conn, err := v.cli.Get()
-	if err != nil {
-		return nil, errors.WithStack(err)
-	}
-	defer conn.Close()
-
-	cli := protos.NewVMClient(conn.ClientConn)
-	pods, err := cli.GetNamespacesPods(v.getContext(), &protos.RequestNsPods{
+func (v *vm) GetNamespacesPods(ctx context.Context, ns string, label string, filter map[string]string) ([]*protos.Pod, error) {
+	pods, err := v.client.GetNamespacesPods(ctx, &protos.RequestNsPods{
 		Ns:     ns,
 		Label:  label,
 		Filter: filter,
@@ -189,13 +124,7 @@ func (v *vm) GetNamespacesPods(ns string, label string, filter map[string]string
 	return pods.Pods, nil
 }
 
-func (v *vm) BuildImage(name string, src string) error {
-	conn, err := v.cli.Get()
-	if err != nil {
-		return errors.WithStack(err)
-	}
-	defer conn.Close()
-
+func (v *vm) BuildImage(ctx context.Context, name string, src string) error {
 	reader, err := utils.CreateTarStream(src, "Dockerfile")
 	if err != nil {
 		return errors.WithStack(err)
@@ -207,30 +136,17 @@ func (v *vm) BuildImage(name string, src string) error {
 		return errors.WithStack(err)
 	}
 
-	cli := protos.NewVMClient(conn.ClientConn)
-	_, err = cli.BuildImage(context.Background(), &protos.RequestBuildImage{Tag: name, Data: bytes})
+	_, err = v.client.BuildImage(ctx, &protos.RequestBuildImage{Tag: name, Data: bytes})
 	return err
 }
 
-func (v *vm) PushImage(name string, version string) error {
-	conn, err := v.cli.Get()
-	if err != nil {
-		return errors.WithStack(err)
-	}
-	defer conn.Close()
-
-	cli := protos.NewVMClient(conn.ClientConn)
-	_, err = cli.PushImage(context.Background(), &protos.RequestPushImage{Name: name, Version: version})
+func (v *vm) PushImage(ctx context.Context, name string, version string) error {
+	_, err := v.client.PushImage(ctx, &protos.RequestPushImage{Name: name, Version: version})
 	return err
 }
 
-func (v *vm) GetRepositoryUrl() string {
+func (v *vm) GetRepositoryUrl(_ context.Context) string {
 	return v.repository
-}
-
-func (v *vm) getContext() context.Context {
-	ctx, _ := context.WithTimeout(context.Background(), time.Second*3)
-	return ctx
 }
 
 func New(url, repository string) (*vm, error) {
@@ -238,5 +154,6 @@ func New(url, repository string) (*vm, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &vm{cli: cli, repository: repository}, nil
+
+	return &vm{client: protos.NewVMClient(cli), repository: repository}, nil
 }

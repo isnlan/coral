@@ -18,7 +18,9 @@ import (
 var _mongoClient *mongo.Client
 
 func InitMongo(uri string) (err error) {
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
 	_mongoClient, err = mongo.Connect(ctx, options.Client().ApplyURI(uri))
 	if err != nil {
 		return errors.WithMessage(err, "mongo connect error")
@@ -52,15 +54,12 @@ func NewDao(db *mongo.Database, table string) *Dao {
 }
 
 func (d *Dao) Save(ctx context.Context, doc interface{}) error {
-	ctx, _ = context.WithTimeout(ctx, 5*time.Second)
 	_, err := d.coll.InsertOne(ctx, doc)
 	return err
 }
 
 func (d *Dao) FindOne(ctx context.Context, query map[string]interface{}, doc interface{}) (bool, error) {
 	filter := bson.M(query)
-	ctx, _ = context.WithTimeout(ctx, 5*time.Second)
-
 	err := d.coll.FindOne(ctx, filter).Decode(doc)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
@@ -72,7 +71,6 @@ func (d *Dao) FindOne(ctx context.Context, query map[string]interface{}, doc int
 }
 
 func (d *Dao) UpdateOne(ctx context.Context, condition map[string]interface{}, doc interface{}) error {
-	ctx, _ = context.WithTimeout(ctx, 5*time.Second)
 	filter := bson.M(condition)
 	update := bson.D{
 		{Key: "$set", Value: doc},
@@ -82,7 +80,6 @@ func (d *Dao) UpdateOne(ctx context.Context, condition map[string]interface{}, d
 }
 
 func (d *Dao) DeleteOne(ctx context.Context, condition map[string]interface{}) error {
-	ctx, _ = context.WithTimeout(ctx, 5*time.Second)
 	filter := bson.M(condition)
 	_, err := d.coll.DeleteOne(ctx, filter)
 	return err

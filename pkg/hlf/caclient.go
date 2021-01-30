@@ -505,7 +505,9 @@ func (f *FabricCAClient) Enroll(request CaEnrollmentRequest) (*Identity, []byte,
 	}
 
 	req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/enroll", f.Url), bytes.NewBuffer(crm))
-
+	if err != nil {
+		return nil, nil, err
+	}
 	req.Header.Set("Content-Type", "application/json")
 	req.SetBasicAuth(request.EnrollmentId, request.Secret)
 
@@ -556,6 +558,9 @@ func (f *FabricCAClient) Revoke(identity *Identity, request *CARevocationRequest
 	}
 
 	httpReq, err := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/revoke", f.Url), bytes.NewBuffer(reqJson))
+	if err != nil {
+		return nil, err
+	}
 	httpReq.Header.Set("Content-Type", "application/json")
 
 	token, err := f.createAuthToken(identity, reqJson)
@@ -630,6 +635,9 @@ func (f *FabricCAClient) ReEnroll(request CaReEnrollmentRequest) (*Identity, []b
 		return nil, nil, err
 	}
 	req, err := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/reenroll", f.Url), bytes.NewBuffer(crm))
+	if err != nil {
+		return nil, nil, err
+	}
 
 	req.Header.Set("Content-Type", "application/json")
 	token, err := f.createAuthToken(request.Identity, crm)
@@ -685,6 +693,9 @@ func (f *FabricCAClient) GetCaCertificateChain(caName string) (*CAGetCertsRespon
 	}
 
 	httpReq, err := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/cainfo", f.Url), bytes.NewBuffer(reqJson))
+	if err != nil {
+		return nil, err
+	}
 	httpReq.Header.Set("Content-Type", "application/json")
 
 	httpClient := &http.Client{Transport: f.getTransport()}
@@ -766,6 +777,10 @@ func (f *FabricCAClient) ListAffiliations(identity *Identity, path string, caNam
 	}
 
 	httpReq, err := http.NewRequest("GET", uri, bytes.NewBuffer(nil))
+	if err != nil {
+		return nil, err
+	}
+
 	token, err := f.createAuthToken(identity, nil)
 	if err != nil {
 		return nil, err
@@ -823,7 +838,9 @@ func (f *FabricCAClient) AddAffiliation(identity *Identity, req CAAddAffiliation
 	}
 
 	httpReq, err := http.NewRequest("POST", fmt.Sprintf("%s/api/v1/affiliations", f.Url), bytes.NewBuffer(reqJson))
-
+	if err != nil {
+		return nil, err
+	}
 	httpReq.Header.Set("Content-Type", "application/json")
 
 	token, err := f.createAuthToken(identity, reqJson)
@@ -880,6 +897,9 @@ func (f *FabricCAClient) RemoveAffiliation(identity *Identity, req CARemoveAffil
 	httpReq, err := http.NewRequest("DELETE",
 		fmt.Sprintf("%s/api/v1/affiliations/%s", f.Url, req.Name),
 		bytes.NewBuffer(nil))
+	if err != nil {
+		return nil, err
+	}
 
 	httpReq.Header.Set("Content-Type", "application/json")
 

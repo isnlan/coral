@@ -114,8 +114,7 @@ func (c *ECCryptSuite) Sign(msg []byte, k interface{}) ([]byte, error) {
 	if !ok {
 		return nil, ErrInvalidKeyType
 	}
-	var h []byte
-	h = c.Hash(msg)
+	h := c.Hash(msg)
 	R, S, err := ecdsa.Sign(rand.Reader, key, h)
 	if err != nil {
 		return nil, err
@@ -141,7 +140,7 @@ func (c *ECCryptSuite) preventMalleability(k *ecdsa.PrivateKey, S *big.Int) {
 
 func (c *ECCryptSuite) Hash(data []byte) []byte {
 	h := c.hashFunction()
-	h.Write(data)
+	_, _ = h.Write(data)
 	return h.Sum(nil)
 }
 

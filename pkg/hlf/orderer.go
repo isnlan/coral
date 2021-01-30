@@ -36,8 +36,10 @@ const timeout = 5
 
 // Broadcast Broadcast envelope to orderer for execution.
 func (o *Orderer) Broadcast(envelope *common.Envelope) (*orderer.BroadcastResponse, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
+	defer cancel()
+
 	if o.conn == nil {
-		ctx, _ := context.WithTimeout(context.Background(), time.Second*5)
 		c, err := grpc.DialContext(ctx, o.Uri, o.Opts...)
 		if err != nil {
 			return nil, fmt.Errorf("cannot connect to orderer: %s err is: %v", o.Name, err)
@@ -46,13 +48,15 @@ func (o *Orderer) Broadcast(envelope *common.Envelope) (*orderer.BroadcastRespon
 		o.client = orderer.NewAtomicBroadcastClient(o.conn)
 	}
 
-	ctx, _ := context.WithTimeout(context.Background(), time.Second*30)
 	bcc, err := o.client.Broadcast(ctx)
 	if err != nil {
 		return nil, err
 	}
 	defer bcc.CloseSend()
-	bcc.Send(envelope)
+	err = bcc.Send(envelope)
+	if err != nil {
+		return nil, err
+	}
 	response, err := bcc.Recv()
 	if err != nil {
 		return nil, err

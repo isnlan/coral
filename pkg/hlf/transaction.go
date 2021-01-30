@@ -148,7 +148,7 @@ func generateRandomBytes(len int) ([]byte, error) {
 // sha256 is hardcoded in hyperledger
 func generateTxId(nonce, creator []byte) string {
 	f := sha256.New()
-	f.Write(append(nonce, creator...))
+	_, _ = f.Write(append(nonce, creator...))
 	return hex.EncodeToString(f.Sum(nil))
 }
 
@@ -272,7 +272,7 @@ func createTransaction(proposal []byte, endorsement []*PeerResponse) ([]byte, er
 			}
 			return nil, ErrBadTransactionStatus
 		}
-		if bytes.Compare(pl, e.Response.Payload) != 0 {
+		if !bytes.Equal(pl, e.Response.Payload) {
 			return nil, ErrEndorsementsDoNotMatch
 		}
 	}

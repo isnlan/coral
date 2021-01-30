@@ -2,7 +2,6 @@ package record
 
 import (
 	"context"
-	"time"
 
 	"github.com/snlansky/coral/pkg/application"
 
@@ -18,8 +17,8 @@ var _record *recorder
 var logger = logging.MustGetLogger("record")
 
 type recorder struct {
-	url string
-	cli *xgrpc.Client
+	url    string
+	client protos.BehaviorLogClient
 }
 
 func NewRecorder(url string) (*recorder, error) {
@@ -29,21 +28,13 @@ func NewRecorder(url string) (*recorder, error) {
 	}
 
 	return &recorder{
-		url: url,
-		cli: client,
+		url:    url,
+		client: protos.NewBehaviorLogClient(client),
 	}, nil
 }
 
-func (r *recorder) Record(record *protos.Record) error {
-	conn, err := r.cli.Get()
-	if err != nil {
-		return err
-	}
-	defer conn.Close()
-
-	ctx, _ := context.WithTimeout(context.Background(), time.Second*5)
-	client := protos.NewBehaviorLogClient(conn.ClientConn)
-	_, err = client.Recode(ctx, record)
+func (r *recorder) Record(ctx context.Context, record *protos.Record) error {
+	_, err := r.client.Recode(ctx, record)
 	return err
 }
 
@@ -66,7 +57,7 @@ func AsyncRecode(ctx context.Context, record *protos.Record) {
 		record.TraceId = trace.GetTraceIDFromContext(ctx)
 		record.Service = application.Name
 
-		err := _record.Record(record)
+		err := _record.Record(ctx, record)
 		if err != nil {
 			logger.Errorf("record option error: %v", err)
 		}

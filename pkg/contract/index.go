@@ -96,7 +96,7 @@ func (index *Index) Total(stub IContractStub, prefix string) (int, error) {
 		return 0, err
 	}
 
-	if countBytes == nil || len(countBytes) == 0 {
+	if len(countBytes) == 0 {
 		return 0, nil
 	}
 

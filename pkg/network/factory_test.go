@@ -30,4 +30,5 @@ func TestNew(t *testing.T) {
 	time.Sleep(time.Second * 10)
 	builder, err = factory.Builder(chain)
 	assert.NoError(t, err)
+	fmt.Println(builder)
 }

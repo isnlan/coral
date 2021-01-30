@@ -35,7 +35,7 @@ func main() {
 		errors.Check(err)
 		fmt.Println(ctx)
 
-		trace.StartSpan(ctx, "test callback2", f)
+		_, _ = trace.StartSpan(ctx, "test callback2", f)
 	}
 
 	{
