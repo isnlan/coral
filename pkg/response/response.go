@@ -9,7 +9,7 @@ const SuccessMsg = "ok"
 type JsonResponse struct {
 	ErrorCode   int         `json:"errcode"`
 	Description string      `json:"description"`
-	Data        interface{} `json:"data"`
+	Data        interface{} `json:"data,omitempty"`
 }
 
 func New(data interface{}) *JsonResponse {
