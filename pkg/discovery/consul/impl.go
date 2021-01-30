@@ -67,9 +67,8 @@ func (c *Client) RegisterHealthServer(s *grpc.Server) {
 }
 
 func (c *Client) WatchService(ctx context.Context, name string, tag string, ch chan<- []*discovery.ServiceInfo) {
-	var waitIndex uint64
-
 	go func() {
+		var waitIndex uint64
 		for {
 			entries, lastIndex, err := c.serviceEntriesWatch(name, tag, waitIndex)
 			if err != nil {

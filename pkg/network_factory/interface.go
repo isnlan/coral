@@ -1,4 +1,4 @@
-package factory
+package network_factory
 
 import (
 	"context"

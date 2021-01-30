@@ -64,3 +64,7 @@ func (c *Client) Get() (*grpcpool.ClientConn, error) {
 		return conn, err
 	}
 }
+
+func (c *Client) Close() {
+	c.pool.Close()
+}

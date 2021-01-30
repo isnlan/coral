@@ -1,4 +1,4 @@
-package blink
+package blink_client
 
 import (
 	"fmt"
@@ -9,17 +9,17 @@ import (
 	"github.com/snlansky/coral/pkg/response"
 )
 
-type Client struct {
+type client struct {
 	baseUrl string
 }
 
-func New(baseUrl string) *Client {
-	return &Client{
+func New(baseUrl string) *client {
+	return &client{
 		baseUrl: baseUrl,
 	}
 }
 
-func (c *Client) AclQuery(clientId string) (*entity.AclClient, error) {
+func (c *client) AclQuery(clientId string) (*entity.AclClient, error) {
 	var resp response.JsonResponse
 	var acl entity.AclClient
 	resp.Data = &acl
@@ -42,7 +42,7 @@ func (c *Client) AclQuery(clientId string) (*entity.AclClient, error) {
 	return &acl, nil
 }
 
-func (c *Client) ChainLease(chainId string) (*entity.Lease, error) {
+func (c *client) ChainLease(chainId string) (*entity.Lease, error) {
 	var resp response.JsonResponse
 	var lease entity.Lease
 	resp.Data = &lease
@@ -60,7 +60,7 @@ func (c *Client) ChainLease(chainId string) (*entity.Lease, error) {
 	return &lease, nil
 }
 
-func (c *Client) CallRecord(data interface{}) error {
+func (c *client) CallRecord(data interface{}) error {
 	var resp response.JsonResponse
 
 	_, _, errs := gorequest.New().Post(fmt.Sprintf("%s/api/private/calls/record", c.baseUrl)).

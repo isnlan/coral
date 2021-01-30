@@ -1,4 +1,4 @@
-package factory
+package network_factory
 
 import (
 	"fmt"
@@ -19,7 +19,7 @@ import (
 
 const maxCallRecvMsgSize = 20 * 1024 * 1024
 
-var logger = logging.MustGetLogger("factory")
+var logger = logging.MustGetLogger("network_factory")
 
 type Factory struct {
 	lock sync.RWMutex
@@ -76,6 +76,11 @@ func (mgr *Factory) getNetwork(netType string) (*xgrpc.Client, error) {
 }
 
 func (mgr *Factory) Close() {
+	mgr.lock.Lock()
+	defer mgr.lock.Unlock()
+	for _, client := range mgr.nets {
+		client.Close()
+	}
 }
 
 type Builder struct {
