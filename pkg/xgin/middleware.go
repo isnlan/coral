@@ -78,14 +78,14 @@ func RecoveryWriter() gin.HandlerFunc {
 					c.AbortWithStatus(http.StatusInternalServerError)
 				case errors.CodeError:
 					logger.Errorf("request [%s]%s error, code %d, description %s", c.Request.Method, c.Request.URL.String(), resp.Code(), resp.Error())
-					c.AbortWithStatusJSON(http.StatusOK, &response.JsonResponse{
+					c.AbortWithStatusJSON(http.StatusOK, &response.Response{
 						ErrorCode:   resp.Code(),
 						Description: resp.Error(),
 						Data:        nil,
 					})
 				case error:
 					logger.Errorf("request [%s]%s error, code %d, description %s", c.Request.Method, c.Request.URL.String(), errors.InternalErrorCode, resp.Error())
-					c.AbortWithStatusJSON(http.StatusOK, &response.JsonResponse{
+					c.AbortWithStatusJSON(http.StatusOK, &response.Response{
 						ErrorCode:   errors.InternalErrorCode,
 						Description: resp.Error(),
 						Data:        nil,

@@ -20,7 +20,7 @@ func New(baseUrl string) *client {
 }
 
 func (c *client) AclQuery(clientId string) (*entity.AclClient, error) {
-	var resp response.JsonResponse
+	var resp response.Response
 	var acl entity.AclClient
 	resp.Data = &acl
 
@@ -43,7 +43,7 @@ func (c *client) AclQuery(clientId string) (*entity.AclClient, error) {
 }
 
 func (c *client) ChainLease(chainId string) (*entity.Lease, error) {
-	var resp response.JsonResponse
+	var resp response.Response
 	var lease entity.Lease
 	resp.Data = &lease
 
@@ -61,7 +61,7 @@ func (c *client) ChainLease(chainId string) (*entity.Lease, error) {
 }
 
 func (c *client) CallRecord(data interface{}) error {
-	var resp response.JsonResponse
+	var resp response.Response
 
 	_, _, errs := gorequest.New().Post(fmt.Sprintf("%s/api/private/calls/record", c.baseUrl)).
 		Send(data).
