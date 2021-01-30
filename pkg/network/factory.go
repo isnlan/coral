@@ -55,10 +55,7 @@ func (f *Factory) getNetwork(netType string) (*grpc.ClientConn, error) {
 		return client, nil
 	}
 
-	var svr *protos.NetworkServer
-
-	client, err := xgrpc.NewClient(fmt.Sprintf("consul://%s/%s?wait=30s&tag=%s&healthy=true&require-consistent=true",
-		f.url, discovery.MakeTypeName(svr), netType), f.opts...)
+	client, err := xgrpc.NewClient(f.makeConsulResolver(netType), f.opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -68,6 +65,12 @@ func (f *Factory) getNetwork(netType string) (*grpc.ClientConn, error) {
 	f.nets[netType] = client
 	logger.Infof("find service: %v", netType)
 	return client, nil
+}
+
+func (f *Factory) makeConsulResolver(netType string) string {
+	var svr *protos.NetworkServer
+	return fmt.Sprintf("consul://%s/%s?wait=30s&tag=%s&healthy=true&require-consistent=true",
+		f.url, discovery.MakeTypeName(svr), netType)
 }
 
 func (f *Factory) Close() {
