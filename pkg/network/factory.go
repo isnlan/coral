@@ -57,7 +57,8 @@ func (f *Factory) getNetwork(netType string) (*grpc.ClientConn, error) {
 
 	var svr *protos.NetworkServer
 
-	client, err := xgrpc.NewClient(fmt.Sprintf("consul://%s/%s?wait=3s&tag=%s", f.url, discovery.MakeTypeName(svr), netType), f.opts...)
+	client, err := xgrpc.NewClient(fmt.Sprintf("consul://%s/%s?wait=30s&tag=%s&healthy=true&require-consistent=true",
+		f.url, discovery.MakeTypeName(svr), netType), f.opts...)
 	if err != nil {
 		return nil, err
 	}
