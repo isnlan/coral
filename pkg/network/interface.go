@@ -1,4 +1,4 @@
-package network_factory
+package network
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"github.com/snlansky/coral/pkg/protos"
 )
 
-type INetwork interface {
+type Network interface {
 	BuildChain(ctx context.Context) error
 	BuildChannel(ctx context.Context) error
 	StartChain(ctx context.Context) error

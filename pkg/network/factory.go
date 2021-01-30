@@ -1,4 +1,4 @@
-package network_factory
+package network
 
 import (
 	"fmt"
@@ -19,10 +19,10 @@ import (
 
 const maxCallRecvMsgSize = 20 * 1024 * 1024
 
-var logger = logging.MustGetLogger("network_factory")
+var logger = logging.MustGetLogger("network")
 
 type Factory struct {
-	lock sync.RWMutex
+	lock *sync.RWMutex
 	url  string
 	nets map[string]*xgrpc.Client
 	opts []grpc.DialOption
@@ -30,7 +30,7 @@ type Factory struct {
 
 func New(url string) *Factory {
 	return &Factory{
-		lock: sync.RWMutex{},
+		lock: new(sync.RWMutex),
 		url:  url,
 		nets: map[string]*xgrpc.Client{},
 		opts: []grpc.DialOption{grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(maxCallRecvMsgSize)),
@@ -38,8 +38,8 @@ func New(url string) *Factory {
 	}
 }
 
-func (mgr *Factory) Builder(chain *protos.Chain) (*Builder, error) {
-	client, err := mgr.getNetwork(chain.NetworkType)
+func (f *Factory) Builder(chain *protos.Chain) (*Builder, error) {
+	client, err := f.getNetwork(chain.NetworkType)
 	if err != nil {
 		return nil, errors.WithMessage(err, "get network error")
 	}
@@ -52,10 +52,10 @@ func (mgr *Factory) Builder(chain *protos.Chain) (*Builder, error) {
 	return &Builder{chain: chain, conn: conn}, nil
 }
 
-func (mgr *Factory) getNetwork(netType string) (*xgrpc.Client, error) {
-	mgr.lock.RLock()
-	client, find := mgr.nets[netType]
-	mgr.lock.RUnlock()
+func (f *Factory) getNetwork(netType string) (*xgrpc.Client, error) {
+	f.lock.RLock()
+	client, find := f.nets[netType]
+	f.lock.RUnlock()
 
 	if find {
 		return client, nil
@@ -63,30 +63,30 @@ func (mgr *Factory) getNetwork(netType string) (*xgrpc.Client, error) {
 
 	var svr *protos.NetworkServer
 
-	client, err := xgrpc.NewClient(fmt.Sprintf("consul://%s/%s?wait=3s&tag=%s", mgr.url, discovery.MakeTypeName(svr), netType), mgr.opts...)
+	client, err := xgrpc.NewClient(fmt.Sprintf("consul://%s/%s?wait=3s&tag=%s", f.url, discovery.MakeTypeName(svr), netType), f.opts...)
 	if err != nil {
 		return nil, err
 	}
 
-	mgr.lock.Lock()
-	defer mgr.lock.Unlock()
-	mgr.nets[netType] = client
+	f.lock.Lock()
+	defer f.lock.Unlock()
+	f.nets[netType] = client
 	logger.Infof("find service: %v", netType)
 	return client, nil
 }
 
-func (mgr *Factory) Close() {
-	mgr.lock.Lock()
-	defer mgr.lock.Unlock()
-	for _, client := range mgr.nets {
+func (f *Factory) Close() {
+	f.lock.Lock()
+	defer f.lock.Unlock()
+	for _, client := range f.nets {
 		client.Close()
 	}
 }
 
 type Builder struct {
 	chain   *protos.Chain
-	conn    *grpcpool.ClientConn
 	channel string
+	conn    *grpcpool.ClientConn
 }
 
 func (b *Builder) SetChannel(channel string) *Builder {
@@ -94,7 +94,7 @@ func (b *Builder) SetChannel(channel string) *Builder {
 	return b
 }
 
-func (b *Builder) Build() INetwork {
+func (b *Builder) Build() Network {
 	return &network{
 		chain:   b.chain,
 		channel: b.channel,
