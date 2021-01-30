@@ -1,4 +1,4 @@
-package blink_client
+package blink
 
 import (
 	"fmt"
