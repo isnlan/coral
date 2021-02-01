@@ -19,7 +19,7 @@ type blinkImpl struct {
 	baseUrl string
 }
 
-func New(baseUrl string) *blinkImpl {
+func New(baseUrl string) Blink {
 	return &blinkImpl{
 		baseUrl: baseUrl,
 	}
