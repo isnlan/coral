@@ -70,7 +70,7 @@ func (f *Factory) getClient(netType string) (*grpc.ClientConn, error) {
 
 func (f *Factory) makeConsulResolver(netType string) string {
 	var svr *protos.NetworkServer
-	return fmt.Sprintf("consul://%s/%s?wait=30s&tag=%s&healthy=true&require-consistent=true",
+	return fmt.Sprintf("consul://%s/%s?wait=3m&tag=%s&healthy=true&require-consistent=true",
 		f.url, discovery.MakeTypeName(svr), netType)
 }
 
