@@ -55,9 +55,10 @@ func (f *Factory) getClient(netType string) (*grpc.ClientConn, error) {
 		return client, nil
 	}
 
-	client, err := xgrpc.NewClient(f.makeConsulResolver(netType), f.opts...)
+	url := f.makeConsulResolver(netType)
+	client, err := xgrpc.NewClient(url, f.opts...)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithMessage(err, fmt.Sprintf("create gprc client %s error", url))
 	}
 
 	f.mu.Lock()
