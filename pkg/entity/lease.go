@@ -68,6 +68,7 @@ type Lease struct {
 	Account     string           `json:"account"`
 	Team        string           `json:"team"`
 	Enable      bool             `json:"enable"`
+	TlsEnabled  bool             `json:"tls_enabled"`
 	Channels    []*ChannelStatus `json:"channels"`
 	ExpireTime  int64            `json:"expire_time"`
 }
