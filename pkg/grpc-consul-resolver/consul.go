@@ -6,11 +6,14 @@ import (
 	"sort"
 	"time"
 
+	"github.com/snlansky/coral/pkg/logging"
+
 	"github.com/hashicorp/consul/api"
 	"github.com/jpillora/backoff"
-	"google.golang.org/grpc/grpclog"
 	"google.golang.org/grpc/resolver"
 )
+
+var logger = logging.MustGetLogger("grpc-consul-resolver")
 
 // init function needs for  auto-register in resolvers registry
 func init() {
@@ -63,13 +66,13 @@ func watchConsulService(ctx context.Context, s servicer, tgt target, out chan<- 
 				},
 			)
 			if err != nil {
-				grpclog.Errorf("[Consul resolver] Couldn't fetch endpoints. target={%s}", tgt.String())
+				logger.Errorf("[Consul resolver] Couldn't fetch endpoints. target={%s}", tgt.String())
 				time.Sleep(bck.Duration())
 				continue
 			}
 			bck.Reset()
 			lastIndex = meta.LastIndex
-			grpclog.Infof("[Consul resolver] %d endpoints fetched in(+wait) %s for target={%s}",
+			logger.Infof("[Consul resolver] %d endpoints fetched in(+wait) %s for target={%s}",
 				len(ss),
 				meta.RequestTime,
 				tgt.String(),
@@ -81,6 +84,8 @@ func watchConsulService(ctx context.Context, s servicer, tgt target, out chan<- 
 				if s.Service.Address == "" {
 					address = s.Node.Address
 				}
+
+				logger.Infof("find service: %s", fmt.Sprintf("%s:%d", address, s.Service.Port))
 				ee = append(ee, fmt.Sprintf("%s:%d", address, s.Service.Port))
 			}
 
@@ -125,7 +130,7 @@ func populateEndpoints(ctx context.Context, clientConn resolver.ClientConn, inpu
 			sort.Sort(byAddressString(conns)) // Don't replace the same address list in the balancer
 			clientConn.UpdateState(resolver.State{Addresses: conns})
 		case <-ctx.Done():
-			grpclog.Info("[Consul resolver] Watch has been finished")
+			logger.Info("[Consul resolver] Watch has been finished")
 			return
 		}
 	}

@@ -9,6 +9,7 @@ github.com/Microsoft/go-winio/pkg/guid
 # github.com/Microsoft/hcsshim v0.8.7-0.20191101173118-65519b62243c
 github.com/Microsoft/hcsshim/osversion
 # github.com/armon/go-metrics v0.3.2
+## explicit
 github.com/armon/go-metrics
 # github.com/cespare/xxhash v1.1.0
 github.com/cespare/xxhash
@@ -79,6 +80,7 @@ github.com/gin-gonic/gin/internal/bytesconv
 github.com/gin-gonic/gin/internal/json
 github.com/gin-gonic/gin/render
 # github.com/go-playground/form v3.1.4+incompatible
+## explicit
 github.com/go-playground/form
 # github.com/go-playground/locales v0.13.0
 github.com/go-playground/locales
@@ -124,12 +126,14 @@ github.com/hashicorp/go-cleanhttp
 # github.com/hashicorp/go-hclog v0.12.0
 github.com/hashicorp/go-hclog
 # github.com/hashicorp/go-immutable-radix v1.1.0
+## explicit
 github.com/hashicorp/go-immutable-radix
 # github.com/hashicorp/go-rootcerts v1.0.2
 github.com/hashicorp/go-rootcerts
 # github.com/hashicorp/go-version v1.2.1
 ## explicit
 # github.com/hashicorp/golang-lru v0.5.4
+## explicit
 github.com/hashicorp/golang-lru/simplelru
 # github.com/hashicorp/hcl v1.0.0
 github.com/hashicorp/hcl
@@ -169,6 +173,7 @@ github.com/inconshreveable/mousetrap
 github.com/jmoiron/sqlx
 github.com/jmoiron/sqlx/reflectx
 # github.com/jpillora/backoff v1.0.0
+## explicit
 github.com/jpillora/backoff
 # github.com/json-iterator/go v1.1.9
 github.com/json-iterator/go
@@ -188,9 +193,6 @@ github.com/magiconair/properties
 github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.12
 github.com/mattn/go-isatty
-# github.com/mbobakov/grpc-consul-resolver v1.4.3
-## explicit
-github.com/mbobakov/grpc-consul-resolver
 # github.com/micro/go-micro v1.18.0
 ## explicit
 github.com/micro/go-micro/metadata
@@ -353,6 +355,7 @@ go.uber.org/zap/zapgrpc
 golang.org/x/crypto/pbkdf2
 golang.org/x/crypto/sha3
 # golang.org/x/net v0.0.0-20200202094626-16171245cfb2
+## explicit
 golang.org/x/net/http/httpguts
 golang.org/x/net/http2
 golang.org/x/net/http2/hpack

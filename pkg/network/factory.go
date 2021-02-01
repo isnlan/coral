@@ -10,8 +10,8 @@ import (
 
 	"google.golang.org/grpc"
 
-	_ "github.com/mbobakov/grpc-consul-resolver"
 	"github.com/snlansky/coral/pkg/errors"
+	_ "github.com/snlansky/coral/pkg/grpc-consul-resolver"
 	"github.com/snlansky/coral/pkg/protos"
 	"github.com/snlansky/coral/pkg/xgrpc"
 )
