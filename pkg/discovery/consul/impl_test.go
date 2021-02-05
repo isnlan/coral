@@ -7,6 +7,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/hashicorp/consul/api"
+
 	"github.com/snlansky/coral/pkg/discovery"
 
 	"github.com/snlansky/coral/pkg/xgrpc"
@@ -69,4 +71,39 @@ func TestNew(t *testing.T) {
 	}()
 
 	time.Sleep(time.Minute)
+}
+
+func TestNew2(t *testing.T) {
+	client, err := New("127.0.0.1:8500")
+	assert.NoError(t, err)
+
+	port := 7000
+	server, err := xgrpc.NewServer(fmt.Sprintf("0.0.0.0:%d", port))
+	assert.NoError(t, err)
+
+	client.RegisterHealthServer(server.Server())
+	go server.Start()
+	opt := &api.QueryOptions{
+		RequireConsistent: true,
+	}
+
+	ip, err := discovery.GetLocalIP()
+	assert.NoError(t, err)
+
+	cancel, err := client.ServiceRegister("aac", ip, port, "Fsf")
+	assert.NoError(t, err)
+
+	go func() {
+		time.Sleep(5 * time.Second)
+		cancel()
+		//t.Logf("%s close", id)
+	}()
+
+	for {
+		time.Sleep(time.Second)
+		_, _, err := client.client.Agent().Service("aac-172.20.158.73:7000", opt)
+		fmt.Println(err)
+
+	}
+
 }

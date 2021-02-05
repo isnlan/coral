@@ -63,16 +63,20 @@ func (c *consulImpl) ServiceRegister(name, address string, port int, tags ...str
 		for {
 			select {
 			case <-tick.C:
-				err := register()
+				_, _, err := c.client.Agent().Service(svr.ID, &api.QueryOptions{RequireConsistent: true})
 				if err != nil {
-					logger.Errorf("register service error")
-					continue
+					if err := register(); err != nil {
+						logger.Errorf("service: %s register error", svr.ID)
+					} else {
+						logger.Infof("service: %s register success!", svr.ID)
+					}
 				}
-				logger.Infof("service: %s register success!", svr.ID)
 			case <-ctx.Done():
 				err := c.client.Agent().ServiceDeregister(svr.ID)
 				if err != nil {
-					logger.Errorf("deregister error: %v", err)
+					logger.Errorf("service: %s deregister error: %v", svr.ID, err)
+				} else {
+					logger.Warnf("service: %s deregister", svr.ID)
 				}
 				return
 			}
