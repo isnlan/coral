@@ -46,20 +46,40 @@ func (c *consulImpl) ServiceRegister(name, address string, port int, tags ...str
 			DeregisterCriticalServiceAfter: "30s",
 		},
 	}
-	err := c.client.Agent().ServiceRegister(svr)
-	if err != nil {
+
+	register := func() error {
+		return c.client.Agent().ServiceRegister(svr)
+	}
+
+	if err := register(); err != nil {
 		return nil, err
 	}
-
-	f := func() {
-		err := c.client.Agent().ServiceDeregister(svr.ID)
-		if err != nil {
-			logger.Errorf("deregister error: %v", err)
-		}
-	}
-
 	logger.Infof("service: %s register success!", svr.ID)
-	return f, nil
+
+	ctx, cancel := context.WithCancel(context.Background())
+
+	go func() {
+		tick := time.NewTicker(time.Minute)
+		for {
+			select {
+			case <-tick.C:
+				err := register()
+				if err != nil {
+					logger.Errorf("register service error")
+					continue
+				}
+				logger.Infof("service: %s register success!", svr.ID)
+			case <-ctx.Done():
+				err := c.client.Agent().ServiceDeregister(svr.ID)
+				if err != nil {
+					logger.Errorf("deregister error: %v", err)
+				}
+				return
+			}
+		}
+	}()
+
+	return discovery.Deregister(cancel), nil
 }
 
 func (c *consulImpl) RegisterHealthServer(s *grpc.Server) {
