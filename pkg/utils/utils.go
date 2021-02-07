@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"encoding/base64"
+	"encoding/hex"
 	"fmt"
 	"io"
 	"math/big"
@@ -103,4 +104,11 @@ func CreateUtcTimestamp() *timestamp.Timestamp {
 	secs := now.Unix()
 	nanos := int32(now.UnixNano() - (secs * 1000000000))
 	return &(timestamp.Timestamp{Seconds: secs, Nanos: nanos})
+}
+
+func MakeMongoIdFromString(str string) string {
+	bytes := sha256.Sum256([]byte(str))
+	var dst [12]byte
+	copy(dst[:], bytes[:])
+	return hex.EncodeToString(dst[:])
 }

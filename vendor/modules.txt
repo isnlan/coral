@@ -11,6 +11,9 @@ github.com/Microsoft/hcsshim/osversion
 # github.com/armon/go-metrics v0.3.2
 ## explicit
 github.com/armon/go-metrics
+# github.com/assembla/cony v0.3.2
+## explicit
+github.com/assembla/cony
 # github.com/cespare/xxhash v1.1.0
 github.com/cespare/xxhash
 # github.com/codahale/hdrhistogram v0.0.0-20161010025455-3a0bb77429bd
@@ -255,6 +258,9 @@ github.com/spf13/pflag
 # github.com/spf13/viper v1.4.0
 ## explicit
 github.com/spf13/viper
+# github.com/streadway/amqp v1.0.0
+## explicit
+github.com/streadway/amqp
 # github.com/stretchr/testify v1.4.0
 ## explicit
 github.com/stretchr/testify/assert

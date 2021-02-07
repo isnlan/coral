@@ -13,6 +13,7 @@ import (
 const (
 	_UrlKey           = "_Url_"
 	_ContextTracerKey = "_TracerContext_"
+	_GinContextKey    = "_GinContext_"
 )
 
 var logger = logging.MustGetLogger("trace")

@@ -70,5 +70,14 @@ func setContext(c *gin.Context, ctx context.Context) {
 	}
 
 	ctx = context.WithValue(ctx, _UrlKey, c.Request.URL.EscapedPath())
+	ctx = context.WithValue(ctx, _GinContextKey, c)
 	c.Set(_ContextTracerKey, ctx)
+}
+
+func GetGinContext(ctx context.Context) *gin.Context {
+	value := ctx.Value(_GinContextKey)
+	if value == nil {
+		panic("gin context not set")
+	}
+	return value.(*gin.Context)
 }
