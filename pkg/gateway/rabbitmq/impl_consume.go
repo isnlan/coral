@@ -2,7 +2,6 @@ package rabbitmq
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"github.com/assembla/cony"
 	"github.com/snlansky/coral/pkg/gateway"
@@ -100,9 +99,9 @@ func (c *Consume) Start() {
 			// msg.Nack(false)
 			// msg.Reject(false)
 		case err := <-c.cns.Errors():
-			fmt.Printf("Consumer error: %v\n", err)
+			logger.Errorf("Consumer error: %v", err)
 		case err := <-c.cli.Errors():
-			fmt.Printf("Client error: %v\n", err)
+			logger.Errorf("Client error: %v", err)
 		}
 	}
 }
