@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/snlansky/coral/pkg/logging"
+	"github.com/isnlan/coral/pkg/logging"
 
 	"github.com/streadway/amqp"
 
 	"github.com/assembla/cony"
-	"github.com/snlansky/coral/pkg/gateway"
+	"github.com/isnlan/coral/pkg/gateway"
 )
 
 const GatewayApiRoute = "gateway.api"

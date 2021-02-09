@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/assembla/cony"
-	"github.com/snlansky/coral/pkg/gateway"
+	"github.com/isnlan/coral/pkg/gateway"
 )
 
 type Consume struct {

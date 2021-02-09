@@ -6,8 +6,8 @@ import (
 
 	"github.com/golang/protobuf/ptypes/empty"
 
-	"github.com/snlansky/coral/pkg/protos"
-	"github.com/snlansky/coral/pkg/xgrpc"
+	"github.com/isnlan/coral/pkg/protos"
+	"github.com/isnlan/coral/pkg/xgrpc"
 )
 
 func main() {

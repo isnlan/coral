@@ -14,9 +14,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/snlansky/coral/pkg/contract"
+	"github.com/isnlan/coral/pkg/contract"
 
-	"github.com/snlansky/coral/pkg/utils"
+	"github.com/isnlan/coral/pkg/utils"
 
 	"github.com/hyperledger/fabric-chaincode-go/shim"
 

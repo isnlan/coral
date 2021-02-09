@@ -1,7 +1,7 @@
 package entity
 
 import (
-	"github.com/snlansky/coral/pkg/hlf"
+	"github.com/isnlan/coral/pkg/hlf"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 

@@ -9,9 +9,10 @@ import (
 	"crypto/x509"
 	"errors"
 	"fmt"
-	grpc_middeware "github.com/grpc-ecosystem/go-grpc-middleware"
-	"github.com/snlansky/coral/pkg/trace"
 	"time"
+
+	grpc_middeware "github.com/grpc-ecosystem/go-grpc-middleware"
+	"github.com/isnlan/coral/pkg/trace"
 
 	"github.com/hyperledger/fabric-protos-go/peer"
 	"google.golang.org/grpc"

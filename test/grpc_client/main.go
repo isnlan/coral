@@ -7,8 +7,8 @@ import (
 	"github.com/opentracing/opentracing-go"
 
 	grpc_middeware "github.com/grpc-ecosystem/go-grpc-middleware"
-	"github.com/snlansky/coral/pkg/errors"
-	"github.com/snlansky/coral/pkg/trace"
+	"github.com/isnlan/coral/pkg/errors"
+	"github.com/isnlan/coral/pkg/trace"
 	"google.golang.org/grpc"
 	pb "google.golang.org/grpc/examples/helloworld/helloworld"
 )

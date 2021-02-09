@@ -6,10 +6,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/snlansky/coral/pkg/contract/identity"
+	"github.com/isnlan/coral/pkg/contract/identity"
 
-	"github.com/snlansky/coral/pkg/contract"
-	"github.com/snlansky/coral/pkg/utils"
+	"github.com/isnlan/coral/pkg/contract"
+	"github.com/isnlan/coral/pkg/utils"
 )
 
 type memoryStub struct {

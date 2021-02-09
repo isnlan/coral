@@ -5,7 +5,7 @@ import (
 	"time"
 
 	grpc_middeware "github.com/grpc-ecosystem/go-grpc-middleware"
-	"github.com/snlansky/coral/pkg/trace"
+	"github.com/isnlan/coral/pkg/trace"
 
 	"google.golang.org/grpc"
 )

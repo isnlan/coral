@@ -4,7 +4,7 @@ import (
 	"github.com/golang/protobuf/ptypes"
 	"github.com/hyperledger/fabric-protos-go/peer"
 	"github.com/hyperledger/fabric/protoutil"
-	"github.com/snlansky/coral/pkg/protos"
+	"github.com/isnlan/coral/pkg/protos"
 
 	"github.com/hyperledger/fabric-protos-go/common"
 )

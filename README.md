@@ -29,5 +29,5 @@ Go version>=1.14
 ### 按照
 
 ```shell
-GO111MODULE=on && go get -u github.com/snlansky/coral
+GO111MODULE=on && go get -u github.com/isnlan/coral
 ```

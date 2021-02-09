@@ -8,13 +8,14 @@ package logging
 
 import (
 	"fmt"
-	"github.com/op/go-logging"
-	"github.com/snlansky/coral/pkg/logging/enc"
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 	"io"
 	"os"
 	"sync"
+
+	"github.com/isnlan/coral/pkg/logging/enc"
+	"github.com/op/go-logging"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 // Config is used to provide dependencies to a Logging instance.

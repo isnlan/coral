@@ -6,7 +6,7 @@ import (
 	"sort"
 	"time"
 
-	"github.com/snlansky/coral/pkg/logging"
+	"github.com/isnlan/coral/pkg/logging"
 
 	"github.com/hashicorp/consul/api"
 	"github.com/jpillora/backoff"

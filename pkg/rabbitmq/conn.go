@@ -5,7 +5,7 @@ import (
 
 	"sync/atomic"
 
-	"github.com/snlansky/coral/pkg/logging"
+	"github.com/isnlan/coral/pkg/logging"
 	"github.com/streadway/amqp"
 )
 

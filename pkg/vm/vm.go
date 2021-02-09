@@ -4,14 +4,14 @@ import (
 	"context"
 	"io/ioutil"
 
-	"github.com/snlansky/coral/pkg/utils"
+	"github.com/isnlan/coral/pkg/utils"
 
 	"github.com/golang/protobuf/ptypes/empty"
 
-	"github.com/snlansky/coral/pkg/errors"
+	"github.com/isnlan/coral/pkg/errors"
 
-	"github.com/snlansky/coral/pkg/protos"
-	"github.com/snlansky/coral/pkg/xgrpc"
+	"github.com/isnlan/coral/pkg/protos"
+	"github.com/isnlan/coral/pkg/xgrpc"
 )
 
 type VM interface {

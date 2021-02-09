@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/snlansky/coral/pkg/hlf"
+	"github.com/isnlan/coral/pkg/hlf"
 
 	"github.com/hyperledger/fabric-protos-go/common"
 )

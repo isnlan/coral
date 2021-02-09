@@ -31,7 +31,7 @@ go get -u gopkg.in/yaml.v2
 ## Installation
 
 ```
-go get -u github.com/snlansky/gohfc
+go get -u github.com/isnlan/gohfc
 
 ```
 

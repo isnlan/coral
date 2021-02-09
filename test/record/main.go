@@ -2,10 +2,10 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/snlansky/coral/pkg/gateway"
-	"github.com/snlansky/coral/pkg/gateway/rabbitmq"
-	"github.com/snlansky/coral/pkg/trace"
-	"github.com/snlansky/coral/pkg/xgin"
+	"github.com/isnlan/coral/pkg/gateway"
+	"github.com/isnlan/coral/pkg/gateway/rabbitmq"
+	"github.com/isnlan/coral/pkg/trace"
+	"github.com/isnlan/coral/pkg/xgin"
 )
 
 func check(err error) {

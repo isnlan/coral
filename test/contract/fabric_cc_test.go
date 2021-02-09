@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/snlansky/coral/pkg/contract"
-	"github.com/snlansky/coral/pkg/contract/impl"
+	"github.com/isnlan/coral/pkg/contract"
+	"github.com/isnlan/coral/pkg/contract/impl"
 
 	pb "github.com/hyperledger/fabric-protos-go/peer"
 	"github.com/stretchr/testify/assert"

@@ -2,8 +2,8 @@ package xgin
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/snlansky/coral/pkg/logging"
-	"github.com/snlansky/coral/pkg/trace"
+	"github.com/isnlan/coral/pkg/logging"
+	"github.com/isnlan/coral/pkg/trace"
 )
 
 var logger = logging.MustGetLogger("xgin")

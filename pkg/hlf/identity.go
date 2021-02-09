@@ -12,7 +12,7 @@ import (
 	"encoding/pem"
 	"io/ioutil"
 
-	"github.com/snlansky/coral/pkg/contract/identity"
+	"github.com/isnlan/coral/pkg/contract/identity"
 )
 
 // Identity is participant public and private key

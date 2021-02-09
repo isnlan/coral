@@ -5,11 +5,11 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/snlansky/coral/pkg/protos"
+	"github.com/isnlan/coral/pkg/protos"
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/snlansky/coral/pkg/logging"
+	"github.com/isnlan/coral/pkg/logging"
 )
 
 var logger = logging.MustGetLogger("gateway")

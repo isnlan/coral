@@ -5,7 +5,7 @@ import (
 	"time"
 
 	redis "github.com/go-redis/redis/v8"
-	"github.com/snlansky/coral/pkg/logging"
+	"github.com/isnlan/coral/pkg/logging"
 )
 
 var logger = logging.MustGetLogger("cache")

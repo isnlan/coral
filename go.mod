@@ -1,4 +1,4 @@
-module github.com/snlansky/coral
+module github.com/isnlan/coral
 
 go 1.14
 

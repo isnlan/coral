@@ -9,8 +9,8 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/snlansky/coral/pkg/errors"
-	"github.com/snlansky/coral/pkg/response"
+	"github.com/isnlan/coral/pkg/errors"
+	"github.com/isnlan/coral/pkg/response"
 
 	"github.com/gin-gonic/gin"
 )

@@ -3,7 +3,7 @@ package network
 import (
 	"context"
 
-	"github.com/snlansky/coral/pkg/protos"
+	"github.com/isnlan/coral/pkg/protos"
 )
 
 type Network interface {

@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/snlansky/coral/pkg/utils"
+	"github.com/isnlan/coral/pkg/utils"
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/snlansky/coral/pkg/trace"
+	"github.com/isnlan/coral/pkg/trace"
 )
 
 const _ClientIdContextKey = "ClientIdContext"

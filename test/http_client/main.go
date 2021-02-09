@@ -8,9 +8,9 @@ import (
 
 	"github.com/opentracing/opentracing-go"
 
-	"github.com/snlansky/coral/pkg/errors"
+	"github.com/isnlan/coral/pkg/errors"
 
-	"github.com/snlansky/coral/pkg/trace"
+	"github.com/isnlan/coral/pkg/trace"
 )
 
 func main() {

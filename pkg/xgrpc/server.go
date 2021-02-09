@@ -4,8 +4,8 @@ import (
 	"log"
 	"net"
 
-	"github.com/snlansky/coral/pkg/errors"
-	"github.com/snlansky/coral/pkg/trace"
+	"github.com/isnlan/coral/pkg/errors"
+	"github.com/isnlan/coral/pkg/trace"
 
 	"google.golang.org/grpc"
 )

@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/snlansky/coral/pkg/trace"
+	"github.com/isnlan/coral/pkg/trace"
 )
 
 const host = "172.20.107.44:32333"

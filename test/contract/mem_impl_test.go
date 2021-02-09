@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/snlansky/coral/pkg/contract/impl"
+	"github.com/isnlan/coral/pkg/contract/impl"
 
-	"github.com/snlansky/coral/pkg/contract"
+	"github.com/isnlan/coral/pkg/contract"
 	"github.com/stretchr/testify/assert"
 )
 

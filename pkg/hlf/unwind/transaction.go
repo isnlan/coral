@@ -4,11 +4,11 @@ import (
 	"time"
 
 	"github.com/golang/protobuf/ptypes"
-	"github.com/snlansky/coral/pkg/protos"
+	"github.com/isnlan/coral/pkg/protos"
 
-	"github.com/snlansky/coral/pkg/contract/identity"
+	"github.com/isnlan/coral/pkg/contract/identity"
 
-	"github.com/snlansky/coral/pkg/errors"
+	"github.com/isnlan/coral/pkg/errors"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/hyperledger/fabric-protos-go/common"

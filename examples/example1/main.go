@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/snlansky/coral/pkg/hlf"
+	"github.com/isnlan/coral/pkg/hlf"
 
 	"context"
 	"math/rand"

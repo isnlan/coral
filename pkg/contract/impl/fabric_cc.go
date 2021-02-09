@@ -10,8 +10,8 @@ import (
 	"runtime/debug"
 	"time"
 
-	"github.com/snlansky/coral/pkg/contract"
-	"github.com/snlansky/coral/pkg/rpc"
+	"github.com/isnlan/coral/pkg/contract"
+	"github.com/isnlan/coral/pkg/rpc"
 
 	"github.com/hyperledger/fabric-chaincode-go/shim"
 	pb "github.com/hyperledger/fabric-protos-go/peer"

@@ -5,7 +5,7 @@ import (
 	"io"
 
 	docker "github.com/fsouza/go-dockerclient"
-	"github.com/snlansky/coral/pkg/errors"
+	"github.com/isnlan/coral/pkg/errors"
 )
 
 type DockerVM struct {

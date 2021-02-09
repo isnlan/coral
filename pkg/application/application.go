@@ -9,8 +9,8 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/isnlan/coral/pkg/logging"
 	"github.com/mitchellh/go-homedir"
-	"github.com/snlansky/coral/pkg/logging"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )

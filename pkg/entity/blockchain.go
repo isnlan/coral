@@ -3,7 +3,7 @@ package entity
 import (
 	"time"
 
-	"github.com/snlansky/coral/pkg/protos"
+	"github.com/isnlan/coral/pkg/protos"
 )
 
 type Block struct {

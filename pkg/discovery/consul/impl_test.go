@@ -9,12 +9,12 @@ import (
 
 	"github.com/hashicorp/consul/api"
 
-	"github.com/snlansky/coral/pkg/discovery"
+	"github.com/isnlan/coral/pkg/discovery"
 
-	"github.com/snlansky/coral/pkg/xgrpc"
+	"github.com/isnlan/coral/pkg/xgrpc"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/snlansky/coral/pkg/protos"
+	"github.com/isnlan/coral/pkg/protos"
 )
 
 func TestNew(t *testing.T) {

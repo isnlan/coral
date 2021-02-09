@@ -11,7 +11,7 @@ import (
 	"time"
 
 	grpc_middeware "github.com/grpc-ecosystem/go-grpc-middleware"
-	"github.com/snlansky/coral/pkg/trace"
+	"github.com/isnlan/coral/pkg/trace"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/hyperledger/fabric-protos-go/common"

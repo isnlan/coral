@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/snlansky/coral/pkg/discovery"
+	"github.com/isnlan/coral/pkg/discovery"
 
-	"github.com/snlansky/coral/pkg/logging"
+	"github.com/isnlan/coral/pkg/logging"
 
 	"google.golang.org/grpc"
 
-	"github.com/snlansky/coral/pkg/errors"
-	_ "github.com/snlansky/coral/pkg/grpc-consul-resolver"
-	"github.com/snlansky/coral/pkg/protos"
-	"github.com/snlansky/coral/pkg/xgrpc"
+	"github.com/isnlan/coral/pkg/errors"
+	_ "github.com/isnlan/coral/pkg/grpc-consul-resolver"
+	"github.com/isnlan/coral/pkg/protos"
+	"github.com/isnlan/coral/pkg/xgrpc"
 )
 
 const maxCallRecvMsgSize = 1024 * 1024 * 20

@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/snlansky/coral/pkg/gateway"
+	"github.com/isnlan/coral/pkg/gateway"
 	"github.com/stretchr/testify/assert"
 )
 

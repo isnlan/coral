@@ -3,16 +3,15 @@ package blink
 import (
 	"fmt"
 
+	"github.com/isnlan/coral/pkg/entity"
+	"github.com/isnlan/coral/pkg/errors"
+	"github.com/isnlan/coral/pkg/response"
 	"github.com/parnurzeal/gorequest"
-	"github.com/snlansky/coral/pkg/entity"
-	"github.com/snlansky/coral/pkg/errors"
-	"github.com/snlansky/coral/pkg/response"
 )
 
 type Blink interface {
 	AclQuery(clientId string) (*entity.AclClient, error)
 	ChainLease(chainId string) (*entity.Lease, error)
-	CallRecord(data interface{}) error
 }
 
 type blinkImpl struct {
@@ -64,21 +63,4 @@ func (c *blinkImpl) ChainLease(chainId string) (*entity.Lease, error) {
 	}
 
 	return &lease, nil
-}
-
-func (c *blinkImpl) CallRecord(data interface{}) error {
-	var resp response.Response
-
-	_, _, errs := gorequest.New().Post(fmt.Sprintf("%s/api/private/calls/record", c.baseUrl)).
-		Send(data).
-		EndStruct(&resp)
-	if len(errs) != 0 {
-		return errs[0]
-	}
-
-	if resp.ErrorCode != response.SuccessCode {
-		return errors.Errorf("request call record error: %s", resp.Description)
-	}
-
-	return nil
 }

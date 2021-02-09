@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/snlansky/coral/pkg/discovery"
+	"github.com/isnlan/coral/pkg/discovery"
 
-	"github.com/snlansky/coral/pkg/logging"
+	"github.com/isnlan/coral/pkg/logging"
 
 	"google.golang.org/grpc/health"
 

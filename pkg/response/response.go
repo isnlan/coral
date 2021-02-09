@@ -1,6 +1,6 @@
 package response
 
-import "github.com/snlansky/coral/pkg/errors"
+import "github.com/isnlan/coral/pkg/errors"
 
 const SuccessCode = 0
 

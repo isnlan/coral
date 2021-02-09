@@ -7,7 +7,7 @@ import (
 	"github.com/uber/jaeger-client-go"
 
 	"github.com/gin-gonic/gin"
-	"github.com/snlansky/coral/pkg/logging"
+	"github.com/isnlan/coral/pkg/logging"
 )
 
 const (

@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/snlansky/coral/pkg/contract"
-	"github.com/snlansky/coral/pkg/contract/identity"
+	"github.com/isnlan/coral/pkg/contract"
+	"github.com/isnlan/coral/pkg/contract/identity"
 
 	"github.com/hyperledger/fabric-chaincode-go/shim"
 )
