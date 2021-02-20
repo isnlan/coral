@@ -42,7 +42,7 @@ func (r *Gateway) RecordeApi(rs gin.RoutesInfo) error {
 			continue
 		}
 
-		api := NewApi("http", router.Method, router.Path, r.appName, apiName, "")
+		api := NewApi(r.appName, "http", router.Method, router.Path, apiName, "")
 
 		r.apis[router.Handler] = api
 		err := r.producer.ApiUpload(api)
