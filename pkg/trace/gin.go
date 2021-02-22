@@ -77,7 +77,7 @@ func setContext(c *gin.Context, ctx context.Context) {
 func GetGinContext(ctx context.Context) *gin.Context {
 	value := ctx.Value(_GinContextKey)
 	if value == nil {
-		panic("gin context not set")
+		return nil
 	}
 	return value.(*gin.Context)
 }

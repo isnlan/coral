@@ -52,7 +52,10 @@ type ContractCallEntity struct {
 }
 
 func SetClientId(ctx context.Context, clientId string) {
-	trace.GetGinContext(ctx).Set(_ClientIdContextKey, clientId)
+	c := trace.GetGinContext(ctx)
+	if c != nil {
+		c.Set(_ClientIdContextKey, clientId)
+	}
 }
 
 func GetClientId(c *gin.Context) string {
