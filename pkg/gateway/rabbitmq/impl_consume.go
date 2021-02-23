@@ -17,7 +17,7 @@ func NewConsume(url string, handler gateway.Consumer) *Consume {
 	// Construct new client with the flag url
 	// and default backoff policy
 	cli := cony.NewClient(
-		cony.URL("amqp://admin:admin@localhost/"),
+		cony.URL(url),
 		cony.Backoff(cony.DefaultBackoff),
 	)
 
