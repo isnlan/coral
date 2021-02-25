@@ -1,6 +1,9 @@
 package main
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/isnlan/coral/pkg/gateway"
 	"github.com/isnlan/coral/pkg/gateway/rabbitmq"
@@ -15,6 +18,13 @@ func check(err error) {
 }
 
 func main() {
+	go func() {
+		url := "amqp://admin:admin@localhost:5672/"
+		consume := rabbitmq.NewConsume(url, &mockConsume{})
+		consume.Start()
+	}()
+	time.Sleep(1 * time.Second)
+
 	rc := gateway.New("UserCenter", rabbitmq.NewProduce("amqp://admin:admin@localhost:5672/"))
 	router := xgin.New(rc.Handler)
 
@@ -30,8 +40,8 @@ func main() {
 		})
 	}
 
-	router.GET("/ping", rc.RegisterHandler("PING", f))
-	router.GET("/register", rc.RegisterHandler("注册用户", f2))
+	router.GET("/ping", rc.RegisterHandler("PING", "PING_TYPE", f))
+	router.GET("/register", rc.RegisterHandler("注册用户", "USER_TYPE", f2))
 	router.GET("/token", func(ctx *gin.Context) {
 		ctx.JSON(200, gin.H{
 			"message": "token",
@@ -41,4 +51,22 @@ func main() {
 	err := rc.RecordeApi(router.Routes())
 	check(err)
 	router.Run(":8085")
+}
+
+type mockConsume struct {
+}
+
+func (m mockConsume) ApiHandler(api *gateway.Api) error {
+	fmt.Printf("api: %+v\n", api)
+	return nil
+}
+
+func (m mockConsume) ApiCallHandler(entity *gateway.ApiCallEntity) error {
+	fmt.Printf("entity: %+v\n", entity)
+	return nil
+}
+
+func (m mockConsume) ContractCallHandler(entity *gateway.ContractCallEntity) error {
+	fmt.Printf("entity: %+v\n", entity)
+	return nil
 }

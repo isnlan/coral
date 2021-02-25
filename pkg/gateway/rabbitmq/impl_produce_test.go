@@ -25,6 +25,7 @@ func TestNewProduce(t *testing.T) {
 		Path:    "/ping",
 		AppName: "myapp",
 		ApiName: "PING",
+		ApiType: "拼",
 		DocUrl:  "",
 	})
 	assert.NoError(t, err)

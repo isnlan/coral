@@ -1,9 +1,12 @@
 package gateway
 
 import (
+	"fmt"
 	"reflect"
 	"runtime"
 	"time"
+
+	"github.com/isnlan/coral/pkg/utils"
 
 	"github.com/isnlan/coral/pkg/protos"
 
@@ -16,7 +19,6 @@ var logger = logging.MustGetLogger("gateway")
 
 type Gateway struct {
 	appName  string
-	fns      map[string]string
 	apis     map[string]*Api
 	producer Producer
 }
@@ -24,27 +26,35 @@ type Gateway struct {
 func New(appName string, producer Producer) *Gateway {
 	return &Gateway{
 		appName:  appName,
-		fns:      map[string]string{},
 		apis:     map[string]*Api{},
 		producer: producer,
 	}
 }
 
-func (r *Gateway) RegisterHandler(apiName string, f gin.HandlerFunc) gin.HandlerFunc {
-	r.fns[makeFuncName(f)] = apiName
+func (r *Gateway) RegisterHandler(apiName string, apiType string, f gin.HandlerFunc) gin.HandlerFunc {
+	api := new(Api)
+	api.ApiName = apiName
+	api.ApiType = apiType
+
+	r.apis[makeFuncName(f)] = api
 	return f
 }
 
 func (r *Gateway) RecordeApi(rs gin.RoutesInfo) error {
 	for _, router := range rs {
-		apiName := r.fns[router.Handler]
-		if apiName == "" {
+		api, find := r.apis[router.Handler]
+		if !find {
 			continue
 		}
 
-		api := NewApi(r.appName, "http", router.Method, router.Path, apiName, "")
+		id := fmt.Sprintf("%s:[%s.%s] %s", r.appName, "HTTP", router.Method, router.Path)
+		api.Id = utils.MakeMongoIdFromString(id)
+		api.Scheme = "HTTP"
+		api.Method = router.Method
+		api.Path = router.Path
+		api.AppName = r.appName
+		api.DocUrl = ""
 
-		r.apis[router.Handler] = api
 		err := r.producer.ApiUpload(api)
 		if err != nil {
 			return err

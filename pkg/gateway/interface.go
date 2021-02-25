@@ -20,10 +20,11 @@ type Api struct {
 	Path    string `json:"path"`     // http route path
 	AppName string `json:"app_name"` // application name
 	ApiName string `json:"api_name"` // api 中文名称
+	ApiType string `json:"api_type"` // api 接口类型
 	DocUrl  string `json:"doc_url"`  // 文档地址
 }
 
-func NewApi(appName, scheme, method, path, apiName, docUrl string) *Api {
+func NewApi(appName, scheme, method, path, apiName, apiType, docUrl string) *Api {
 	api := fmt.Sprintf("%s:[%s.%s] %s", appName, scheme, method, path)
 	return &Api{
 		Id:      utils.MakeMongoIdFromString(api),
@@ -32,6 +33,7 @@ func NewApi(appName, scheme, method, path, apiName, docUrl string) *Api {
 		Path:    path,
 		AppName: appName,
 		ApiName: apiName,
+		ApiType: apiType,
 		DocUrl:  docUrl,
 	}
 }
