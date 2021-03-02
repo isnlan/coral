@@ -112,3 +112,7 @@ func MakeMongoIdFromString(str string) string {
 	copy(dst[:], bytes[:])
 	return hex.EncodeToString(dst[:])
 }
+
+func MakeMongoIdf(format string, a ...interface{}) string {
+	return MakeMongoIdFromString(fmt.Sprintf(format, a...))
+}
