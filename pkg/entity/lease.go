@@ -57,8 +57,10 @@ type (
 )
 
 type ChannelStatus struct {
-	Name   string `json:"name" yaml:"name"`
-	Enable bool   `json:"enable" yaml:"enable"`
+	Name      string   `json:"name""`     // 链名称
+	Enable    bool     `json:"enable"`    // 是否可用
+	Contracts []string `json:"contracts"` // 合约列表
+	SyncData  bool     `json:"sync_data"` // 同步数据开启
 }
 
 type Lease struct {
