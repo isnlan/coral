@@ -2,28 +2,53 @@ package db
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
+	"github.com/benweissmann/memongo"
+
 	"github.com/stretchr/testify/assert"
+
+	"github.com/smartystreets/goconvey/convey"
 )
 
-func init() {
-	err := InitMongo("mongodb://root:dJSt9bmxFk@mongo-mongodb:27017/admin?authSource=admin")
+func TestMongoDaoImpl(t *testing.T) {
+	mongoServer, err := memongo.Start("4.0.5")
 	if err != nil {
-		panic(err)
+		t.Fatal(err)
 	}
-}
-func TestDao_UpdateOne(t *testing.T) {
-	dao := NewDao(GetDB("mytest"), "testcoll")
-
-	err := dao.Save(context.Background(), map[string]interface{}{"id": 1, "value": 13})
+	defer mongoServer.Stop()
+	err = InitMongo(mongoServer.URI())
 	assert.NoError(t, err)
 
-	filter := map[string]interface{}{"id": 1}
-	doc := map[string]interface{}{"id": 1, "value": 15}
-	err = dao.UpdateOne(context.Background(), filter, doc)
-	assert.NoError(t, err)
+	convey.Convey("test CreateUniqueIndex", t, func() {
+		ctx := context.Background()
 
-	err = dao.DeleteOne(context.Background(), map[string]interface{}{"id": 2})
-	assert.NoError(t, err)
+		mydb := GetDB("db1")
+
+		coll := mydb.Collection("doc1")
+		err := CreateUniqueIndex(ctx, coll, "name")
+		convey.So(err, convey.ShouldBeNil)
+
+		err1 := CreateUniqueIndex(ctx, coll, "name")
+		convey.So(err1, convey.ShouldBeNil)
+
+		err2 := CreateUniqueIndex(ctx, coll, "age", "uid")
+		convey.So(err2, convey.ShouldBeNil)
+
+		cursor, err := coll.Indexes().List(ctx)
+		convey.So(err, convey.ShouldBeNil)
+		defer cursor.Close(ctx)
+
+		//list := []interface{}{}
+		for cursor.Next(ctx) {
+			var idx interface{}
+			err := cursor.Decode(&idx)
+			convey.So(err, convey.ShouldBeNil)
+
+			fmt.Println(idx)
+		}
+
+	})
+
 }

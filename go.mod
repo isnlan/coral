@@ -6,6 +6,7 @@ require (
 	github.com/Knetic/govaluate v3.0.0+incompatible // indirect
 	github.com/armon/go-metrics v0.3.2 // indirect
 	github.com/assembla/cony v0.3.2
+	github.com/benweissmann/memongo v0.1.1
 	github.com/codahale/hdrhistogram v0.0.0-20161010025455-3a0bb77429bd // indirect
 	github.com/dgraph-io/ristretto v0.0.3
 	github.com/docker/docker v1.4.2-0.20191101170500-ac7306503d23
@@ -36,6 +37,7 @@ require (
 	github.com/opentracing/opentracing-go v1.1.1-0.20190913142402-a7454ce5950e
 	github.com/parnurzeal/gorequest v0.2.16
 	github.com/pkg/errors v0.9.1
+	github.com/smartystreets/goconvey v0.0.0-20190330032615-68dc04aab96a
 	github.com/spf13/cobra v1.0.0
 	github.com/spf13/viper v1.4.0
 	github.com/streadway/amqp v1.0.0

@@ -8,12 +8,20 @@ github.com/Microsoft/go-winio
 github.com/Microsoft/go-winio/pkg/guid
 # github.com/Microsoft/hcsshim v0.8.7-0.20191101173118-65519b62243c
 github.com/Microsoft/hcsshim/osversion
+# github.com/acobaugh/osrelease v0.0.0-20181218015638-a93a0a55a249
+github.com/acobaugh/osrelease
 # github.com/armon/go-metrics v0.3.2
 ## explicit
 github.com/armon/go-metrics
 # github.com/assembla/cony v0.3.2
 ## explicit
 github.com/assembla/cony
+# github.com/benweissmann/memongo v0.1.1
+## explicit
+github.com/benweissmann/memongo
+github.com/benweissmann/memongo/memongolog
+github.com/benweissmann/memongo/mongobin
+github.com/benweissmann/memongo/monitor
 # github.com/cespare/xxhash v1.1.0
 github.com/cespare/xxhash
 # github.com/codahale/hdrhistogram v0.0.0-20161010025455-3a0bb77429bd
@@ -118,6 +126,8 @@ github.com/golang/protobuf/ptypes/empty
 github.com/golang/protobuf/ptypes/timestamp
 # github.com/golang/snappy v0.0.1
 github.com/golang/snappy
+# github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1
+github.com/gopherjs/gopherjs/js
 # github.com/grpc-ecosystem/go-grpc-middleware v1.2.0
 ## explicit
 github.com/grpc-ecosystem/go-grpc-middleware
@@ -180,6 +190,8 @@ github.com/jmoiron/sqlx/reflectx
 github.com/jpillora/backoff
 # github.com/json-iterator/go v1.1.9
 github.com/json-iterator/go
+# github.com/jtolds/gls v4.20.0+incompatible
+github.com/jtolds/gls
 # github.com/klauspost/compress v1.9.5
 github.com/klauspost/compress/fse
 github.com/klauspost/compress/huff0
@@ -243,7 +255,16 @@ github.com/pkg/errors
 github.com/pmezard/go-difflib/difflib
 # github.com/sirupsen/logrus v1.4.2
 github.com/sirupsen/logrus
-# github.com/spf13/afero v1.1.2
+# github.com/smartystreets/assertions v0.0.0-20180927180507-b2de0cb4f26d
+github.com/smartystreets/assertions
+github.com/smartystreets/assertions/internal/go-render/render
+github.com/smartystreets/assertions/internal/oglematchers
+# github.com/smartystreets/goconvey v0.0.0-20190330032615-68dc04aab96a
+## explicit
+github.com/smartystreets/goconvey/convey
+github.com/smartystreets/goconvey/convey/gotest
+github.com/smartystreets/goconvey/convey/reporting
+# github.com/spf13/afero v1.2.1
 github.com/spf13/afero
 github.com/spf13/afero/mem
 # github.com/spf13/cast v1.3.0
@@ -296,7 +317,7 @@ github.com/uber/jaeger-lib/metrics
 github.com/ugorji/go/codec
 # github.com/xdg/scram v0.0.0-20180814205039-7eeb5667e42c
 github.com/xdg/scram
-# github.com/xdg/stringprep v0.0.0-20180714160509-73f8eece6fdc
+# github.com/xdg/stringprep v1.0.0
 github.com/xdg/stringprep
 # go.mongodb.org/mongo-driver v1.3.4
 ## explicit
