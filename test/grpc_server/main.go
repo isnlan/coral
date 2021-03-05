@@ -6,9 +6,10 @@ import (
 	"log"
 	"net"
 
+	"google.golang.org/grpc"
+
 	"github.com/isnlan/coral/pkg/errors"
 	"github.com/isnlan/coral/pkg/trace"
-	"google.golang.org/grpc"
 	pb "google.golang.org/grpc/examples/helloworld/helloworld"
 )
 

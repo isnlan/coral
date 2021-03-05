@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"io"
 	"math/big"
+	"reflect"
 	"time"
 
 	"github.com/golang/protobuf/ptypes/timestamp"
@@ -115,4 +116,8 @@ func MakeMongoIdFromString(str string) string {
 
 func MakeMongoIdf(format string, a ...interface{}) string {
 	return MakeMongoIdFromString(fmt.Sprintf(format, a...))
+}
+
+func MakeTypeName(tpy interface{}) string {
+	return reflect.TypeOf(tpy).Elem().Name()
 }

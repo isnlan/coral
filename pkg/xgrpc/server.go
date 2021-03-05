@@ -7,6 +7,11 @@ import (
 	"github.com/isnlan/coral/pkg/errors"
 	"github.com/isnlan/coral/pkg/trace"
 
+	grpc_ctxtags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
+
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpc_opentracing "github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing"
+	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"google.golang.org/grpc"
 )
 
@@ -22,7 +27,21 @@ func NewServer(addr string, opts ...grpc.ServerOption) (*Server, error) {
 		return nil, errors.WithMessage(err, "failed to listen")
 	}
 
-	opts = append(opts, grpc.UnaryInterceptor(trace.OpenTracingServerInterceptor()))
+	streamInterceptor := grpc.StreamInterceptor(grpc_middleware.ChainStreamServer(
+		grpc_ctxtags.StreamServerInterceptor(),
+		grpc_opentracing.StreamServerInterceptor(),
+		grpc_prometheus.StreamServerInterceptor,
+		RecoveryStreamServerInterceptor(),
+	))
+
+	unaryInterceptor := grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
+		trace.OpenTracingServerInterceptor(),
+		grpc_prometheus.UnaryServerInterceptor,
+		LoggerUnaryServerInterceptor(),
+		RecoveryUnaryServerInterceptor(),
+	))
+
+	opts = append(opts, streamInterceptor, unaryInterceptor)
 
 	s := &Server{
 		addr:     addr,

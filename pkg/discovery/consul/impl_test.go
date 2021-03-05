@@ -7,6 +7,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/isnlan/coral/pkg/utils"
+
 	"github.com/hashicorp/consul/api"
 
 	"github.com/isnlan/coral/pkg/discovery"
@@ -19,7 +21,7 @@ import (
 
 func TestNew(t *testing.T) {
 	var vms *protos.VMServer
-	sname := discovery.MakeTypeName(vms)
+	sname := utils.MakeTypeName(vms)
 	fmt.Println(sname)
 
 	tags := []string{"fabric", "silk", "fisco"}

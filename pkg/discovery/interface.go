@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"net"
-	"reflect"
 
 	"google.golang.org/grpc"
 )
@@ -21,10 +20,6 @@ type ServiceDiscover interface {
 	RegisterHealthServer(s *grpc.Server)
 	ServiceRegister(name, address string, port int, tags ...string) (Deregister, error)
 	WatchService(ctx context.Context, name string, tag string, ch chan<- []*ServiceInfo)
-}
-
-func MakeTypeName(tpy interface{}) string {
-	return reflect.TypeOf(tpy).Elem().Name()
 }
 
 func GetLocalIP() (string, error) {
