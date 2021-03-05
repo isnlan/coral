@@ -3,19 +3,18 @@ package xgrpc
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"runtime"
 	"time"
 
-	"github.com/isnlan/coral/pkg/utils"
-
 	"github.com/isnlan/coral/pkg/logging"
 
 	"google.golang.org/grpc"
 
+	grpc_ctxtags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
 	"github.com/isnlan/coral/pkg/errors"
-	"google.golang.org/grpc/peer"
 )
 
 var (
@@ -30,82 +29,54 @@ var (
 func LoggerUnaryServerInterceptor() grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
 		start := time.Now()
-		clientIP, service, method := unaryRequestInfo(ctx, info)
-
 		var statusColor, methodColor, resetColor string
 
 		resp, err = handler(ctx, req)
-		var statusCode = 200
 		if err != nil {
-			statusCode = 500
+			logger.Errorf("[GRPC]%s %3d %s| %v |%s %-2v %s reason: %v\n",
+				statusColor, 500, resetColor,
+				time.Now().Sub(start),
+				methodColor, requestInfo(ctx), resetColor,
+				err,
+			)
 		}
-
-		logger.Infof("[GRPC]%s %3d %s| %v | %s |%s %-2s %s %s %#v\n",
-			statusColor, statusCode, resetColor,
-			time.Now().Sub(start),
-			clientIP,
-			methodColor, service, resetColor,
-			method,
-			req,
-		)
 
 		return resp, err
 	}
 }
 
-func RecoveryUnaryServerInterceptor() grpc.UnaryServerInterceptor {
-	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
-		clientIP, service, method := unaryRequestInfo(ctx, info)
-		reqinfo := fmt.Sprintf("[%s]%s %s", clientIP, service, method)
-
-		defer func() {
-			if r := recover(); r != nil {
-				err = recoverFrom(ctx, r, reqinfo)
-			}
-		}()
-		return handler(ctx, req)
+func requestFieldExtractor(method string, req interface{}) map[string]interface{} {
+	return map[string]interface{}{
+		"method":  method,
+		"request": req,
 	}
 }
 
-func RecoveryStreamServerInterceptor() grpc.StreamServerInterceptor {
-	return func(srv interface{}, stream grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) (err error) {
-		defer func() {
-			if r := recover(); r != nil {
-				err = recoverFrom(stream.Context(), r, "")
-			}
-		}()
-
-		return handler(srv, stream)
-	}
-}
-
-func unaryRequestInfo(ctx context.Context, info *grpc.UnaryServerInfo) (string, string, string) {
-	var clientIP string
-	if p, ok := peer.FromContext(ctx); ok {
-		clientIP = p.Addr.String()
-	}
-
-	service := utils.MakeTypeName(info.Server)
-	method := info.FullMethod
-	return clientIP, service, method
-}
-
-func recoverFrom(ctx context.Context, r interface{}, reqinfo string) error {
+func recoverHandler(ctx context.Context, r interface{}) error {
 	switch v := r.(type) {
 	case runtime.Error:
 		stack := stack(3)
-		logger.Errorf("runtime error:\n%s\n%s\n%s%s", reqinfo, r, stack, reset)
-		return fmt.Errorf("runtime error: %v", v)
+		logger.Errorf("runtime error:\n%v\n%s\n%s%s", requestInfo(ctx), r, stack, reset)
+		return v
 	case errors.CodeError:
-		logger.Errorf("request %s error, code %d, description %s", reqinfo, v.Code(), v.Error())
+		logger.Errorf("request %v error, code %d, description %s", requestInfo(ctx), v.Code(), v.Error())
 		return v
 	case error:
-		logger.Errorf("request %s error, code %d, description %s", reqinfo, errors.InternalErrorCode, v.Error())
+		logger.Errorf("request %v error, code %d, description %s", requestInfo(ctx), errors.InternalErrorCode, v.Error())
 		return v
 	default:
-		logger.Errorf("[Recovery] panic recovered: %s\n%s\n", reqinfo, r)
+		logger.Errorf("[Recovery] panic recovered: %v\n%s\n", requestInfo(ctx), r)
 		return fmt.Errorf("unknown type error %v", v)
 	}
+}
+
+func requestInfo(ctx context.Context) string {
+	tags := grpc_ctxtags.Extract(ctx)
+	v, err := json.Marshal(tags.Values())
+	if err != nil {
+		return ""
+	}
+	return string(v)
 }
 
 // stack returns a nicely formatted stack frame, skipping skip frames.

@@ -2,14 +2,10 @@ package main
 
 import (
 	"context"
-	"fmt"
-	"log"
-	"net"
-
-	"google.golang.org/grpc"
 
 	"github.com/isnlan/coral/pkg/errors"
 	"github.com/isnlan/coral/pkg/trace"
+	"github.com/isnlan/coral/pkg/xgrpc"
 	pb "google.golang.org/grpc/examples/helloworld/helloworld"
 )
 
@@ -20,15 +16,23 @@ func main() {
 	errors.Check(err)
 	defer closer.Close()
 
-	lis, err := net.Listen("tcp", serviceAddress)
+	//lis, err := net.Listen("tcp", serviceAddress)
+	//if err != nil {
+	//	log.Fatalf("failed to listen: %v", err)
+	//}
+	//s := grpc.NewServer(grpc.UnaryInterceptor(trace.OpenTracingServerInterceptor()))
+	//pb.RegisterGreeterServer(s, &server{})
+	//if err := s.Serve(lis); err != nil {
+	//	log.Fatalf("failed to serve: %v", err)
+	//}
+
+	s, err := xgrpc.NewServer(serviceAddress)
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		panic(err)
 	}
-	s := grpc.NewServer(grpc.UnaryInterceptor(trace.OpenTracingServerInterceptor()))
-	pb.RegisterGreeterServer(s, &server{})
-	if err := s.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
-	}
+
+	pb.RegisterGreeterServer(s.Server(), &server{})
+	s.Start()
 }
 
 const (
@@ -39,7 +43,11 @@ type server struct {
 }
 
 func (s server) SayHello(ctx context.Context, request *pb.HelloRequest) (*pb.HelloReply, error) {
-	fmt.Println("-->", request)
+	if request.Name == "lucy" {
+		n := 0
+		_ = 1 / n
+		return nil, errors.New("name error")
+	}
 	return &pb.HelloReply{
 		Message: "hi: " + request.Name,
 	}, nil
