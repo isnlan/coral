@@ -438,6 +438,9 @@ func (f *FabricCAClient) Register(identity *Identity, req *CARegistrationRequest
 		return "", err
 	}
 
+	httpReq.Close = true
+	httpReq.Header.Set("Connection", "close")
+
 	httpReq.Header.Set("Content-Type", "application/json")
 
 	token, err := f.createAuthToken(identity, reqJson)
@@ -508,6 +511,10 @@ func (f *FabricCAClient) Enroll(request CaEnrollmentRequest) (*Identity, []byte,
 	if err != nil {
 		return nil, nil, err
 	}
+
+	req.Close = true
+	req.Header.Set("Connection", "close")
+
 	req.Header.Set("Content-Type", "application/json")
 	req.SetBasicAuth(request.EnrollmentId, request.Secret)
 
