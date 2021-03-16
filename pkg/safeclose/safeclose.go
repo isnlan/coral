@@ -8,13 +8,16 @@ func New() *Close {
 	return &Close{C: make(chan struct{})}
 }
 
-func (c *Close) Close(f func() error) error  {
+func (c *Close) Close(f func() error) error {
 	select {
-	case <- c.C:
+	case <-c.C:
 		return nil
 	default:
 		close(c.C)
-		return f()
+		if f != nil {
+			return f()
+		}
+		return nil
 	}
 }
 

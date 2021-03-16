@@ -55,7 +55,7 @@ func (f *Factory) getClient(netType string) (*grpc.ClientConn, error) {
 		return client, nil
 	}
 
-	url := f.makeConsulResolver(netType)
+	url := f.makeConsulUrl(netType)
 	client, err := xgrpc.NewClient(url, f.opts...)
 	if err != nil {
 		return nil, errors.WithMessage(err, fmt.Sprintf("create gprc client %s error", url))
@@ -68,9 +68,9 @@ func (f *Factory) getClient(netType string) (*grpc.ClientConn, error) {
 	return client, nil
 }
 
-func (f *Factory) makeConsulResolver(netType string) string {
+func (f *Factory) makeConsulUrl(netType string) string {
 	var svr *protos.NetworkServer
-	return fmt.Sprintf("consul://%s/%s?wait=3m&tag=%s&healthy=true&require-consistent=true",
+	return fmt.Sprintf("consul://%s/%s?wait=30m&tag=%s&healthy=true&require-consistent=true",
 		f.url, utils.MakeTypeName(svr), netType)
 }
 
