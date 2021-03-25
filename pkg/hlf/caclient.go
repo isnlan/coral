@@ -1245,8 +1245,9 @@ func (f *FabricCAClient) getTransport() *http.Transport {
 	var tr *http.Transport
 	if f.Transport == nil {
 		tr = &http.Transport{
-			MaxIdleConns:       10,
+			MaxIdleConns:       20,
 			IdleConnTimeout:    30 * time.Second,
+			MaxConnsPerHost:    50,
 			DisableCompression: true,
 			TLSClientConfig:    &tls.Config{InsecureSkipVerify: f.SkipTLSVerification},
 			DisableKeepAlives:  true,
