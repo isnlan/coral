@@ -14,6 +14,7 @@ import (
 	"encoding/pem"
 	"fmt"
 	"io/ioutil"
+	"net"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -437,9 +438,6 @@ func (f *FabricCAClient) Register(identity *Identity, req *CARegistrationRequest
 	if err != nil {
 		return "", err
 	}
-
-	httpReq.Close = true
-	httpReq.Header.Set("Connection", "close")
 
 	httpReq.Header.Set("Content-Type", "application/json")
 
@@ -1245,12 +1243,18 @@ func (f *FabricCAClient) getTransport() *http.Transport {
 	var tr *http.Transport
 	if f.Transport == nil {
 		tr = &http.Transport{
-			MaxIdleConns:       20,
-			IdleConnTimeout:    30 * time.Second,
-			MaxConnsPerHost:    50,
-			DisableCompression: true,
-			TLSClientConfig:    &tls.Config{InsecureSkipVerify: f.SkipTLSVerification},
-			DisableKeepAlives:  true,
+			Proxy: http.ProxyFromEnvironment,
+			DialContext: (&net.Dialer{
+				Timeout:   30 * time.Second,
+				KeepAlive: 30 * time.Second,
+				DualStack: true,
+			}).DialContext,
+			ForceAttemptHTTP2:     true,
+			MaxIdleConns:          100,
+			IdleConnTimeout:       90 * time.Second,
+			TLSHandshakeTimeout:   10 * time.Second,
+			TLSClientConfig:       &tls.Config{InsecureSkipVerify: f.SkipTLSVerification},
+			ExpectContinueTimeout: 1 * time.Second,
 		}
 	} else {
 		tr = f.Transport
