@@ -38,7 +38,7 @@ func (v *vmImpl) Apply(ctx context.Context, data [][]byte) error {
 	for _, d := range data {
 		_, err := v.client.Apply(ctx, &protos.Data{Data: d})
 		if err != nil {
-			return errors.Wrapf(err, "apply date: \n %s", string(d))
+			return xgrpc.Unwrap(err)
 		}
 	}
 
@@ -50,7 +50,7 @@ func (v *vmImpl) Delete(ctx context.Context, data [][]byte) error {
 		// 资源删除顺序与资源创建顺序相反
 		_, err := v.client.Delete(ctx, &protos.Data{Data: data[len(data)-1-i]})
 		if err != nil {
-			return err
+			return xgrpc.Unwrap(err)
 		}
 	}
 
@@ -61,7 +61,7 @@ func (v *vmImpl) Delete(ctx context.Context, data [][]byte) error {
 func (v *vmImpl) GetNodeIps(ctx context.Context) ([]string, error) {
 	ips, err := v.client.GetNodeIps(ctx, &empty.Empty{})
 	if err != nil {
-		return nil, errors.WithStack(err)
+		return nil, xgrpc.Unwrap(err)
 	}
 
 	return ips.Ips, nil
@@ -70,7 +70,7 @@ func (v *vmImpl) GetNodeIps(ctx context.Context) ([]string, error) {
 func (v *vmImpl) GetNsList(ctx context.Context) ([]string, error) {
 	list, err := v.client.GetNamespacesList(ctx, &empty.Empty{})
 	if err != nil {
-		return nil, err
+		return nil, xgrpc.Unwrap(err)
 	}
 	return list.Namespaces, nil
 }
@@ -78,7 +78,7 @@ func (v *vmImpl) GetNsList(ctx context.Context) ([]string, error) {
 func (v *vmImpl) GetServiceList(ctx context.Context, ns string) ([]string, error) {
 	list, err := v.client.GetServiceList(ctx, &protos.Namespace{Ns: ns})
 	if err != nil {
-		return nil, err
+		return nil, xgrpc.Unwrap(err)
 	}
 	return list.Services, nil
 }
@@ -86,7 +86,7 @@ func (v *vmImpl) GetServiceList(ctx context.Context, ns string) ([]string, error
 func (v *vmImpl) GetServicePort(ctx context.Context, ns string, service string) ([]string, error) {
 	ret, err := v.client.GetServicePort(ctx, &protos.RequestServicePort{Ns: ns, Svc: service})
 	if err != nil {
-		return nil, errors.WithStack(err)
+		return nil, xgrpc.Unwrap(err)
 	}
 	return ret.Ports, nil
 }
@@ -94,7 +94,7 @@ func (v *vmImpl) GetServicePort(ctx context.Context, ns string, service string) 
 func (v *vmImpl) GetDeploymentList(ctx context.Context, ns string) ([]string, error) {
 	list, err := v.client.GetDeploymentList(ctx, &protos.Namespace{Ns: ns})
 	if err != nil {
-		return nil, err
+		return nil, xgrpc.Unwrap(err)
 	}
 	return list.Deployments, err
 }
@@ -102,7 +102,7 @@ func (v *vmImpl) GetDeploymentList(ctx context.Context, ns string) ([]string, er
 func (v *vmImpl) GetDeploymentStatus(ctx context.Context, ns string, deployment string) error {
 	status, err := v.client.GetDeploymentStatus(ctx, &protos.RequestDeploymentStatus{Ns: ns, Name: deployment})
 	if err != nil {
-		return errors.WithStack(err)
+		return xgrpc.Unwrap(err)
 	}
 
 	if len(status.Status) > 0 {
@@ -119,7 +119,7 @@ func (v *vmImpl) GetNamespacesPods(ctx context.Context, ns string, label string,
 		Filter: filter,
 	})
 	if err != nil {
-		return nil, errors.WithStack(err)
+		return nil, xgrpc.Unwrap(err)
 	}
 	return pods.Pods, nil
 }
@@ -137,12 +137,12 @@ func (v *vmImpl) BuildImage(ctx context.Context, name string, src string) error 
 	}
 
 	_, err = v.client.BuildImage(ctx, &protos.RequestBuildImage{Tag: name, Data: bytes})
-	return err
+	return xgrpc.Unwrap(err)
 }
 
 func (v *vmImpl) PushImage(ctx context.Context, name string, version string) error {
 	_, err := v.client.PushImage(ctx, &protos.RequestPushImage{Name: name, Version: version})
-	return err
+	return xgrpc.Unwrap(err)
 }
 
 func (v *vmImpl) GetRepositoryUrl(_ context.Context) string {

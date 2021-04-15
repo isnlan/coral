@@ -3,6 +3,8 @@ package network
 import (
 	"context"
 
+	"github.com/isnlan/coral/pkg/xgrpc"
+
 	"github.com/isnlan/coral/pkg/protos"
 )
 
@@ -47,7 +49,7 @@ func newNetworkImpl(chain *protos.Chain, channel string, client protos.NetworkCl
 
 func (n *networkImpl) BuildChain(ctx context.Context) error {
 	_, err := n.client.BuildChain(ctx, n.chain)
-	return err
+	return xgrpc.Unwrap(err)
 }
 
 func (n *networkImpl) BuildChannel(ctx context.Context) error {
@@ -56,18 +58,18 @@ func (n *networkImpl) BuildChannel(ctx context.Context) error {
 		Name:  n.channel,
 	}
 	_, err := n.client.BuildChannel(ctx, c)
-	return err
+	return xgrpc.Unwrap(err)
 }
 
 func (n *networkImpl) StartChain(ctx context.Context) error {
 	_, err := n.client.StartChain(ctx, n.chain)
-	return err
+	return xgrpc.Unwrap(err)
 }
 
 func (n *networkImpl) IsRunning(ctx context.Context) (bool, error) {
 	status, err := n.client.IsRunning(ctx, n.chain)
 	if err != nil {
-		return false, err
+		return false, xgrpc.Unwrap(err)
 	}
 
 	return status.Status, nil
@@ -75,13 +77,13 @@ func (n *networkImpl) IsRunning(ctx context.Context) (bool, error) {
 
 func (n *networkImpl) StopChain(ctx context.Context) error {
 	_, err := n.client.StopChain(ctx, n.chain)
-	return err
+	return xgrpc.Unwrap(err)
 }
 
 func (n *networkImpl) IsStopped(ctx context.Context) (bool, error) {
 	status, err := n.client.IsStopped(ctx, n.chain)
 	if err != nil {
-		return false, err
+		return false, xgrpc.Unwrap(err)
 	}
 
 	return status.Status, nil
@@ -89,13 +91,13 @@ func (n *networkImpl) IsStopped(ctx context.Context) (bool, error) {
 
 func (n *networkImpl) DeleteChain(ctx context.Context) error {
 	_, err := n.client.DeleteChain(ctx, n.chain)
-	return err
+	return xgrpc.Unwrap(err)
 }
 
 func (n *networkImpl) DownloadArtifacts(ctx context.Context) ([]byte, error) {
 	art, err := n.client.DownloadArtifacts(ctx, n.chain)
 	if err != nil {
-		return nil, err
+		return nil, xgrpc.Unwrap(err)
 	}
 
 	return art.Data, nil
@@ -107,7 +109,11 @@ func (n *networkImpl) Register(ctx context.Context, user string, pwd string) (*p
 		User:  user,
 		Pwd:   pwd,
 	}
-	return n.client.Register(ctx, req)
+	dig, err := n.client.Register(ctx, req)
+	if err != nil {
+		return nil, xgrpc.Unwrap(err)
+	}
+	return dig, nil
 }
 
 func (n *networkImpl) InstallContract(ctx context.Context, contract *protos.Contract) (string, error) {
@@ -120,7 +126,7 @@ func (n *networkImpl) InstallContract(ctx context.Context, contract *protos.Cont
 	}
 	resp, err := n.client.InstallContract(ctx, req)
 	if err != nil {
-		return "", err
+		return "", xgrpc.Unwrap(err)
 	}
 	return resp.TxId, nil
 }
@@ -135,7 +141,7 @@ func (n *networkImpl) UpdateContract(ctx context.Context, contract *protos.Contr
 	}
 	resp, err := n.client.UpdateContract(ctx, req)
 	if err != nil {
-		return "", err
+		return "", xgrpc.Unwrap(err)
 	}
 	return resp.TxId, nil
 }
@@ -152,7 +158,7 @@ func (n *networkImpl) QueryContract(ctx context.Context, identity *protos.Digita
 	}
 	resp, err := n.client.QueryContract(ctx, req)
 	if err != nil {
-		return nil, err
+		return nil, xgrpc.Unwrap(err)
 	}
 	return resp.Data, nil
 }
@@ -169,7 +175,7 @@ func (n *networkImpl) InvokeContract(ctx context.Context, identity *protos.Digit
 	}
 	resp, err := n.client.InvokeContract(ctx, req)
 	if err != nil {
-		return "", nil, err
+		return "", nil, xgrpc.Unwrap(err)
 	}
 	return resp.TxId, resp.Data, nil
 }
@@ -177,7 +183,7 @@ func (n *networkImpl) InvokeContract(ctx context.Context, identity *protos.Digit
 func (n *networkImpl) QueryChainNodes(ctx context.Context) ([]*protos.Node, error) {
 	nodes, err := n.client.QueryChainNodes(ctx, n.chain)
 	if err != nil {
-		return nil, err
+		return nil, xgrpc.Unwrap(err)
 	}
 
 	return nodes.Nodes, nil
@@ -186,7 +192,7 @@ func (n *networkImpl) QueryChainNodes(ctx context.Context) ([]*protos.Node, erro
 func (n *networkImpl) QueryChannelList(ctx context.Context) ([]string, error) {
 	list, err := n.client.QueryChannelList(ctx, n.chain)
 	if err != nil {
-		return nil, err
+		return nil, xgrpc.Unwrap(err)
 	}
 
 	return list.Channels, nil
@@ -197,7 +203,12 @@ func (n *networkImpl) QueryChannel(ctx context.Context) (*protos.ChannelInformat
 		Chain: n.chain,
 		Name:  n.channel,
 	}
-	return n.client.QueryChannel(ctx, c)
+	info, err := n.client.QueryChannel(ctx, c)
+	if err != nil {
+		return nil, xgrpc.Unwrap(err)
+	}
+
+	return info, nil
 }
 
 func (n *networkImpl) QueryContractList(ctx context.Context) ([]string, error) {
@@ -207,7 +218,7 @@ func (n *networkImpl) QueryContractList(ctx context.Context) ([]string, error) {
 	}
 	list, err := n.client.QueryContractList(ctx, c)
 	if err != nil {
-		return nil, err
+		return nil, xgrpc.Unwrap(err)
 	}
 
 	return list.Contracts, nil
@@ -220,7 +231,7 @@ func (n *networkImpl) QueryLatestBlock(ctx context.Context) (*protos.InnerBlock,
 	}
 	block, err := n.client.QueryLatestBlock(ctx, c)
 	if err != nil {
-		return nil, err
+		return nil, xgrpc.Unwrap(err)
 	}
 	return block, nil
 }
@@ -236,7 +247,7 @@ func (n *networkImpl) QueryBlockByNum(ctx context.Context, unm uint64) (*protos.
 	}
 	block, err := n.client.QueryBlockByNum(ctx, req)
 	if err != nil {
-		return nil, err
+		return nil, xgrpc.Unwrap(err)
 	}
 	return block, nil
 }
@@ -252,7 +263,7 @@ func (n *networkImpl) QueryBlockByTxId(ctx context.Context, txId string) (*proto
 	}
 	block, err := n.client.QueryBlockByTxId(ctx, req)
 	if err != nil {
-		return nil, err
+		return nil, xgrpc.Unwrap(err)
 	}
 	return block, nil
 }
@@ -268,7 +279,7 @@ func (n *networkImpl) QueryBlockByHash(ctx context.Context, hash []byte) (*proto
 	}
 	block, err := n.client.QueryBlockByHash(ctx, req)
 	if err != nil {
-		return nil, err
+		return nil, xgrpc.Unwrap(err)
 	}
 	return block, nil
 }
@@ -282,5 +293,9 @@ func (n *networkImpl) QueryTxById(ctx context.Context, txId string) (*protos.Inn
 		Channel: c,
 		TxId:    txId,
 	}
-	return n.client.QueryTxById(ctx, req)
+	tx, err := n.client.QueryTxById(ctx, req)
+	if err != nil {
+		return nil, xgrpc.Unwrap(err)
+	}
+	return tx, nil
 }
