@@ -25,7 +25,7 @@ message FabricDigital {
   bool is_org = 7;
 }
 
-message KBaasDigital {
+message KDBCDigital {
   // 数字身份唯一标识
   string bduid = 1;
   // 区块链网络ID
@@ -52,7 +52,7 @@ message DigitalIdentity {
   // 数字身份
   oneof digital {
     FabricDigital fabric = 5;
-    KBaasDigital kbaas = 6;
+    KDBCDigital kdbc = 6;
   }
 }
 
