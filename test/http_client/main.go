@@ -22,7 +22,7 @@ func main() {
 	errors.Check(err)
 
 	var i map[string]interface{}
-	err = trace.DoRequest(context.Background(), req, &i)
+	err = trace.DoRequest(context.Background(), nil, req, &i)
 	errors.Check(err)
 
 	{

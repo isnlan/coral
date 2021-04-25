@@ -10,12 +10,17 @@ import (
 	"github.com/opentracing/opentracing-go"
 )
 
-var client = &http.Client{Transport: &nethttp.Transport{}}
-
-func DoRequest(ctx context.Context, req *http.Request, v interface{}) error {
+func DoRequest(ctx context.Context, tr *http.Transport, req *http.Request, v interface{}) error {
 	req = req.WithContext(ctx)
 	req, ht := nethttp.TraceRequest(opentracing.GlobalTracer(), req, nethttp.OperationName(req.URL.EscapedPath()), nethttp.ComponentName("http client"))
 	defer ht.Finish()
+
+	var client *http.Client
+	if tr != nil {
+		client = &http.Client{Transport: tr}
+	} else {
+		client = http.DefaultClient
+	}
 
 	res, err := client.Do(req)
 	if err != nil {
@@ -39,7 +44,7 @@ func DoPost(ctx context.Context, url string, req interface{}, v interface{}) err
 		return err
 	}
 	request.Header.Set("Content-Type", "application/json")
-	err = DoRequest(ctx, request, v)
+	err = DoRequest(ctx, nil, request, v)
 	if err != nil {
 		return err
 	}
