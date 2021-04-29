@@ -12,6 +12,8 @@ import (
 	"encoding/pem"
 	"io/ioutil"
 
+	"github.com/isnlan/coral/pkg/errors"
+
 	"github.com/isnlan/coral/pkg/contract/identity"
 )
 
@@ -154,7 +156,14 @@ func LoadCertFromBytes(pk, sk []byte) (*Identity, error) {
 // 用于转换ca生成的公私钥
 func LoadECCertFromBytes(pk, sk []byte) (*Identity, error) {
 	cpb, _ := pem.Decode(pk)
+	if cpb == nil {
+		return nil, errors.New("pem decode pk error")
+	}
 	kpb, _ := pem.Decode(sk)
+	if kpb == nil {
+		return nil, errors.New("pem decode sk error")
+	}
+
 	crt, err := x509.ParseCertificate(cpb.Bytes)
 	if err != nil {
 		return nil, err
