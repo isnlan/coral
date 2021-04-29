@@ -7,7 +7,8 @@ require (
 	github.com/armon/go-metrics v0.3.2 // indirect
 	github.com/assembla/cony v0.3.2
 	github.com/benweissmann/memongo v0.1.1
-	github.com/cloudflare/cfssl v1.0.0
+	github.com/cloudflare/cfssl v1.5.0
+	//github.com/cloudflare/cfssl v0.0.0
 	github.com/codahale/hdrhistogram v0.0.0-20161010025455-3a0bb77429bd // indirect
 	github.com/dgraph-io/ristretto v0.0.3
 	github.com/docker/docker v1.4.2-0.20191101170500-ac7306503d23
@@ -37,16 +38,13 @@ require (
 	github.com/micro/go-micro v1.18.0
 	github.com/miekg/pkcs11 v1.0.3 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/mitchellh/mapstructure v1.1.2
 	github.com/op/go-logging v0.0.0-20160315200505-970db520ece7
 	github.com/opentracing-contrib/go-stdlib v1.0.0
 	github.com/opentracing/opentracing-go v1.1.1-0.20190913142402-a7454ce5950e
 	github.com/parnurzeal/gorequest v0.2.16
 	github.com/pkg/errors v0.9.1
 	github.com/smartystreets/goconvey v0.0.0-20190330032615-68dc04aab96a
-	github.com/spf13/cast v1.3.0
 	github.com/spf13/cobra v1.0.0
-	github.com/spf13/pflag v1.0.3
 	github.com/spf13/viper v1.4.0
 	github.com/streadway/amqp v1.0.0
 	github.com/stretchr/testify v1.5.1
@@ -56,8 +54,7 @@ require (
 	github.com/uber/jaeger-lib v2.2.0+incompatible // indirect
 	go.mongodb.org/mongo-driver v1.3.4
 	go.uber.org/zap v1.15.0
-	golang.org/x/crypto v0.0.0-20191108234033-bd318be0434a
-	golang.org/x/net v0.0.0-20200202094626-16171245cfb2 // indirect
+	golang.org/x/crypto v0.0.0-20201012173705-84dcc777aaee
 	google.golang.org/grpc v1.29.1
 	google.golang.org/protobuf v1.25.0
 	gopkg.in/yaml.v2 v2.2.8
@@ -65,7 +62,7 @@ require (
 )
 
 replace (
-	github.com/cloudflare/cfssl v1.0.0 => github.com/cloudflare/cfssl v1.4.1
+	//github.com/cloudflare/cfssl v0.0.0 => github.com/cloudflare/cfssl v1.4.1
 	github.com/hyperledger/fabric v0.0.0 => github.com/hyperledger/fabric v2.1.1+incompatible
 	github.com/hyperledger/fabric-amcl v0.0.0 => github.com/hyperledger/fabric-amcl v0.0.0-20200424173818-327c9e2cf77a
 	github.com/hyperledger/fabric-chaincode-go v0.0.0 => github.com/hyperledger/fabric-chaincode-go v0.0.0-20200511190512-bcfeb58dd83a

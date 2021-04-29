@@ -28,7 +28,7 @@ github.com/beorn7/perks/quantile
 github.com/cespare/xxhash
 # github.com/cespare/xxhash/v2 v2.1.1
 github.com/cespare/xxhash/v2
-# github.com/cloudflare/cfssl v1.0.0 => github.com/cloudflare/cfssl v1.4.1
+# github.com/cloudflare/cfssl v1.5.0
 ## explicit
 github.com/cloudflare/cfssl/api
 github.com/cloudflare/cfssl/api/client
@@ -228,13 +228,10 @@ github.com/hyperledger/fabric/bccsp/sw
 github.com/hyperledger/fabric/bccsp/utils
 github.com/hyperledger/fabric/common/flogging
 github.com/hyperledger/fabric/common/flogging/fabenc
-github.com/hyperledger/fabric/idemix
 github.com/hyperledger/fabric/internal/pkg/identity
 github.com/hyperledger/fabric/protoutil
 # github.com/hyperledger/fabric-amcl v0.0.0 => github.com/hyperledger/fabric-amcl v0.0.0-20200424173818-327c9e2cf77a
 ## explicit
-github.com/hyperledger/fabric-amcl/amcl
-github.com/hyperledger/fabric-amcl/amcl/FP256BN
 # github.com/hyperledger/fabric-chaincode-go v0.0.0 => github.com/hyperledger/fabric-chaincode-go v0.0.0-20200511190512-bcfeb58dd83a
 ## explicit
 github.com/hyperledger/fabric-chaincode-go/shim
@@ -255,6 +252,7 @@ github.com/jmhodges/clock
 ## explicit
 github.com/jmoiron/sqlx
 github.com/jmoiron/sqlx/reflectx
+github.com/jmoiron/sqlx/types
 # github.com/jpillora/backoff v1.0.0
 ## explicit
 github.com/jpillora/backoff
@@ -292,7 +290,6 @@ github.com/miekg/pkcs11
 ## explicit
 github.com/mitchellh/go-homedir
 # github.com/mitchellh/mapstructure v1.1.2
-## explicit
 github.com/mitchellh/mapstructure
 # github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd
 github.com/modern-go/concurrent
@@ -357,7 +354,6 @@ github.com/smartystreets/goconvey/convey/reporting
 github.com/spf13/afero
 github.com/spf13/afero/mem
 # github.com/spf13/cast v1.3.0
-## explicit
 github.com/spf13/cast
 # github.com/spf13/cobra v1.0.0
 ## explicit
@@ -365,7 +361,6 @@ github.com/spf13/cobra
 # github.com/spf13/jwalterweatherman v1.0.0
 github.com/spf13/jwalterweatherman
 # github.com/spf13/pflag v1.0.3
-## explicit
 github.com/spf13/pflag
 # github.com/spf13/viper v1.4.0
 ## explicit
@@ -373,12 +368,9 @@ github.com/spf13/viper
 # github.com/streadway/amqp v1.0.0
 ## explicit
 github.com/streadway/amqp
-# github.com/stretchr/objx v0.2.0
-github.com/stretchr/objx
 # github.com/stretchr/testify v1.5.1
 ## explicit
 github.com/stretchr/testify/assert
-github.com/stretchr/testify/mock
 # github.com/sykesm/zap-logfmt v0.0.3
 ## explicit
 github.com/sykesm/zap-logfmt
@@ -410,22 +402,29 @@ github.com/uber/jaeger-client-go/utils
 github.com/uber/jaeger-lib/metrics
 # github.com/ugorji/go/codec v1.1.7
 github.com/ugorji/go/codec
-# github.com/weppos/publicsuffix-go v0.5.0
+# github.com/weppos/publicsuffix-go v0.13.0
 github.com/weppos/publicsuffix-go/publicsuffix
 # github.com/xdg/scram v0.0.0-20180814205039-7eeb5667e42c
 github.com/xdg/scram
 # github.com/xdg/stringprep v1.0.0
 github.com/xdg/stringprep
-# github.com/zmap/zcrypto v0.0.0-20190729165852-9051775e6a2e
+# github.com/zmap/zcrypto v0.0.0-20200911161511-43ff0ea04f21
 github.com/zmap/zcrypto/json
 github.com/zmap/zcrypto/util
 github.com/zmap/zcrypto/x509
 github.com/zmap/zcrypto/x509/ct
 github.com/zmap/zcrypto/x509/pkix
-# github.com/zmap/zlint v0.0.0-20190806154020-fd021b4cfbeb
-github.com/zmap/zlint
-github.com/zmap/zlint/lints
-github.com/zmap/zlint/util
+# github.com/zmap/zlint/v2 v2.2.1
+github.com/zmap/zlint/v2
+github.com/zmap/zlint/v2/lint
+github.com/zmap/zlint/v2/lints/apple
+github.com/zmap/zlint/v2/lints/cabf_br
+github.com/zmap/zlint/v2/lints/cabf_ev
+github.com/zmap/zlint/v2/lints/community
+github.com/zmap/zlint/v2/lints/etsi
+github.com/zmap/zlint/v2/lints/mozilla
+github.com/zmap/zlint/v2/lints/rfc
+github.com/zmap/zlint/v2/util
 # go.mongodb.org/mongo-driver v1.3.4
 ## explicit
 go.mongodb.org/mongo-driver/bson
@@ -484,7 +483,7 @@ go.uber.org/zap/internal/color
 go.uber.org/zap/internal/exit
 go.uber.org/zap/zapcore
 go.uber.org/zap/zapgrpc
-# golang.org/x/crypto v0.0.0-20191108234033-bd318be0434a
+# golang.org/x/crypto v0.0.0-20201012173705-84dcc777aaee
 ## explicit
 golang.org/x/crypto/cryptobyte
 golang.org/x/crypto/cryptobyte/asn1
@@ -495,8 +494,7 @@ golang.org/x/crypto/pbkdf2
 golang.org/x/crypto/pkcs12
 golang.org/x/crypto/pkcs12/internal/rc2
 golang.org/x/crypto/sha3
-# golang.org/x/net v0.0.0-20200202094626-16171245cfb2
-## explicit
+# golang.org/x/net v0.0.0-20201010224723-4f7140c49acb
 golang.org/x/net/context
 golang.org/x/net/context/ctxhttp
 golang.org/x/net/http/httpguts
@@ -509,11 +507,12 @@ golang.org/x/net/trace
 # golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
 golang.org/x/sync/errgroup
 golang.org/x/sync/semaphore
-# golang.org/x/sys v0.0.0-20200223170610-d5e6a3e2c0ae
+# golang.org/x/sys v0.0.0-20200930185726-fdedc70b468f
 golang.org/x/sys/cpu
+golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
 golang.org/x/sys/windows
-# golang.org/x/text v0.3.2
+# golang.org/x/text v0.3.3
 golang.org/x/text/secure/bidirule
 golang.org/x/text/transform
 golang.org/x/text/unicode/bidi
@@ -602,3 +601,4 @@ gopkg.in/yaml.v2
 # moul.io/http2curl v1.0.0
 ## explicit
 moul.io/http2curl
+# github.com/hyperledger/fabric-amcl v0.0.0 => github.com/hyperledger/fabric-amcl v0.0.0-20200424173818-327c9e2cf77a

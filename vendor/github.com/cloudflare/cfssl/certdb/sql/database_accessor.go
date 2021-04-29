@@ -19,8 +19,10 @@ func init() {
 
 const (
 	insertSQL = `
-INSERT INTO certificates (serial_number, authority_key_identifier, ca_label, status, reason, expiry, revoked_at, pem)
-	VALUES (:serial_number, :authority_key_identifier, :ca_label, :status, :reason, :expiry, :revoked_at, :pem);`
+INSERT INTO certificates (serial_number, authority_key_identifier, ca_label, status, reason, expiry, revoked_at, pem,
+	issued_at, not_before, metadata, sans, common_name)
+VALUES (:serial_number, :authority_key_identifier, :ca_label, :status, :reason, :expiry, :revoked_at, :pem,
+	:issued_at, :not_before, :metadata, :sans, :common_name);`
 
 	selectSQL = `
 SELECT %s FROM certificates
@@ -99,15 +101,29 @@ func (d *Accessor) InsertCertificate(cr certdb.CertificateRecord) error {
 		return err
 	}
 
+	var issuedAt, notBefore *time.Time
+	if cr.IssuedAt != nil {
+		t := cr.IssuedAt.UTC()
+		issuedAt = &t
+	}
+	if cr.NotBefore != nil {
+		t := cr.NotBefore.UTC()
+		notBefore = &t
+	}
 	res, err := d.db.NamedExec(insertSQL, &certdb.CertificateRecord{
-		Serial:    cr.Serial,
-		AKI:       cr.AKI,
-		CALabel:   cr.CALabel,
-		Status:    cr.Status,
-		Reason:    cr.Reason,
-		Expiry:    cr.Expiry.UTC(),
-		RevokedAt: cr.RevokedAt.UTC(),
-		PEM:       cr.PEM,
+		Serial:       cr.Serial,
+		AKI:          cr.AKI,
+		CALabel:      cr.CALabel,
+		Status:       cr.Status,
+		Reason:       cr.Reason,
+		Expiry:       cr.Expiry.UTC(),
+		RevokedAt:    cr.RevokedAt.UTC(),
+		PEM:          cr.PEM,
+		IssuedAt:     issuedAt,
+		NotBefore:    notBefore,
+		MetadataJSON: cr.MetadataJSON,
+		SANsJSON:     cr.SANsJSON,
+		CommonName:   cr.CommonName,
 	})
 	if err != nil {
 		return wrapSQLError(err)
