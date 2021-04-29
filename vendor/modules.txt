@@ -218,7 +218,7 @@ github.com/hashicorp/hcl/json/scanner
 github.com/hashicorp/hcl/json/token
 # github.com/hashicorp/serf v0.9.5
 github.com/hashicorp/serf/coordinate
-# github.com/hyperledger/fabric v0.0.0 => github.com/hyperledger/fabric v2.1.1+incompatible
+# github.com/hyperledger/fabric v2.1.1+incompatible
 ## explicit
 github.com/hyperledger/fabric/bccsp
 github.com/hyperledger/fabric/bccsp/factory
@@ -230,13 +230,13 @@ github.com/hyperledger/fabric/common/flogging
 github.com/hyperledger/fabric/common/flogging/fabenc
 github.com/hyperledger/fabric/internal/pkg/identity
 github.com/hyperledger/fabric/protoutil
-# github.com/hyperledger/fabric-amcl v0.0.0 => github.com/hyperledger/fabric-amcl v0.0.0-20200424173818-327c9e2cf77a
+# github.com/hyperledger/fabric-amcl v0.0.0-20200424173818-327c9e2cf77a
 ## explicit
-# github.com/hyperledger/fabric-chaincode-go v0.0.0 => github.com/hyperledger/fabric-chaincode-go v0.0.0-20200511190512-bcfeb58dd83a
+# github.com/hyperledger/fabric-chaincode-go v0.0.0-20200511190512-bcfeb58dd83a
 ## explicit
 github.com/hyperledger/fabric-chaincode-go/shim
 github.com/hyperledger/fabric-chaincode-go/shim/internal
-# github.com/hyperledger/fabric-protos-go v0.0.0 => github.com/hyperledger/fabric-protos-go v0.0.0-20191121202242-f5500d5e3e85
+# github.com/hyperledger/fabric-protos-go v0.0.0-20191121202242-f5500d5e3e85
 ## explicit
 github.com/hyperledger/fabric-protos-go/common
 github.com/hyperledger/fabric-protos-go/ledger/queryresult
@@ -601,4 +601,3 @@ gopkg.in/yaml.v2
 # moul.io/http2curl v1.0.0
 ## explicit
 moul.io/http2curl
-# github.com/hyperledger/fabric-amcl v0.0.0 => github.com/hyperledger/fabric-amcl v0.0.0-20200424173818-327c9e2cf77a

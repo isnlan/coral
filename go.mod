@@ -29,10 +29,14 @@ require (
 	github.com/hashicorp/go-immutable-radix v1.1.0 // indirect
 	github.com/hashicorp/go-version v1.2.1 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
-	github.com/hyperledger/fabric v0.0.0
-	github.com/hyperledger/fabric-amcl v0.0.0 // indirect
-	github.com/hyperledger/fabric-chaincode-go v0.0.0
-	github.com/hyperledger/fabric-protos-go v0.0.0
+	github.com/hyperledger/fabric v2.1.1+incompatible
+	github.com/hyperledger/fabric-amcl v0.0.0-20200424173818-327c9e2cf77a // indirect
+	github.com/hyperledger/fabric-chaincode-go v0.0.0-20200511190512-bcfeb58dd83a
+	github.com/hyperledger/fabric-protos-go v0.0.0-20191121202242-f5500d5e3e85
+	//github.com/hyperledger/fabric v0.0.0
+	//github.com/hyperledger/fabric-amcl v0.0.0 // indirect
+	//github.com/hyperledger/fabric-chaincode-go v0.0.0
+	//github.com/hyperledger/fabric-protos-go v0.0.0
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/jpillora/backoff v1.0.0
 	github.com/micro/go-micro v1.18.0
@@ -61,10 +65,10 @@ require (
 	moul.io/http2curl v1.0.0 // indirect
 )
 
-replace (
-	//github.com/cloudflare/cfssl v0.0.0 => github.com/cloudflare/cfssl v1.4.1
-	github.com/hyperledger/fabric v0.0.0 => github.com/hyperledger/fabric v2.1.1+incompatible
-	github.com/hyperledger/fabric-amcl v0.0.0 => github.com/hyperledger/fabric-amcl v0.0.0-20200424173818-327c9e2cf77a
-	github.com/hyperledger/fabric-chaincode-go v0.0.0 => github.com/hyperledger/fabric-chaincode-go v0.0.0-20200511190512-bcfeb58dd83a
-	github.com/hyperledger/fabric-protos-go v0.0.0 => github.com/hyperledger/fabric-protos-go v0.0.0-20191121202242-f5500d5e3e85
-)
+//replace (
+//	//github.com/cloudflare/cfssl v0.0.0 => github.com/cloudflare/cfssl v1.4.1
+//	github.com/hyperledger/fabric v0.0.0 => github.com/hyperledger/fabric v2.1.1+incompatible
+//	github.com/hyperledger/fabric-amcl v0.0.0 => github.com/hyperledger/fabric-amcl v0.0.0-20200424173818-327c9e2cf77a
+//	github.com/hyperledger/fabric-chaincode-go v0.0.0 => github.com/hyperledger/fabric-chaincode-go v0.0.0-20200511190512-bcfeb58dd83a
+//	github.com/hyperledger/fabric-protos-go v0.0.0 => github.com/hyperledger/fabric-protos-go v0.0.0-20191121202242-f5500d5e3e85
+//)
