@@ -47,7 +47,7 @@ func New(name string) *Application {
 	cmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config.yaml)")
 
 	cobra.OnInitialize(initConfig)
-	rotator := initializeLogging()
+	rotator := initializeLogging(name)
 
 	Name = name
 
@@ -107,7 +107,7 @@ func (app *Application) Start(svr Server) {
 	}
 }
 
-func initializeLogging() logging.Rotator {
+func initializeLogging(name string) logging.Rotator {
 	loggingFile := os.Getenv("LOGGING_FILE")
 	if loggingFile != "" {
 		writer := &lumberjack.Logger{
@@ -117,7 +117,7 @@ func initializeLogging() logging.Rotator {
 			MaxAge:     1,    //days
 			Compress:   true, // disabled by default
 		}
-		c := logging.NewFileConfig(writer)
+		c := logging.NewFileConfig(name, writer)
 		logging.Init(c)
 		return writer
 	} else {
