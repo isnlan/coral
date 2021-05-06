@@ -8,6 +8,7 @@ import (
 	"os/signal"
 	"strings"
 	"syscall"
+	"time"
 
 	"gopkg.in/natefinch/lumberjack.v2"
 
@@ -64,6 +65,22 @@ func (app *Application) Start(svr Server) {
 			log.Fatal(err)
 		}
 		svr.Start()
+
+		if app.rotator != nil {
+			go func() {
+				for {
+					now := time.Now()
+					next := now.Add(time.Hour * 24)
+					next = time.Date(next.Year(), next.Month(), next.Day(), 0, 0, 0, 0, next.Location())
+					t := time.NewTimer(next.Sub(now))
+					<-t.C
+					err := app.rotator.Rotate()
+					if err != nil {
+						log.Fatal(err)
+					}
+				}
+			}()
+		}
 
 		sigChan := make(chan os.Signal, 1)
 		signal.Notify(sigChan, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT)
