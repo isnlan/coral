@@ -9,6 +9,8 @@ import (
 	"strings"
 	"syscall"
 
+	"gopkg.in/natefinch/lumberjack.v2"
+
 	"github.com/isnlan/coral/pkg/logging"
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
@@ -31,8 +33,9 @@ var (
 )
 
 type Application struct {
-	name string
-	cmd  *cobra.Command
+	name    string
+	cmd     *cobra.Command
+	rotator logging.Rotator
 }
 
 func New(name string) *Application {
@@ -43,13 +46,14 @@ func New(name string) *Application {
 	cmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config.yaml)")
 
 	cobra.OnInitialize(initConfig)
-	initializeLogging()
+	rotator := initializeLogging()
 
 	Name = name
 
 	return &Application{
-		name: name,
-		cmd:  cmd,
+		name:    name,
+		cmd:     cmd,
+		rotator: rotator,
 	}
 }
 
@@ -70,7 +74,12 @@ func (app *Application) Start(svr Server) {
 				svr.Close()
 				return
 			case syscall.SIGHUP:
-				//logger.Rotate(false)
+				if app.rotator != nil {
+					err := app.rotator.Rotate()
+					if err != nil {
+						log.Fatal(err)
+					}
+				}
 			default:
 				return
 			}
@@ -81,14 +90,28 @@ func (app *Application) Start(svr Server) {
 	}
 }
 
-func initializeLogging() {
-	loggingSpec := os.Getenv("LOGGING_SPEC")
-	loggingFormat := os.Getenv("LOGGING_FORMAT")
-	logging.Init(logging.Config{
-		Format:  loggingFormat,
-		Writer:  os.Stderr,
-		LogSpec: loggingSpec,
-	})
+func initializeLogging() logging.Rotator {
+	loggingFile := os.Getenv("LOGGING_FILE")
+	if loggingFile != "" {
+		writer := &lumberjack.Logger{
+			Filename:   loggingFile,
+			MaxSize:    100, // megabytes
+			MaxBackups: 3,
+			MaxAge:     1,    //days
+			Compress:   true, // disabled by default
+		}
+		c := logging.NewFileConfig(writer)
+		logging.Init(c)
+		return writer
+	} else {
+		c := logging.Config{
+			Format:  os.Getenv("LOGGING_FORMAT"),
+			Writer:  os.Stderr,
+			LogSpec: os.Getenv("LOGGING_SPEC"),
+		}
+		logging.Init(c)
+		return nil
+	}
 }
 
 // initConfig reads in config file and ENV variables if set.

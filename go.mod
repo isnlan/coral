@@ -61,6 +61,7 @@ require (
 	golang.org/x/crypto v0.0.0-20201012173705-84dcc777aaee
 	google.golang.org/grpc v1.29.1
 	google.golang.org/protobuf v1.25.0
+	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	gopkg.in/yaml.v2 v2.2.8
 	moul.io/http2curl v1.0.0 // indirect
 )

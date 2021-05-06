@@ -57,7 +57,7 @@ type Logging struct {
 // New creates a new logging system and initializes it with the provided
 // configuration.
 func New(c Config) (*Logging, error) {
-	encoderConfig := zap.NewProductionEncoderConfig()
+	encoderConfig := NewProductionEncoderConfig()
 	encoderConfig.NameKey = "name"
 
 	s := &Logging{
