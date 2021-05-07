@@ -41,14 +41,17 @@ func TracerWrapper(c *gin.Context) {
 	if err := sp.Tracer().Inject(sp.Context(),
 		opentracing.TextMap,
 		opentracing.TextMapCarrier(md)); err != nil {
-		logger.Error(err)
+		logger.Errorf("trace inject error: %v", err)
 	}
 
 	ctx := opentracing.ContextWithSpan(c.Request.Context(), sp)
 	ctx = metadata.NewContext(ctx, md)
 
 	setContext(c, ctx)
-	logger.Infof("trace_id: %s", getTraceIDFromSpan(sp))
+	traceId := getTraceIDFromSpan(sp)
+	if traceId != "" {
+		logger.Infof("trace_id: %s", traceId)
+	}
 
 	c.Next()
 
