@@ -31,7 +31,7 @@ func NewFileConfig(svr string, w io.Writer) Config {
 	writeSyncer := zapcore.AddSync(w)
 
 	format := `{"@timestamp": "%{time:2006-01-02T15:04:05.999Z07:00}", "service": "` + svr +
-		`", "module": "%{module}", "func": "%{shortfunc}", "level": "%{level:.4s}", "msg": "%{message}"}`
+		`", "logger": "%{module}.%{shortfunc}", "level": "%{level:.4s}", "msg": "%{message}"}`
 	c := Config{
 		Format:  format,
 		LogSpec: "",
