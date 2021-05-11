@@ -26,6 +26,7 @@ func TestCA_Enroll(t *testing.T) {
 		ParentServerURL: "",
 		CertFile:        "/Users/snlan/go/src/github.com/isnlan/coral/test/ca/ca.org1-cert.pem",
 		KeyFile:         "/Users/snlan/go/src/github.com/isnlan/coral/test/ca/key.pem",
+		MspId:           "Org1MSP",
 	}
 
 	csr, err := crypto.CreateCertificateRequest("myname", key, []string{"127.0.0.1:7054"})
@@ -40,7 +41,7 @@ func TestCA_Enroll(t *testing.T) {
 	a, _ := pem.Decode(cert)
 	certObj, err := x509.ParseCertificate(a.Bytes)
 	assert.NoError(t, err)
-	id := &hlf.Identity{Certificate: certObj, PrivateKey: key, MspId: "Org1MSP"}
+	id := &hlf.Identity{Certificate: certObj, PrivateKey: key, MspId: ca.mspId}
 
 	address, err := id.GetAddress()
 	assert.NoError(t, err)

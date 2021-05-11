@@ -39,13 +39,14 @@ type CA struct {
 	certFile        string
 	keyFile         string
 	attrMgr         *attrmgr.Mgr
-	//issuer          idemix.Issuer
+	mspId           string
 }
 
 type Config struct {
 	ParentServerURL string
 	CertFile        string
 	KeyFile         string
+	MspId           string
 }
 
 func New(cfg *Config) (*CA, error) {
@@ -63,7 +64,7 @@ func New(cfg *Config) (*CA, error) {
 		keyFile:         cfg.KeyFile,
 		attrMgr:         attrmgr.New(),
 		enrollSigner:    nil,
-		//issuer:          nil,
+		mspId:           cfg.MspId,
 	}
 
 	err := ca.validateCertAndKey(ca.certFile, ca.keyFile)
