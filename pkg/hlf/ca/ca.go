@@ -42,7 +42,13 @@ type CA struct {
 	//issuer          idemix.Issuer
 }
 
-func New() (*CA, error) {
+type Config struct {
+	ParentServerURL string
+	CertFile        string
+	KeyFile         string
+}
+
+func New(cfg *Config) (*CA, error) {
 	signing := &config.Signing{
 		Profiles: map[string]*config.SigningProfile{},
 		Default:  config.DefaultConfig(),
@@ -51,10 +57,10 @@ func New() (*CA, error) {
 		csp:             factory.GetDefault(),
 		name:            "ca",
 		csr:             &CSRInfo{},
-		parentServerURL: "",
+		parentServerURL: cfg.ParentServerURL,
 		signing:         signing,
-		certFile:        "/Users/snlan/go/src/github.com/isnlan/coral/test/ca/ca.org1-cert.pem",
-		keyFile:         "/Users/snlan/go/src/github.com/isnlan/coral/test/ca/key.pem",
+		certFile:        cfg.CertFile,
+		keyFile:         cfg.KeyFile,
 		attrMgr:         attrmgr.New(),
 		enrollSigner:    nil,
 		//issuer:          nil,

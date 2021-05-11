@@ -22,9 +22,15 @@ func TestCA_Enroll(t *testing.T) {
 	key, err := crypto.GenerateKey()
 	assert.NoError(t, err)
 
+	conf := &Config{
+		ParentServerURL: "",
+		CertFile:        "/Users/snlan/go/src/github.com/isnlan/coral/test/ca/ca.org1-cert.pem",
+		KeyFile:         "/Users/snlan/go/src/github.com/isnlan/coral/test/ca/key.pem",
+	}
+
 	csr, err := crypto.CreateCertificateRequest("myname", key, []string{"127.0.0.1:7054"})
 	assert.NoError(t, err)
-	ca, err := New()
+	ca, err := New(conf)
 	assert.NoError(t, err)
 	req := MakeEmptySignRequest(csr)
 	cert, err := ca.Enroll(req, "myname", "mupass")
