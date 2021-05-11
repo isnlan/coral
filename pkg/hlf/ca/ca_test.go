@@ -16,18 +16,18 @@ func TestCA_Enroll(t *testing.T) {
 		Algorithm: "P256-SHA256",
 		Hash:      "SHA2-256",
 	}
-	crypto, err := hlf.NewECCryptSuiteFromConfig(CryptoConfig)
-	assert.NoError(t, err)
-
-	key, err := crypto.GenerateKey()
-	assert.NoError(t, err)
 
 	conf := &Config{
 		ParentServerURL: "",
 		CertFile:        "/Users/snlan/go/src/github.com/isnlan/coral/test/ca/ca.org1-cert.pem",
 		KeyFile:         "/Users/snlan/go/src/github.com/isnlan/coral/test/ca/key.pem",
-		MspId:           "Org1MSP",
 	}
+
+	crypto, err := hlf.NewECCryptSuiteFromConfig(CryptoConfig)
+	assert.NoError(t, err)
+
+	key, err := crypto.GenerateKey()
+	assert.NoError(t, err)
 
 	csr, err := crypto.CreateCertificateRequest("myname", key, []string{"127.0.0.1:7054"})
 	assert.NoError(t, err)
@@ -41,7 +41,7 @@ func TestCA_Enroll(t *testing.T) {
 	a, _ := pem.Decode(cert)
 	certObj, err := x509.ParseCertificate(a.Bytes)
 	assert.NoError(t, err)
-	id := &hlf.Identity{Certificate: certObj, PrivateKey: key, MspId: ca.mspId}
+	id := &hlf.Identity{Certificate: certObj, PrivateKey: key, MspId: "Org1MSP"}
 
 	address, err := id.GetAddress()
 	assert.NoError(t, err)
