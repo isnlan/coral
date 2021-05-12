@@ -3,6 +3,8 @@ package trace
 import (
 	"context"
 
+	"go.uber.org/zap"
+
 	"github.com/opentracing/opentracing-go"
 	"github.com/uber/jaeger-client-go"
 
@@ -57,6 +59,38 @@ func getTraceIDFromSpan(span opentracing.Span) string {
 	return ""
 }
 
+func GetSpanIDFromContext(ctx context.Context) string {
+	span := opentracing.SpanFromContext(ctx)
+	if span != nil {
+		return getSpanIDFromSpan(span)
+	}
+
+	return ""
+}
+
+func getSpanIDFromSpan(span opentracing.Span) string {
+	if sc, ok := span.Context().(jaeger.SpanContext); ok {
+		return sc.SpanID().String()
+	}
+	return ""
+}
+
+func GetParentIDFromSpan(ctx context.Context) string {
+	span := opentracing.SpanFromContext(ctx)
+	if span != nil {
+		return getParentIDFromSpan(span)
+	}
+
+	return ""
+}
+
+func getParentIDFromSpan(span opentracing.Span) string {
+	if sc, ok := span.Context().(jaeger.SpanContext); ok {
+		return sc.ParentID().String()
+	}
+	return ""
+}
+
 func GetUrlFromContext(ctx context.Context) string {
 	return getStringFromContext(ctx, _UrlKey)
 }
@@ -70,4 +104,13 @@ func getStringFromContext(ctx context.Context, key string) string {
 		}
 	}
 	return ""
+}
+
+func GetTraceFieldFrom(ctx context.Context) []interface{} {
+	var fields []interface{}
+	fields = append(fields, zap.String("service", logging.ServiceName))
+	fields = append(fields, zap.String("trace", GetTraceIDFromContext(ctx)))
+	fields = append(fields, zap.String("span", GetSpanIDFromContext(ctx)))
+	fields = append(fields, zap.String("parent", GetParentIDFromSpan(ctx)))
+	return fields
 }

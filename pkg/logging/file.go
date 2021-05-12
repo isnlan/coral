@@ -24,18 +24,14 @@ func NewProductionEncoderConfig() zapcore.EncoderConfig {
 }
 
 func EpochTimeEncoder(t time.Time, encoder zapcore.PrimitiveArrayEncoder) {
-	encoder.AppendString(t.UTC().Format("2006-01-02T15:04:05Z07:00.000Z"))
+	encoder.AppendString(t.UTC().Format("2006-01-02T15:04:05.999Z07:00"))
 }
 
-func NewFileConfig(svr string, w io.Writer) Config {
-	writeSyncer := zapcore.AddSync(w)
-
-	format := `{"@timestamp": "%{time:2006-01-02T15:04:05.999Z07:00}", "service": "` + svr +
-		`", "logger": "%{module}.%{shortfunc}", "level": "%{level:.4s}", "msg": "%{message}"}`
+func NewWriteSyncerConfig(w io.Writer) Config {
 	c := Config{
-		Format:  format,
+		Format:  "json",
 		LogSpec: "",
-		Writer:  writeSyncer,
+		Writer:  zapcore.AddSync(w),
 	}
 	return c
 }

@@ -284,7 +284,7 @@ func newTimeFormatter(f string) TimeFormatter {
 
 // Format writes the log record time stamp to the provided writer.
 func (t TimeFormatter) Format(w io.Writer, entry zapcore.Entry, fields []zapcore.Field) {
-	fmt.Fprint(w, entry.Time.UTC().Format(t.Layout))
+	fmt.Fprint(w, entry.Time.Format(t.Layout))
 }
 
 func stringOrDefault(str, dflt string) string {

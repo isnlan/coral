@@ -13,7 +13,7 @@ import (
 const host = "172.20.107.44:32333"
 const local = "127.0.0.1:6831"
 
-var logger = logging.MustGetLogger("mysvr")
+var logger = logging.MustGetLogger("httpserver")
 
 func main() {
 	_, closer, err := trace.NewTracer("scpkg-gin-server", local)
@@ -21,21 +21,20 @@ func main() {
 		panic(err)
 	}
 	defer closer.Close()
-	logging.Init(logging.NewFileConfig("http", os.Stderr))
 
 	r := gin.Default()
 	r.Use(trace.TracerWrapper)
 
+	logging.Init("ping", logging.NewWriteSyncerConfig(os.Stderr))
+
 	r.GET("/ping", func(c *gin.Context) {
 		time.Sleep(time.Millisecond * 200)
-
 		ctx := trace.GetContextFrom(c)
+		logger.With(trace.GetTraceFieldFrom(ctx)...).Info("get client request")
 		spanA, ctxS := trace.StartSpanFromContext(ctx, "save object to db")
 		time.Sleep(time.Second)
 
 		spanA.Finish()
-
-		logger.With(trace.GetFields(ctx)).Info("--------")
 
 		spanB, _ := trace.StartSpanFromContext(ctx, "save cache")
 		time.Sleep(time.Second)

@@ -18,6 +18,8 @@ const (
 	defaultLevel  = zapcore.InfoLevel
 )
 
+var ServiceName string
+
 var Global *Logging
 
 func init() {
@@ -32,11 +34,12 @@ func init() {
 }
 
 // Init initializes logging with the provided config.
-func Init(config Config) {
+func Init(svr string, config Config) {
 	err := Global.Apply(config)
 	if err != nil {
 		panic(err)
 	}
+	ServiceName = svr
 }
 
 // Reset sets logging to the defaults defined in this package.

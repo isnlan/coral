@@ -1,7 +1,9 @@
 package main
 
 import (
-	"errors"
+	"context"
+
+	"github.com/isnlan/coral/pkg/trace"
 
 	"gopkg.in/natefinch/lumberjack.v2"
 
@@ -17,10 +19,10 @@ func main() {
 		Compress:   true, // disabled by default
 	}
 
-	logging.Init(logging.NewFileConfig("blink", lumberJackLogger))
+	logging.Init("app", logging.NewWriteSyncerConfig(lumberJackLogger))
 
 	logger := logging.MustGetLogger("mysvr")
-	logger.Errorf("test err: %v", errors.New("my error"))
+	logger.With(trace.GetTraceFieldFrom(context.Background())...).Info("aac")
 
 	Add()
 }

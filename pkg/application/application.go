@@ -117,8 +117,8 @@ func initializeLogging(name string) logging.Rotator {
 			MaxAge:     1,    //days
 			Compress:   true, // disabled by default
 		}
-		c := logging.NewFileConfig(name, writer)
-		logging.Init(c)
+		c := logging.NewWriteSyncerConfig(writer)
+		logging.Init(name, c)
 		return writer
 	} else {
 		c := logging.Config{
@@ -126,7 +126,7 @@ func initializeLogging(name string) logging.Rotator {
 			Writer:  os.Stderr,
 			LogSpec: os.Getenv("LOGGING_SPEC"),
 		}
-		logging.Init(c)
+		logging.Init(name, c)
 		return nil
 	}
 }
