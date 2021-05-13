@@ -33,9 +33,9 @@ func Init(addr string, password string, db int) {
 	_r = redsync.New([]redsync.Pool{pool})
 }
 
-func Mutex(id string) *redsync.Mutex {
+func Mutex(id string, options ...redsync.Option) *redsync.Mutex {
 	if _r == nil {
 		return nil
 	}
-	return _r.NewMutex(id)
+	return _r.NewMutex(id, options...)
 }
