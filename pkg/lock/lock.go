@@ -37,22 +37,33 @@ func Init(addr string, password string, db int) {
 }
 
 type Mutex struct {
-	mu *redsync.Mutex
+	mu       *redsync.Mutex
+	extend   time.Duration
+	releaseC chan struct{}
 }
 
-func New(ctx context.Context, id string) *Mutex {
+func New(id string) *Mutex {
 	if _r == nil {
 		return nil
 	}
 
-	mu := _r.NewMutex(id, redsync.SetExpiry(time.Second*8))
+	extend := time.Second * 4
+	mu := _r.NewMutex(id, redsync.SetExpiry(extend*2))
+	return &Mutex{mu: mu, extend: extend, releaseC: make(chan struct{})}
+}
+
+func (m *Mutex) Lock(ctx context.Context) error {
+	err := m.mu.Lock()
+	if err != nil {
+		return err
+	}
 
 	go func() {
-		t := time.NewTicker(time.Second * 4)
+		t := time.NewTicker(m.extend)
 		for {
 			select {
 			case <-t.C:
-				extend, err := mu.Extend()
+				extend, err := m.mu.Extend()
 				if err != nil {
 					return
 				}
@@ -61,17 +72,15 @@ func New(ctx context.Context, id string) *Mutex {
 				}
 			case <-ctx.Done():
 				return
+			case <-m.releaseC:
+				return
 			}
 		}
 	}()
-
-	return &Mutex{mu: mu}
-}
-
-func (m *Mutex) Lock() error {
-	return m.mu.Lock()
+	return nil
 }
 
 func (m *Mutex) Unlock() (bool, error) {
+	close(m.releaseC)
 	return m.mu.Unlock()
 }
