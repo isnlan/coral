@@ -1,6 +1,9 @@
 package lock
 
 import (
+	"context"
+	"time"
+
 	"github.com/go-redsync/redsync"
 	"github.com/gomodule/redigo/redis"
 )
@@ -33,9 +36,42 @@ func Init(addr string, password string, db int) {
 	_r = redsync.New([]redsync.Pool{pool})
 }
 
-func Mutex(id string, options ...redsync.Option) *redsync.Mutex {
+type Mutex struct {
+	mu *redsync.Mutex
+}
+
+func New(ctx context.Context, id string) *Mutex {
 	if _r == nil {
 		return nil
 	}
-	return _r.NewMutex(id, options...)
+
+	mu := _r.NewMutex(id, redsync.SetExpiry(time.Second*8))
+
+	go func() {
+		t := time.NewTicker(time.Second * 4)
+		for {
+			select {
+			case <-t.C:
+				extend, err := mu.Extend()
+				if err != nil {
+					return
+				}
+				if !extend {
+					return
+				}
+			case <-ctx.Done():
+				return
+			}
+		}
+	}()
+
+	return &Mutex{mu: mu}
+}
+
+func (m *Mutex) Lock() error {
+	return m.mu.Lock()
+}
+
+func (m *Mutex) Unlock() (bool, error) {
+	return m.mu.Unlock()
 }
