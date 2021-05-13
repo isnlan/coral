@@ -81,7 +81,7 @@ func requestInfo(ctx context.Context) string {
 	if len(v) > 1024 {
 		method := tags.Values()["grpc.request.method"]
 		if m, ok := method.(string); ok {
-			return m
+			return "grpc.request.method:" + m
 		} else {
 			return "request body > 1024"
 		}
