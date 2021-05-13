@@ -44,8 +44,8 @@ type server struct {
 
 func (s server) SayHello(ctx context.Context, request *pb.HelloRequest) (*pb.HelloReply, error) {
 	if request.Name == "lucy" {
-		n := 0
-		_ = 1 / n
+		//n := 0
+		//_ = 1 / n
 		return nil, errors.New("name error")
 	}
 	return &pb.HelloReply{

@@ -33,6 +33,7 @@ func LoggerUnaryServerInterceptor() grpc.UnaryServerInterceptor {
 
 		resp, err = handler(ctx, req)
 		if err != nil {
+
 			logger.Errorf("[GRPC]%s %3d %s| %v |%s %-2v %s reason: %v\n",
 				statusColor, 500, resetColor,
 				time.Now().Sub(start),
@@ -76,6 +77,17 @@ func requestInfo(ctx context.Context) string {
 	if err != nil {
 		return ""
 	}
+
+	if len(v) > 1024 {
+		method := tags.Values()["grpc.request.method"]
+		if m, ok := method.(string); ok {
+			return m
+		} else {
+			return "request body > 1024"
+		}
+
+	}
+
 	return string(v)
 }
 
