@@ -17,12 +17,12 @@ require (
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/form v3.1.4+incompatible
 	github.com/go-playground/validator/v10 v10.3.0
-	github.com/go-redis/redis/v8 v8.0.0-beta.5
+	github.com/go-redis/redis/v8 v8.1.1
 	github.com/go-redsync/redsync v1.4.2
+	github.com/go-redsync/redsync/v4 v4.3.0
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/golang/mock v1.2.0
-	github.com/golang/protobuf v1.4.1
-	github.com/gomodule/redigo v2.0.0+incompatible
+	github.com/golang/protobuf v1.4.2
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.0
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
 	github.com/hashicorp/consul/api v1.8.1
@@ -51,7 +51,7 @@ require (
 	github.com/spf13/cobra v1.0.0
 	github.com/spf13/viper v1.4.0
 	github.com/streadway/amqp v1.0.0
-	github.com/stretchr/testify v1.5.1
+	github.com/stretchr/testify v1.6.1
 	github.com/sykesm/zap-logfmt v0.0.3 // indirect
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc
 	github.com/uber/jaeger-client-go v2.24.0+incompatible
@@ -62,7 +62,7 @@ require (
 	google.golang.org/grpc v1.29.1
 	google.golang.org/protobuf v1.25.0
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
-	gopkg.in/yaml.v2 v2.2.8
+	gopkg.in/yaml.v2 v2.3.0
 	moul.io/http2curl v1.0.0 // indirect
 )
 

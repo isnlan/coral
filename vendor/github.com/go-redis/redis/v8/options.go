@@ -14,6 +14,8 @@ import (
 
 	"github.com/go-redis/redis/v8/internal"
 	"github.com/go-redis/redis/v8/internal/pool"
+	"go.opentelemetry.io/otel/api/trace"
+	"go.opentelemetry.io/otel/label"
 )
 
 // Limiter is the interface of a rate limiter or a circuit breaker.
@@ -55,7 +57,7 @@ type Options struct {
 	DB int
 
 	// Maximum number of retries before giving up.
-	// Default is to not retry failed commands.
+	// Default is 3 retries.
 	MaxRetries int
 	// Minimum backoff between each retry.
 	// Default is 8 milliseconds; -1 disables backoff.
@@ -120,6 +122,9 @@ func (opt *Options) init() {
 			opt.Network = "tcp"
 		}
 	}
+	if opt.DialTimeout == 0 {
+		opt.DialTimeout = 5 * time.Second
+	}
 	if opt.Dialer == nil {
 		opt.Dialer = func(ctx context.Context, network, addr string) (net.Conn, error) {
 			netDialer := &net.Dialer{
@@ -134,9 +139,6 @@ func (opt *Options) init() {
 	}
 	if opt.PoolSize == 0 {
 		opt.PoolSize = 10 * runtime.NumCPU()
-	}
-	if opt.DialTimeout == 0 {
-		opt.DialTimeout = 5 * time.Second
 	}
 	switch opt.ReadTimeout {
 	case -1:
@@ -162,6 +164,8 @@ func (opt *Options) init() {
 
 	if opt.MaxRetries == -1 {
 		opt.MaxRetries = 0
+	} else if opt.MaxRetries == 0 {
+		opt.MaxRetries = 3
 	}
 	switch opt.MinRetryBackoff {
 	case -1:
@@ -243,7 +247,14 @@ func newConnPool(opt *Options) *pool.ConnPool {
 			var conn net.Conn
 			err := internal.WithSpan(ctx, "dialer", func(ctx context.Context) error {
 				var err error
+				trace.SpanFromContext(ctx).SetAttributes(
+					label.String("redis.network", opt.Network),
+					label.String("redis.addr", opt.Addr),
+				)
 				conn, err = opt.Dialer(ctx, opt.Network, opt.Addr)
+				if err != nil {
+					_ = internal.RecordError(ctx, err)
+				}
 				return err
 			})
 			return conn, err

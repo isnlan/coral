@@ -12,5 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// package kv provides basic key and value types.
-package kv // import "go.opentelemetry.io/otel/api/kv"
+package otel
+
+// ErrorHandler handles irremediable events.
+type ErrorHandler interface {
+	// Handle handles any error deemed irremediable by an OpenTelemetry
+	// component.
+	Handle(error)
+}
