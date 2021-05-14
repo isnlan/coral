@@ -8,5 +8,5 @@ import (
 )
 
 func NewStore(uri string, db int, password string) (sessions.Store, error) {
-	return ses.NewStoreWithDB(32, "tcp", uri, password, strconv.Itoa(db))
+	return ses.NewStoreWithDB(32, "tcp", uri, password, strconv.Itoa(db), []byte("secret"))
 }
