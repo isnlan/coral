@@ -26,8 +26,8 @@ type Network interface {
 	QueryChainNodes(ctx context.Context) ([]*protos.Node, error)
 	QueryChannelList(ctx context.Context) ([]string, error)
 	QueryChannel(ctx context.Context) (*protos.ChannelInformation, error)
-	EnableSyncChannelData(ctx context.Context) error
-	DisableSyncChannelData(ctx context.Context) error
+	EnableSyncChannelDB(ctx context.Context) (string, error)
+	DisableSyncChannelDB(ctx context.Context) error
 	QueryContractList(ctx context.Context) ([]string, error)
 	QueryLatestBlock(ctx context.Context) (*protos.InnerBlock, error)
 	QueryBlockByNum(ctx context.Context, unm uint64) (*protos.InnerBlock, error)
@@ -201,25 +201,25 @@ func (n *networkImpl) QueryChannelList(ctx context.Context) ([]string, error) {
 	return list.Channels, nil
 }
 
-func (n *networkImpl) EnableSyncChannelData(ctx context.Context) error {
+func (n *networkImpl) EnableSyncChannelDB(ctx context.Context) (string, error) {
 	c := &protos.Channel{
 		Chain: n.chain,
 		Name:  n.channel,
 	}
-	_, err := n.client.EnableSyncChannelData(ctx, c)
+	uri, err := n.client.EnableSyncChannelDB(ctx, c)
 	if err != nil {
-		return xgrpc.Unwrap(err)
+		return "", xgrpc.Unwrap(err)
 	}
 
-	return nil
+	return uri.Uri, nil
 }
 
-func (n *networkImpl) DisableSyncChannelData(ctx context.Context) error {
+func (n *networkImpl) DisableSyncChannelDB(ctx context.Context) error {
 	c := &protos.Channel{
 		Chain: n.chain,
 		Name:  n.channel,
 	}
-	_, err := n.client.DisableSyncChannelData(ctx, c)
+	_, err := n.client.DisableSyncChannelDB(ctx, c)
 	if err != nil {
 		return xgrpc.Unwrap(err)
 	}
