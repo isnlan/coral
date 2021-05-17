@@ -25,6 +25,8 @@ type Network interface {
 	QueryChainNodes(ctx context.Context) ([]*protos.Node, error)
 	QueryChannelList(ctx context.Context) ([]string, error)
 	QueryChannel(ctx context.Context) (*protos.ChannelInformation, error)
+	EnableSyncChannelData(ctx context.Context) error
+	DisableSyncChannelData(ctx context.Context) error
 	QueryContractList(ctx context.Context) ([]string, error)
 	QueryLatestBlock(ctx context.Context) (*protos.InnerBlock, error)
 	QueryBlockByNum(ctx context.Context, unm uint64) (*protos.InnerBlock, error)
@@ -196,6 +198,32 @@ func (n *networkImpl) QueryChannelList(ctx context.Context) ([]string, error) {
 	}
 
 	return list.Channels, nil
+}
+
+func (n *networkImpl) EnableSyncChannelData(ctx context.Context) error {
+	c := &protos.Channel{
+		Chain: n.chain,
+		Name:  n.channel,
+	}
+	_, err := n.client.EnableSyncChannelData(ctx, c)
+	if err != nil {
+		return xgrpc.Unwrap(err)
+	}
+
+	return nil
+}
+
+func (n *networkImpl) DisableSyncChannelData(ctx context.Context) error {
+	c := &protos.Channel{
+		Chain: n.chain,
+		Name:  n.channel,
+	}
+	_, err := n.client.DisableSyncChannelData(ctx, c)
+	if err != nil {
+		return xgrpc.Unwrap(err)
+	}
+
+	return nil
 }
 
 func (n *networkImpl) QueryChannel(ctx context.Context) (*protos.ChannelInformation, error) {

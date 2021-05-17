@@ -124,6 +124,8 @@ message Chain {
   int32 node_count = 7;
   // tls是否开启
   bool tls_enabled = 8;
+  // 扩展参数
+  map<string, string> expend = 9;
 }
 
 message Channel {

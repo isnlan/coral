@@ -94,6 +94,10 @@ service Network {
   rpc QueryChainNodes(Chain) returns (ResponseNodes) {}
   // 查询链列表
   rpc QueryChannelList(Chain) returns (ResponseChannelList) {}
+  // 启用数据同步
+  rpc EnableSyncChannelData(Channel) returns (google.protobuf.Empty) {}
+  // 停用数据同步
+  rpc DisableSyncChannelData(Channel) returns (google.protobuf.Empty) {}
   // 查询链信息
   rpc QueryChannel(Channel) returns (ChannelInformation) {}
   // 查询合约列表
