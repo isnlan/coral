@@ -74,6 +74,14 @@ func (d *DefaultMockNetwork) QueryChannelList(ctx context.Context) ([]string, er
 	return []string{"mychannel"}, nil
 }
 
+func (d *DefaultMockNetwork) EnableSyncChannelData(ctx context.Context) error {
+	return nil
+}
+
+func (d *DefaultMockNetwork) DisableSyncChannelData(ctx context.Context) error {
+	return nil
+}
+
 func (d *DefaultMockNetwork) QueryChannel(ctx context.Context) (*protos.ChannelInformation, error) {
 	return &protos.ChannelInformation{BlockNumber: 2}, nil
 }
