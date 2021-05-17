@@ -17,6 +17,8 @@ type Network interface {
 	StopChain(ctx context.Context) error
 	IsStopped(ctx context.Context) (bool, error)
 	DeleteChain(ctx context.Context) error
+	EnableSyncDB(ctx context.Context) (string, error)
+	DisableSyncDB(ctx context.Context) error
 	DownloadArtifacts(ctx context.Context) ([]byte, error)
 	Register(ctx context.Context, user string, pwd string) (*protos.DigitalIdentity, error)
 	InstallContract(ctx context.Context, contract *protos.Contract) (string, error)
@@ -26,8 +28,6 @@ type Network interface {
 	QueryChainNodes(ctx context.Context) ([]*protos.Node, error)
 	QueryChannelList(ctx context.Context) ([]string, error)
 	QueryChannel(ctx context.Context) (*protos.ChannelInformation, error)
-	EnableSyncChannelDB(ctx context.Context) (string, error)
-	DisableSyncChannelDB(ctx context.Context) error
 	QueryContractList(ctx context.Context) ([]string, error)
 	QueryLatestBlock(ctx context.Context) (*protos.InnerBlock, error)
 	QueryBlockByNum(ctx context.Context, unm uint64) (*protos.InnerBlock, error)
@@ -94,6 +94,20 @@ func (n *networkImpl) IsStopped(ctx context.Context) (bool, error) {
 
 func (n *networkImpl) DeleteChain(ctx context.Context) error {
 	_, err := n.client.DeleteChain(ctx, n.chain)
+	return xgrpc.Unwrap(err)
+}
+
+func (n *networkImpl) EnableSyncDB(ctx context.Context) (string, error) {
+	uri, err := n.client.EnableSyncDB(ctx, n.chain)
+	if err != nil {
+		return "", xgrpc.Unwrap(err)
+
+	}
+	return uri.Uri, nil
+}
+
+func (n *networkImpl) DisableSyncDB(ctx context.Context) error {
+	_, err := n.client.DisableSyncDB(ctx, n.chain)
 	return xgrpc.Unwrap(err)
 }
 
@@ -199,32 +213,6 @@ func (n *networkImpl) QueryChannelList(ctx context.Context) ([]string, error) {
 	}
 
 	return list.Channels, nil
-}
-
-func (n *networkImpl) EnableSyncChannelDB(ctx context.Context) (string, error) {
-	c := &protos.Channel{
-		Chain: n.chain,
-		Name:  n.channel,
-	}
-	uri, err := n.client.EnableSyncChannelDB(ctx, c)
-	if err != nil {
-		return "", xgrpc.Unwrap(err)
-	}
-
-	return uri.Uri, nil
-}
-
-func (n *networkImpl) DisableSyncChannelDB(ctx context.Context) error {
-	c := &protos.Channel{
-		Chain: n.chain,
-		Name:  n.channel,
-	}
-	_, err := n.client.DisableSyncChannelDB(ctx, c)
-	if err != nil {
-		return xgrpc.Unwrap(err)
-	}
-
-	return nil
 }
 
 func (n *networkImpl) QueryChannel(ctx context.Context) (*protos.ChannelInformation, error) {

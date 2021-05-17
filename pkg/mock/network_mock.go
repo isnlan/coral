@@ -134,6 +134,35 @@ func (mr *MockNetworkMockRecorder) DeleteChain(ctx interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteChain", reflect.TypeOf((*MockNetwork)(nil).DeleteChain), ctx)
 }
 
+// EnableSyncDB mocks base method
+func (m *MockNetwork) EnableSyncDB(ctx context.Context) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "EnableSyncDB", ctx)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// EnableSyncDB indicates an expected call of EnableSyncDB
+func (mr *MockNetworkMockRecorder) EnableSyncDB(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnableSyncDB", reflect.TypeOf((*MockNetwork)(nil).EnableSyncDB), ctx)
+}
+
+// DisableSyncDB mocks base method
+func (m *MockNetwork) DisableSyncDB(ctx context.Context) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DisableSyncDB", ctx)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DisableSyncDB indicates an expected call of DisableSyncDB
+func (mr *MockNetworkMockRecorder) DisableSyncDB(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DisableSyncDB", reflect.TypeOf((*MockNetwork)(nil).DisableSyncDB), ctx)
+}
+
 // DownloadArtifacts mocks base method
 func (m *MockNetwork) DownloadArtifacts(ctx context.Context) ([]byte, error) {
 	m.ctrl.T.Helper()
@@ -268,35 +297,6 @@ func (m *MockNetwork) QueryChannel(ctx context.Context) (*protos.ChannelInformat
 func (mr *MockNetworkMockRecorder) QueryChannel(ctx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "QueryChannel", reflect.TypeOf((*MockNetwork)(nil).QueryChannel), ctx)
-}
-
-// EnableSyncChannelDB mocks base method
-func (m *MockNetwork) EnableSyncChannelDB(ctx context.Context) (string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "EnableSyncChannelDB", ctx)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// EnableSyncChannelDB indicates an expected call of EnableSyncChannelDB
-func (mr *MockNetworkMockRecorder) EnableSyncChannelDB(ctx interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnableSyncChannelDB", reflect.TypeOf((*MockNetwork)(nil).EnableSyncChannelDB), ctx)
-}
-
-// DisableSyncChannelDB mocks base method
-func (m *MockNetwork) DisableSyncChannelDB(ctx context.Context) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DisableSyncChannelDB", ctx)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// DisableSyncChannelDB indicates an expected call of DisableSyncChannelDB
-func (mr *MockNetworkMockRecorder) DisableSyncChannelDB(ctx interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DisableSyncChannelDB", reflect.TypeOf((*MockNetwork)(nil).DisableSyncChannelDB), ctx)
 }
 
 // QueryContractList mocks base method

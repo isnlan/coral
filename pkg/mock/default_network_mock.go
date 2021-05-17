@@ -42,6 +42,14 @@ func (d *DefaultMockNetwork) DeleteChain(ctx context.Context) error {
 	return nil
 }
 
+func (d *DefaultMockNetwork) EnableSyncDB(ctx context.Context) (string, error) {
+	return "mongodburi", nil
+}
+
+func (d *DefaultMockNetwork) DisableSyncDB(ctx context.Context) error {
+	return nil
+}
+
 func (d *DefaultMockNetwork) DownloadArtifacts(ctx context.Context) ([]byte, error) {
 	return []byte("data"), nil
 }
@@ -72,14 +80,6 @@ func (d *DefaultMockNetwork) QueryChainNodes(ctx context.Context) ([]*protos.Nod
 
 func (d *DefaultMockNetwork) QueryChannelList(ctx context.Context) ([]string, error) {
 	return []string{"mychannel"}, nil
-}
-
-func (d *DefaultMockNetwork) EnableSyncChannelDB(ctx context.Context) (string, error) {
-	return "mongodburi", nil
-}
-
-func (d *DefaultMockNetwork) DisableSyncChannelDB(ctx context.Context) error {
-	return nil
 }
 
 func (d *DefaultMockNetwork) QueryChannel(ctx context.Context) (*protos.ChannelInformation, error) {
