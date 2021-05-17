@@ -270,6 +270,34 @@ func (mr *MockNetworkMockRecorder) QueryChannel(ctx interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "QueryChannel", reflect.TypeOf((*MockNetwork)(nil).QueryChannel), ctx)
 }
 
+// EnableSyncChannelData mocks base method
+func (m *MockNetwork) EnableSyncChannelData(ctx context.Context) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "EnableSyncChannelData", ctx)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// EnableSyncChannelData indicates an expected call of EnableSyncChannelData
+func (mr *MockNetworkMockRecorder) EnableSyncChannelData(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnableSyncChannelData", reflect.TypeOf((*MockNetwork)(nil).EnableSyncChannelData), ctx)
+}
+
+// DisableSyncChannelData mocks base method
+func (m *MockNetwork) DisableSyncChannelData(ctx context.Context) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DisableSyncChannelData", ctx)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DisableSyncChannelData indicates an expected call of DisableSyncChannelData
+func (mr *MockNetworkMockRecorder) DisableSyncChannelData(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DisableSyncChannelData", reflect.TypeOf((*MockNetwork)(nil).DisableSyncChannelData), ctx)
+}
+
 // QueryContractList mocks base method
 func (m *MockNetwork) QueryContractList(ctx context.Context) ([]string, error) {
 	m.ctrl.T.Helper()

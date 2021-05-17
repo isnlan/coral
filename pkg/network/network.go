@@ -8,6 +8,7 @@ import (
 	"github.com/isnlan/coral/pkg/protos"
 )
 
+//go:generate mockgen -source=./pkg/network/network.go -destination=./pkg/mock/network_mock.go -package=mock
 type Network interface {
 	BuildChain(ctx context.Context) error
 	BuildChannel(ctx context.Context) error
