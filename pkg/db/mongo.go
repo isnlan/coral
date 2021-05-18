@@ -18,19 +18,26 @@ import (
 var _mongoClient *mongo.Client
 
 func InitMongo(uri string) (err error) {
+	_mongoClient, err = MongoConnect(uri)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func MongoConnect(uri string) (*mongo.Client, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	_mongoClient, err = mongo.Connect(ctx, options.Client().ApplyURI(uri))
+	c, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
 	if err != nil {
-		return errors.WithMessage(err, "mongo connect error")
+		return nil, errors.WithMessage(err, "mongo connect error")
 	}
-	err = _mongoClient.Ping(ctx, readpref.Primary())
+	err = c.Ping(ctx, readpref.Primary())
 	if err != nil {
-		return errors.WithMessage(err, "mongo ping error")
+		return nil, errors.WithMessage(err, "mongo ping error")
 	}
-
-	return nil
+	return c, nil
 }
 
 func GetMongoClient() *mongo.Client {
