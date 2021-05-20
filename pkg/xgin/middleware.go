@@ -188,3 +188,16 @@ func CorsMiddleware() gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+// SkipperFunc 定义中间件跳过函数
+type SkipperFunc func(*gin.Context) bool
+
+// SkipHandler 统一处理跳过函数
+func SkipHandler(c *gin.Context, skippers ...SkipperFunc) bool {
+	for _, skipper := range skippers {
+		if skipper(c) {
+			return true
+		}
+	}
+	return false
+}
