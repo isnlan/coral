@@ -67,11 +67,6 @@ func TracerWrapper(c *gin.Context) {
 }
 
 func setContext(c *gin.Context, ctx context.Context) {
-	_, ok := ctx.Deadline()
-	if !ok {
-		ctx, _ = context.WithTimeout(ctx, time.Second*30)
-	}
-
 	ctx = context.WithValue(ctx, _UrlKey, c.Request.URL.EscapedPath())
 	ctx = context.WithValue(ctx, _GinContextKey, c)
 	c.Set(_ContextTracerKey, ctx)
