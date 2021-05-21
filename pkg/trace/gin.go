@@ -44,7 +44,7 @@ func TracerWrapper(c *gin.Context) {
 		logger.Errorf("trace inject error: %v", err)
 	}
 
-	ctx := opentracing.ContextWithSpan(c.Request.Context(), sp)
+	ctx := opentracing.ContextWithSpan(c, sp)
 	ctx = metadata.NewContext(ctx, md)
 
 	setContext(c, ctx)
