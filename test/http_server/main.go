@@ -4,6 +4,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/isnlan/coral/pkg/xgin"
+
 	"github.com/isnlan/coral/pkg/logging"
 
 	"github.com/gin-gonic/gin"
@@ -22,8 +24,8 @@ func main() {
 	}
 	defer closer.Close()
 
-	r := gin.Default()
-	r.Use(trace.TracerWrapper)
+	r := xgin.New()
+	//r.Use(trace.TracerWrapper)
 
 	logging.Init("ping", logging.NewWriteSyncerConfig(os.Stderr))
 
@@ -46,5 +48,5 @@ func main() {
 			"message": "pong",
 		})
 	})
-	r.Run("0.0.0.0:8090") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	r.Run("0.0.0.0:8099") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }

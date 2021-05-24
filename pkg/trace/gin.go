@@ -48,10 +48,6 @@ func TracerWrapper(c *gin.Context) {
 	ctx = metadata.NewContext(ctx, md)
 
 	setContext(c, ctx)
-	traceId := getTraceIDFromSpan(sp)
-	if traceId != "" {
-		logger.Infof("trace_id: %s", traceId)
-	}
 
 	c.Next()
 
