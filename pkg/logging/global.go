@@ -9,8 +9,6 @@ package logging
 import (
 	"strings"
 
-	"go.uber.org/zap"
-
 	"go.uber.org/zap/zapcore"
 	"google.golang.org/grpc/grpclog"
 )
@@ -60,7 +58,7 @@ func GetLoggerLevel(loggerName string) string {
 // MustGetLogger creates a logger with the specified name. If an invalid name
 // is provided, the operation will panic.
 func MustGetLogger(loggerName string) *GlibsLogger {
-	return Global.Logger(loggerName).With(zap.String("service", serviceName))
+	return Global.Logger(loggerName)
 }
 
 // ActivateSpec is used to activate a logging specification.

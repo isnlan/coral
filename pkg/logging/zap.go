@@ -55,35 +55,89 @@ func NewGlibsLogger(l *zap.Logger, options ...zap.Option) *GlibsLogger {
 // change, arguments are not separated by spaces.
 type GlibsLogger struct{ s *zap.SugaredLogger }
 
-func (f *GlibsLogger) DPanic(args ...interface{})                    { f.s.DPanicf(formatArgs(args)) }
-func (f *GlibsLogger) DPanicf(template string, args ...interface{})  { f.s.DPanicf(template, args...) }
-func (f *GlibsLogger) DPanicw(msg string, kvPairs ...interface{})    { f.s.DPanicw(msg, kvPairs...) }
-func (f *GlibsLogger) Debug(args ...interface{})                     { f.s.Debugf(formatArgs(args)) }
-func (f *GlibsLogger) Debugf(template string, args ...interface{})   { f.s.Debugf(template, args...) }
-func (f *GlibsLogger) Debugw(msg string, kvPairs ...interface{})     { f.s.Debugw(msg, kvPairs...) }
-func (f *GlibsLogger) Error(args ...interface{})                     { f.s.Errorf(formatArgs(args)) }
-func (f *GlibsLogger) Errorf(template string, args ...interface{})   { f.s.Errorf(template, args...) }
-func (f *GlibsLogger) Errorw(msg string, kvPairs ...interface{})     { f.s.Errorw(msg, kvPairs...) }
-func (f *GlibsLogger) Fatal(args ...interface{})                     { f.s.Fatalf(formatArgs(args)) }
-func (f *GlibsLogger) Fatalf(template string, args ...interface{})   { f.s.Fatalf(template, args...) }
-func (f *GlibsLogger) Fatalw(msg string, kvPairs ...interface{})     { f.s.Fatalw(msg, kvPairs...) }
-func (f *GlibsLogger) Info(args ...interface{})                      { f.s.Infof(formatArgs(args)) }
-func (f *GlibsLogger) Infof(template string, args ...interface{})    { f.s.Infof(template, args...) }
-func (f *GlibsLogger) Infow(msg string, kvPairs ...interface{})      { f.s.Infow(msg, kvPairs...) }
-func (f *GlibsLogger) Panic(args ...interface{})                     { f.s.Panicf(formatArgs(args)) }
-func (f *GlibsLogger) Panicf(template string, args ...interface{})   { f.s.Panicf(template, args...) }
-func (f *GlibsLogger) Panicw(msg string, kvPairs ...interface{})     { f.s.Panicw(msg, kvPairs...) }
-func (f *GlibsLogger) Warn(args ...interface{})                      { f.s.Warnf(formatArgs(args)) }
-func (f *GlibsLogger) Warnf(template string, args ...interface{})    { f.s.Warnf(template, args...) }
-func (f *GlibsLogger) Warnw(msg string, kvPairs ...interface{})      { f.s.Warnw(msg, kvPairs...) }
-func (f *GlibsLogger) Warning(args ...interface{})                   { f.s.Warnf(formatArgs(args)) }
-func (f *GlibsLogger) Warningf(template string, args ...interface{}) { f.s.Warnf(template, args...) }
+func (f *GlibsLogger) DPanic(args ...interface{}) {
+	f.With(zap.String("service", serviceName)).s.DPanicf(formatArgs(args))
+}
+func (f *GlibsLogger) DPanicf(template string, args ...interface{}) {
+	f.With(zap.String("service", serviceName)).s.DPanicf(template, args...)
+}
+func (f *GlibsLogger) DPanicw(msg string, kvPairs ...interface{}) {
+	f.With(zap.String("service", serviceName)).s.DPanicw(msg, kvPairs...)
+}
+func (f *GlibsLogger) Debug(args ...interface{}) {
+	f.With(zap.String("service", serviceName)).s.Debugf(formatArgs(args))
+}
+func (f *GlibsLogger) Debugf(template string, args ...interface{}) {
+	f.With(zap.String("service", serviceName)).s.Debugf(template, args...)
+}
+func (f *GlibsLogger) Debugw(msg string, kvPairs ...interface{}) {
+	f.With(zap.String("service", serviceName)).s.Debugw(msg, kvPairs...)
+}
+func (f *GlibsLogger) Error(args ...interface{}) {
+	f.With(zap.String("service", serviceName)).s.Errorf(formatArgs(args))
+}
+func (f *GlibsLogger) Errorf(template string, args ...interface{}) {
+	f.With(zap.String("service", serviceName)).s.Errorf(template, args...)
+}
+func (f *GlibsLogger) Errorw(msg string, kvPairs ...interface{}) {
+	f.With(zap.String("service", serviceName)).s.Errorw(msg, kvPairs...)
+}
+func (f *GlibsLogger) Fatal(args ...interface{}) {
+	f.With(zap.String("service", serviceName)).s.Fatalf(formatArgs(args))
+}
+func (f *GlibsLogger) Fatalf(template string, args ...interface{}) {
+	f.With(zap.String("service", serviceName)).s.Fatalf(template, args...)
+}
+func (f *GlibsLogger) Fatalw(msg string, kvPairs ...interface{}) {
+	f.With(zap.String("service", serviceName)).s.Fatalw(msg, kvPairs...)
+}
+func (f *GlibsLogger) Info(args ...interface{}) {
+	f.With(zap.String("service", serviceName)).s.Infof(formatArgs(args))
+}
+func (f *GlibsLogger) Infof(template string, args ...interface{}) {
+	f.With(zap.String("service", serviceName)).s.Infof(template, args...)
+}
+func (f *GlibsLogger) Infow(msg string, kvPairs ...interface{}) {
+	f.With(zap.String("service", serviceName)).s.Infow(msg, kvPairs...)
+}
+func (f *GlibsLogger) Panic(args ...interface{}) {
+	f.With(zap.String("service", serviceName)).s.Panicf(formatArgs(args))
+}
+func (f *GlibsLogger) Panicf(template string, args ...interface{}) {
+	f.With(zap.String("service", serviceName)).s.Panicf(template, args...)
+}
+func (f *GlibsLogger) Panicw(msg string, kvPairs ...interface{}) {
+	f.With(zap.String("service", serviceName)).s.Panicw(msg, kvPairs...)
+}
+func (f *GlibsLogger) Warn(args ...interface{}) {
+	f.With(zap.String("service", serviceName)).s.Warnf(formatArgs(args))
+}
+func (f *GlibsLogger) Warnf(template string, args ...interface{}) {
+	f.With(zap.String("service", serviceName)).s.Warnf(template, args...)
+}
+func (f *GlibsLogger) Warnw(msg string, kvPairs ...interface{}) {
+	f.With(zap.String("service", serviceName)).s.Warnw(msg, kvPairs...)
+}
+func (f *GlibsLogger) Warning(args ...interface{}) {
+	f.With(zap.String("service", serviceName)).s.Warnf(formatArgs(args))
+}
+func (f *GlibsLogger) Warningf(template string, args ...interface{}) {
+	f.With(zap.String("service", serviceName)).s.Warnf(template, args...)
+}
 
 // for backwards compatibility
-func (f *GlibsLogger) Critical(args ...interface{})                   { f.s.Errorf(formatArgs(args)) }
-func (f *GlibsLogger) Criticalf(template string, args ...interface{}) { f.s.Errorf(template, args...) }
-func (f *GlibsLogger) Notice(args ...interface{})                     { f.s.Infof(formatArgs(args)) }
-func (f *GlibsLogger) Noticef(template string, args ...interface{})   { f.s.Infof(template, args...) }
+func (f *GlibsLogger) Critical(args ...interface{}) {
+	f.With(zap.String("service", serviceName)).s.Errorf(formatArgs(args))
+}
+func (f *GlibsLogger) Criticalf(template string, args ...interface{}) {
+	f.With(zap.String("service", serviceName)).s.Errorf(template, args...)
+}
+func (f *GlibsLogger) Notice(args ...interface{}) {
+	f.With(zap.String("service", serviceName)).s.Infof(formatArgs(args))
+}
+func (f *GlibsLogger) Noticef(template string, args ...interface{}) {
+	f.With(zap.String("service", serviceName)).s.Infof(template, args...)
+}
 
 func (f *GlibsLogger) Named(name string) *GlibsLogger { return &GlibsLogger{s: f.s.Named(name)} }
 func (f *GlibsLogger) Sync() error                    { return f.s.Sync() }
