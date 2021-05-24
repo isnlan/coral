@@ -9,6 +9,8 @@ package logging
 import (
 	"strings"
 
+	"go.uber.org/zap"
+
 	"go.uber.org/zap/zapcore"
 	"google.golang.org/grpc/grpclog"
 )
@@ -18,7 +20,7 @@ const (
 	defaultLevel  = zapcore.InfoLevel
 )
 
-var ServiceName string
+var serviceName string
 
 var Global *Logging
 
@@ -39,7 +41,7 @@ func Init(svr string, config Config) {
 	if err != nil {
 		panic(err)
 	}
-	ServiceName = svr
+	serviceName = svr
 }
 
 // Reset sets logging to the defaults defined in this package.
@@ -58,7 +60,7 @@ func GetLoggerLevel(loggerName string) string {
 // MustGetLogger creates a logger with the specified name. If an invalid name
 // is provided, the operation will panic.
 func MustGetLogger(loggerName string) *GlibsLogger {
-	return Global.Logger(loggerName)
+	return Global.Logger(loggerName).With(zap.String("service", serviceName))
 }
 
 // ActivateSpec is used to activate a logging specification.

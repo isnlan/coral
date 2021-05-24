@@ -21,13 +21,15 @@ func main() {
 
 	logging.Init("app", logging.NewWriteSyncerConfig(lumberJackLogger))
 
-	logger := logging.MustGetLogger("mysvr")
-	logger.With(trace.GetTraceFieldFrom(context.Background())...).Info("aac")
+	logger := logging.MustGetLogger("mod1")
+	logger.Info("only info")
+	logger.With(trace.GetTraceFieldFrom(context.Background())...).Info("with http trace")
 
+	logger.Info("of")
 	Add()
 }
 
 func Add() {
-	logger := logging.MustGetLogger("AddMod")
-	logger.Info("ok")
+	logger := logging.MustGetLogger("mod2")
+	logger.Info("only info in mod2")
 }

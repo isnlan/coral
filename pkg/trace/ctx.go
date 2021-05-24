@@ -108,7 +108,6 @@ func getStringFromContext(ctx context.Context, key string) string {
 
 func GetTraceFieldFrom(ctx context.Context) []interface{} {
 	var fields []interface{}
-	fields = append(fields, zap.String("service", logging.ServiceName))
 	fields = append(fields, zap.String("trace", GetTraceIDFromContext(ctx)))
 	fields = append(fields, zap.String("span", GetSpanIDFromContext(ctx)))
 	fields = append(fields, zap.String("parent", GetParentIDFromSpan(ctx)))
