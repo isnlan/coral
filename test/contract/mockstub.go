@@ -14,9 +14,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/isnlan/coral/pkg/contract"
+	golang_protobuf "github.com/isnlan/coral/pkg/golang-protobuf"
 
-	"github.com/isnlan/coral/pkg/utils"
+	"github.com/isnlan/coral/pkg/contract"
 
 	"github.com/hyperledger/fabric-chaincode-go/shim"
 
@@ -108,7 +108,7 @@ func (stub *MockStub) GetFunctionAndParameters() (function string, params []stri
 func (stub *MockStub) MockTransactionStart(txid string) {
 	stub.TxID = txid
 	stub.setSignedProposal(&pb.SignedProposal{})
-	stub.setTxTimestamp(utils.CreateUtcTimestamp())
+	stub.setTxTimestamp(golang_protobuf.CreateUtcTimestamp())
 }
 
 // End a mocked transaction, clearing the UUID.
