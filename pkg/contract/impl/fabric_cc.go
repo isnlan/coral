@@ -96,15 +96,15 @@ func (cc *FabricChaincode) recoverHandler(stub contract.IContractStub, req *rpc.
 		if re := recover(); re != nil {
 			switch v := re.(type) {
 			case contract.InternalError:
-				log.Printf("ERROR: %s", v.Error())
+				log.Printf("ERROR: method %s, reason: %s\n", req.ServiceMethod, v.Error())
 				err = errors.New(v.External())
 			case *contract.InternalError:
-				log.Printf("ERROR: %s", v.Error())
+				log.Printf("ERROR: method %s, reason: %s\n", req.ServiceMethod, v.Error())
 				err = errors.New(v.External())
 			case string:
 				err = errors.New(v)
 			case runtime.Error:
-				fmt.Printf("ERR: runtime error:%v \nstack :%s\n", v, string(debug.Stack()))
+				log.Printf("ERR: runtime error:%v \nstack :%s\n", v, string(debug.Stack()))
 				err = contract.ErrRuntime
 			case error:
 				err = v
