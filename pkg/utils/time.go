@@ -2,8 +2,6 @@ package utils
 
 import (
 	"time"
-
-	"github.com/golang/protobuf/ptypes/timestamp"
 )
 
 func GetHourTime() int64 {
@@ -33,12 +31,4 @@ func GetTime(i int64) time.Time {
 
 func Millisecond(t time.Time) int64 {
 	return t.UnixNano() / 1e6
-}
-
-// CreateUtcTimestamp returns a google/protobuf/Timestamp in UTC
-func CreateUtcTimestamp() *timestamp.Timestamp {
-	now := time.Now().UTC()
-	secs := now.Unix()
-	nanos := int32(now.UnixNano() - (secs * 1000000000))
-	return &(timestamp.Timestamp{Seconds: secs, Nanos: nanos})
 }

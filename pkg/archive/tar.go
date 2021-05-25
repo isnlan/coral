@@ -1,13 +1,12 @@
-package utils
+package archive
 
 import (
 	"archive/tar"
+	"errors"
 	"io"
 	"io/ioutil"
 	"os"
 	"path"
-
-	"github.com/pkg/errors"
 )
 
 // 将文件或目录打包成 .fileutil 文件

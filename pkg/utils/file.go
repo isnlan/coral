@@ -3,8 +3,6 @@ package utils
 import (
 	"os"
 	"strings"
-
-	"github.com/isnlan/coral/pkg/errors"
 )
 
 // IsImg determines whether the specified extension is a image.
@@ -55,7 +53,7 @@ func CreatedDir(dir string) error {
 func RemoveDir(dir string) error {
 	err := os.RemoveAll(dir)
 	if err != nil {
-		return errors.Wrap(err, "error remove dir: "+dir)
+		return err
 	}
 	return nil
 }
@@ -76,7 +74,7 @@ func (dc *DirCreator) Create() error {
 	for _, dir := range dc.dirs {
 		err := CreatedDir(dir)
 		if err != nil {
-			return errors.Wrapf(err, "create dir %s error", dir)
+			return err
 		}
 	}
 

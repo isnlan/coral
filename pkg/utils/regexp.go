@@ -1,9 +1,8 @@
 package utils
 
 import (
+	"fmt"
 	"regexp"
-
-	"github.com/isnlan/coral/pkg/errors"
 )
 
 func Match(pattern string, s string) error {
@@ -11,6 +10,6 @@ func Match(pattern string, s string) error {
 	if reg.MatchString(s) {
 		return nil
 	} else {
-		return errors.Errorf("%s unmatched %s", s, pattern)
+		return fmt.Errorf("%s unmatched %s", s, pattern)
 	}
 }

@@ -1,4 +1,4 @@
-package utils
+package archive
 
 import (
 	"archive/tar"
@@ -18,6 +18,8 @@ import (
 	"runtime"
 	"strings"
 	"time"
+
+	"github.com/isnlan/coral/pkg/utils"
 
 	"github.com/mholt/archiver/v3"
 
@@ -387,7 +389,7 @@ func getSubDir(dirPath string) (string, error) {
 	var dirCount int
 	var dirName string
 	for _, d := range dir {
-		if err := Match(`[a-zA-Z0-9]`, string(d.Name()[0])); err != nil {
+		if err := utils.Match(`[a-zA-Z0-9]`, string(d.Name()[0])); err != nil {
 			continue
 		}
 
@@ -408,7 +410,7 @@ func getSubDir(dirPath string) (string, error) {
 }
 
 func UnpackToDir(r io.Reader, destPath string, dir string) error {
-	err := CreatedDir(destPath)
+	err := utils.CreatedDir(destPath)
 	if err != nil {
 		return err
 	}

@@ -4,7 +4,7 @@ import (
 	"context"
 	"io/ioutil"
 
-	"github.com/isnlan/coral/pkg/utils"
+	"github.com/isnlan/coral/pkg/dockervm"
 
 	"github.com/golang/protobuf/ptypes/empty"
 
@@ -125,7 +125,7 @@ func (v *vmImpl) GetNamespacesPods(ctx context.Context, ns string, label string,
 }
 
 func (v *vmImpl) BuildImage(ctx context.Context, name string, src string) error {
-	reader, err := utils.CreateTarStream(src, "Dockerfile")
+	reader, err := dockervm.CreateTarStream(src, "Dockerfile")
 	if err != nil {
 		return errors.WithStack(err)
 	}

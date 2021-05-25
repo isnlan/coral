@@ -5,13 +5,9 @@ import (
 	"fmt"
 	"io"
 	"strings"
-
-	"github.com/isnlan/coral/pkg/logging"
 )
 
-var logger = logging.MustGetLogger("utils")
-
-// 首字母大写
+// FirstUpper 首字母大写
 func FirstUpper(s string) string {
 	return strings.ToUpper(s[:1]) + s[1:]
 }

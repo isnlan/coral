@@ -2,16 +2,17 @@ package utils
 
 import (
 	"encoding/json"
+	"fmt"
 	"reflect"
 )
 
-func SafeRun(f func()) {
+func SafeRun(f func() error) (err error) {
 	defer func() {
 		if re := recover(); re != nil {
-			logger.Errorf("panic: %v", re)
+			err = fmt.Errorf("recover from panic, data: %v", re)
 		}
 	}()
-	f()
+	return f()
 }
 
 func MakeTypeName(tpy interface{}) string {
