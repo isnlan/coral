@@ -5,6 +5,8 @@ import (
 	"errors"
 	"net"
 
+	"github.com/hashicorp/consul/api"
+
 	"google.golang.org/grpc"
 )
 
@@ -20,6 +22,12 @@ type ServiceDiscover interface {
 	RegisterHealthServer(s *grpc.Server)
 	ServiceRegister(name, address string, port int, tags ...string) (Deregister, error)
 	WatchService(ctx context.Context, name string, tag string, ch chan<- []*ServiceInfo)
+	SetKey(ns, key string, value []byte) error
+	GetKey(ns, key string) ([]byte, error)
+	DeleteKey(ns, key string) error
+	DeleteKeyByPrefix(ns, prefix string) error
+	WatchKey(ctx context.Context, ns, key string, ch chan<- *api.KVPair)
+	WatchKeysByPrefix(ctx context.Context, ns, prefix string, ch chan<- []string)
 }
 
 func GetLocalIP() (string, error) {

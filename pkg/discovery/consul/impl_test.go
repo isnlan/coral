@@ -2,6 +2,7 @@ package consul
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"math/rand"
 	"testing"
@@ -107,5 +108,91 @@ func TestNew2(t *testing.T) {
 		fmt.Println(err)
 
 	}
+}
+
+func TestConsulImpl_GetKey(t *testing.T) {
+	value1 := map[string]interface{}{"name": "lucy", "age": 2}
+	bytes1, _ := json.Marshal(value1)
+	value2 := map[string]interface{}{"name": "lili", "age": 20}
+	bytes2, _ := json.Marshal(value2)
+
+	client, err := New("127.0.0.1:8500")
+	assert.NoError(t, err)
+	err = client.SetKey("blink:chain", "chain1", bytes1)
+	assert.NoError(t, err)
+
+	err = client.SetKey("blink:acl", "chain1", bytes2)
+	assert.NoError(t, err)
+
+	v, err := client.GetKey("blink:acl", "chain1")
+	assert.NoError(t, err)
+	assert.Equal(t, v, bytes2)
+}
+
+func TestConsulImpl_GetKeys(t *testing.T) {
+	value1 := map[string]interface{}{"name": "lucy", "age": 2}
+	bytes1, _ := json.Marshal(value1)
+
+	client, err := New("127.0.0.1:8500")
+	assert.NoError(t, err)
+
+	err = client.SetKey("ns", "blink:chain2", bytes1)
+	assert.NoError(t, err)
+
+	keys, err := client.GetList("blink")
+	assert.NoError(t, err)
+	for _, k := range keys {
+		fmt.Printf("-> %+#v\n", k)
+	}
+
+	key, err := client.GetKeys("blink")
+	assert.NoError(t, err)
+	fmt.Println(key)
+}
+
+func TestConsulImpl_WatchKey(t *testing.T) {
+	client, err := New("127.0.0.1:8500")
+	assert.NoError(t, err)
+
+	c := make(chan *api.KVPair)
+	ctx, cancel := context.WithCancel(context.Background())
+	client.WatchKey(ctx, "", "blink:chain1", c)
+
+	for k := range c {
+		fmt.Printf("--> %+#v\n ", k)
+		if k == nil {
+			break
+		}
+	}
+	cancel()
+
+	time.Sleep(time.Second * 10)
+}
+
+func TestConsulImpl_WatchKeysByPrefix(t *testing.T) {
+	client, err := New("127.0.0.1:8500")
+	assert.NoError(t, err)
+
+	c := make(chan []string)
+	ctx, cancel := context.WithCancel(context.Background())
+	client.WatchKeysByPrefix(ctx, "", "blink", c)
+
+	for k := range c {
+		fmt.Printf("--> %+#v\n ", k)
+		if k == nil {
+			break
+		}
+	}
+	cancel()
+
+	time.Sleep(time.Second * 10)
+}
+
+func TestConsulImpl_DelKey(t *testing.T) {
+	client, err := New("127.0.0.1:8500")
+	assert.NoError(t, err)
+
+	err = client.DeleteKey("", "blink")
+	assert.NoError(t, err)
 
 }

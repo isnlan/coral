@@ -142,3 +142,142 @@ func (c *consulImpl) serviceEntriesWatch(name, tag string, waitIndex uint64) ([]
 
 	return list, meta.LastIndex, nil
 }
+
+func (c *consulImpl) SetKey(ns, key string, value []byte) error {
+	pair := &api.KVPair{
+		Key:       key,
+		Value:     value,
+		Namespace: ns,
+	}
+	opt := &api.WriteOptions{
+		// Namespaces are a Consul Enterprise feature
+		// Namespace: ns,
+	}
+	_, err := c.client.KV().Put(pair, opt)
+	return err
+}
+
+func (c *consulImpl) GetKey(ns, key string) ([]byte, error) {
+	pair, _, err := c.client.KV().Get(key, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if pair == nil {
+		return nil, nil
+	}
+
+	return pair.Value, nil
+}
+
+func (c *consulImpl) GetKeys(prefix string) ([]string, error) {
+	keys, _, err := c.client.KV().Keys(prefix, "/", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return keys, nil
+}
+
+func (c *consulImpl) GetList(prefix string) ([]*api.KVPair, error) {
+	list, _, err := c.client.KV().List(prefix, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return list, nil
+}
+
+func (c *consulImpl) DeleteKey(ns, key string) error {
+	_, err := c.client.KV().Delete(key, nil)
+	return err
+}
+
+func (c *consulImpl) DeleteKeyByPrefix(ns, prefix string) error {
+	_, err := c.client.KV().DeleteTree(prefix, nil)
+	return err
+}
+
+func (c *consulImpl) WatchKey(ctx context.Context, ns, key string, ch chan<- *api.KVPair) {
+	go func() {
+		var waitIndex uint64
+		for {
+			pair, lastIndex, err := c.watchKeyByIndex(ns, key, waitIndex)
+			if err != nil {
+				logger.Errorf("key watch error: %v", err)
+				time.Sleep(30 * time.Second)
+				return
+			}
+			if waitIndex != lastIndex {
+				waitIndex = lastIndex
+				ch <- pair
+			}
+
+			select {
+			case <-ctx.Done():
+				logger.Infof("stop watching key: %s", key)
+				return
+			default:
+			}
+		}
+	}()
+}
+
+func (c *consulImpl) watchKeyByIndex(ns, key string, waitIndex uint64) (*api.KVPair, uint64, error) {
+	opt := &api.QueryOptions{
+		RequireConsistent: true,
+		WaitIndex:         waitIndex,
+		WaitTime:          time.Minute,
+	}
+
+	pair, meta, err := c.client.KV().Get(key, opt)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return pair, meta.LastIndex, nil
+}
+
+func (c *consulImpl) WatchKeysByPrefix(ctx context.Context, ns, prefix string, ch chan<- []string) {
+	go func() {
+		var waitIndex uint64
+		for {
+			keys, lastIndex, err := c.watchKeysByIndex(ns, prefix, waitIndex)
+			if err != nil {
+				logger.Errorf("key watch error: %v", err)
+				time.Sleep(30 * time.Second)
+				return
+			}
+			if waitIndex != lastIndex {
+				waitIndex = lastIndex
+				ch <- keys
+			}
+
+			select {
+			case <-ctx.Done():
+				logger.Infof("stop watching keys by prefix: %s", prefix)
+				return
+			default:
+			}
+		}
+	}()
+}
+
+func (c *consulImpl) watchKeysByIndex(ns, prefix string, waitIndex uint64) ([]string, uint64, error) {
+	opt := &api.QueryOptions{
+		RequireConsistent: true,
+		WaitIndex:         waitIndex,
+		WaitTime:          time.Minute,
+	}
+
+	keys, meta, err := c.client.KV().Keys(prefix, "/", opt)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return keys, meta.LastIndex, nil
+}
+
+func (c *consulImpl) LockKey(key string) (*api.Lock, error) {
+	return c.client.LockKey(key)
+}
