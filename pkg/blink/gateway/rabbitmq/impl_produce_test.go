@@ -5,7 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/isnlan/coral/pkg/gateway"
+	gateway2 "github.com/isnlan/coral/pkg/blink/gateway"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -18,7 +19,7 @@ func TestNewProduce(t *testing.T) {
 	produce := NewProduce(url)
 
 	time.Sleep(time.Second)
-	err := produce.ApiUpload(&gateway.Api{
+	err := produce.ApiUpload(&gateway2.Api{
 		Id:      "id1",
 		Scheme:  "http",
 		Method:  "get",
@@ -30,7 +31,7 @@ func TestNewProduce(t *testing.T) {
 	})
 	assert.NoError(t, err)
 
-	err = produce.ApiUpload(&gateway.Api{
+	err = produce.ApiUpload(&gateway2.Api{
 		Id:      "id1",
 		Scheme:  "http",
 		Method:  "get",
@@ -41,7 +42,7 @@ func TestNewProduce(t *testing.T) {
 	})
 	assert.NoError(t, err)
 
-	err = produce.ApiCallRecord(&gateway.ApiCallEntity{
+	err = produce.ApiCallRecord(&gateway2.ApiCallEntity{
 		ApiId:    "id1",
 		Latency:  10,
 		HttpCode: 200,
@@ -49,7 +50,7 @@ func TestNewProduce(t *testing.T) {
 	})
 	assert.NoError(t, err)
 
-	err = produce.ContractCallRecord(&gateway.ContractCallEntity{
+	err = produce.ContractCallRecord(&gateway2.ContractCallEntity{
 		ClientId:  "ssss",
 		Address:   "adress",
 		ChainId:   "c1",
@@ -63,17 +64,17 @@ func TestNewProduce(t *testing.T) {
 type mockConsume struct {
 }
 
-func (m mockConsume) ApiHandler(api *gateway.Api) error {
+func (m mockConsume) ApiHandler(api *gateway2.Api) error {
 	fmt.Println("api", api)
 	return nil
 }
 
-func (m mockConsume) ApiCallHandler(entity *gateway.ApiCallEntity) error {
+func (m mockConsume) ApiCallHandler(entity *gateway2.ApiCallEntity) error {
 	fmt.Println("entity", entity)
 	return nil
 }
 
-func (m mockConsume) ContractCallHandler(entity *gateway.ContractCallEntity) error {
+func (m mockConsume) ContractCallHandler(entity *gateway2.ContractCallEntity) error {
 	fmt.Println("entity", entity)
 	return nil
 }

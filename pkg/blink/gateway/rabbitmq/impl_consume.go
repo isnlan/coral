@@ -3,17 +3,18 @@ package rabbitmq
 import (
 	"encoding/json"
 
+	gateway2 "github.com/isnlan/coral/pkg/blink/gateway"
+
 	"github.com/assembla/cony"
-	"github.com/isnlan/coral/pkg/gateway"
 )
 
 type Consume struct {
 	cli     *cony.Client
-	handler gateway.Consumer
+	handler gateway2.Consumer
 	cns     *cony.Consumer
 }
 
-func NewConsume(url string, handler gateway.Consumer) *Consume {
+func NewConsume(url string, handler gateway2.Consumer) *Consume {
 	// Construct new client with the flag url
 	// and default backoff policy
 	cli := cony.NewClient(
@@ -62,7 +63,7 @@ func (c *Consume) Start() {
 		case msg := <-c.cns.Deliveries():
 			switch msg.RoutingKey {
 			case GatewayApiRoute:
-				var api gateway.Api
+				var api gateway2.Api
 				err := json.Unmarshal(msg.Body, &api)
 				if err != nil {
 					logger.Errorf("json unmarshal api error: %v, body: %q ", err, msg.Body)
@@ -73,7 +74,7 @@ func (c *Consume) Start() {
 					logger.Errorf("api handler error: %v, api: %v ", err, api)
 				}
 			case GatewayApiCallRoute:
-				var entity gateway.ApiCallEntity
+				var entity gateway2.ApiCallEntity
 				err := json.Unmarshal(msg.Body, &entity)
 				if err != nil {
 					logger.Errorf("json unmarshal ApiCallEntity error: %v, body: %q ", err, msg.Body)
@@ -84,7 +85,7 @@ func (c *Consume) Start() {
 					logger.Errorf("api handler error: %v, entity: %v ", err, entity)
 				}
 			case GetawayContractCallRoute:
-				var entity gateway.ContractCallEntity
+				var entity gateway2.ContractCallEntity
 				err := json.Unmarshal(msg.Body, &entity)
 				if err != nil {
 					logger.Errorf("json unmarshal ContractCallEntity error: %v, body: %q ", err, msg.Body)

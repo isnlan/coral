@@ -5,9 +5,10 @@
 package mock
 
 import (
-	gomock "github.com/golang/mock/gomock"
-	gateway "github.com/isnlan/coral/pkg/gateway"
 	reflect "reflect"
+
+	gomock "github.com/golang/mock/gomock"
+	gateway2 "github.com/isnlan/coral/pkg/blink/gateway"
 )
 
 // MockProducer is a mock of Producer interface
@@ -34,7 +35,7 @@ func (m *MockProducer) EXPECT() *MockProducerMockRecorder {
 }
 
 // ApiUpload mocks base method
-func (m *MockProducer) ApiUpload(api *gateway.Api) error {
+func (m *MockProducer) ApiUpload(api *gateway2.Api) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ApiUpload", api)
 	ret0, _ := ret[0].(error)
@@ -48,7 +49,7 @@ func (mr *MockProducerMockRecorder) ApiUpload(api interface{}) *gomock.Call {
 }
 
 // ApiCallRecord mocks base method
-func (m *MockProducer) ApiCallRecord(entity *gateway.ApiCallEntity) error {
+func (m *MockProducer) ApiCallRecord(entity *gateway2.ApiCallEntity) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ApiCallRecord", entity)
 	ret0, _ := ret[0].(error)
@@ -62,7 +63,7 @@ func (mr *MockProducerMockRecorder) ApiCallRecord(entity interface{}) *gomock.Ca
 }
 
 // ContractCallRecord mocks base method
-func (m *MockProducer) ContractCallRecord(entity *gateway.ContractCallEntity) error {
+func (m *MockProducer) ContractCallRecord(entity *gateway2.ContractCallEntity) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ContractCallRecord", entity)
 	ret0, _ := ret[0].(error)
@@ -99,7 +100,7 @@ func (m *MockConsumer) EXPECT() *MockConsumerMockRecorder {
 }
 
 // ApiHandler mocks base method
-func (m *MockConsumer) ApiHandler(api *gateway.Api) error {
+func (m *MockConsumer) ApiHandler(api *gateway2.Api) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ApiHandler", api)
 	ret0, _ := ret[0].(error)
@@ -113,7 +114,7 @@ func (mr *MockConsumerMockRecorder) ApiHandler(api interface{}) *gomock.Call {
 }
 
 // ApiCallHandler mocks base method
-func (m *MockConsumer) ApiCallHandler(entity *gateway.ApiCallEntity) error {
+func (m *MockConsumer) ApiCallHandler(entity *gateway2.ApiCallEntity) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ApiCallHandler", entity)
 	ret0, _ := ret[0].(error)
@@ -127,7 +128,7 @@ func (mr *MockConsumerMockRecorder) ApiCallHandler(entity interface{}) *gomock.C
 }
 
 // ContractCallHandler mocks base method
-func (m *MockConsumer) ContractCallHandler(entity *gateway.ContractCallEntity) error {
+func (m *MockConsumer) ContractCallHandler(entity *gateway2.ContractCallEntity) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ContractCallHandler", entity)
 	ret0, _ := ret[0].(error)

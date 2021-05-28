@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"time"
 
+	gateway2 "github.com/isnlan/coral/pkg/blink/gateway"
+	rabbitmq2 "github.com/isnlan/coral/pkg/blink/gateway/rabbitmq"
+
 	"github.com/gin-gonic/gin"
-	"github.com/isnlan/coral/pkg/gateway"
-	"github.com/isnlan/coral/pkg/gateway/rabbitmq"
 	"github.com/isnlan/coral/pkg/trace"
 	"github.com/isnlan/coral/pkg/xgin"
 )
@@ -20,12 +21,12 @@ func check(err error) {
 func main() {
 	go func() {
 		url := "amqp://admin:admin@localhost:5672/"
-		consume := rabbitmq.NewConsume(url, &mockConsume{})
+		consume := rabbitmq2.NewConsume(url, &mockConsume{})
 		consume.Start()
 	}()
 	time.Sleep(1 * time.Second)
 
-	rc := gateway.New("UserCenter", rabbitmq.NewProduce("amqp://admin:admin@localhost:5672/"))
+	rc := gateway2.New("UserCenter", rabbitmq2.NewProduce("amqp://admin:admin@localhost:5672/"))
 	router := xgin.New(rc.Handler)
 
 	f := func(c *gin.Context) {
@@ -34,7 +35,7 @@ func main() {
 		})
 	}
 	f2 := func(c *gin.Context) {
-		gateway.SetClientId(trace.GetContextFrom(c), "aaaaaa")
+		gateway2.SetClientId(trace.GetContextFrom(c), "aaaaaa")
 		c.JSON(200, gin.H{
 			"message": "注册用户",
 		})
@@ -56,17 +57,17 @@ func main() {
 type mockConsume struct {
 }
 
-func (m mockConsume) ApiHandler(api *gateway.Api) error {
+func (m mockConsume) ApiHandler(api *gateway2.Api) error {
 	fmt.Printf("api: %+v\n", api)
 	return nil
 }
 
-func (m mockConsume) ApiCallHandler(entity *gateway.ApiCallEntity) error {
+func (m mockConsume) ApiCallHandler(entity *gateway2.ApiCallEntity) error {
 	fmt.Printf("entity: %+v\n", entity)
 	return nil
 }
 
-func (m mockConsume) ContractCallHandler(entity *gateway.ContractCallEntity) error {
+func (m mockConsume) ContractCallHandler(entity *gateway2.ContractCallEntity) error {
 	fmt.Printf("entity: %+v\n", entity)
 	return nil
 }

@@ -4,12 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 
+	gateway2 "github.com/isnlan/coral/pkg/blink/gateway"
+
 	"github.com/isnlan/coral/pkg/logging"
 
 	"github.com/streadway/amqp"
 
 	"github.com/assembla/cony"
-	"github.com/isnlan/coral/pkg/gateway"
 )
 
 const GatewayApiRoute = "gateway.api"
@@ -33,7 +34,7 @@ type produceImpl struct {
 	contractCallProducer *cony.Publisher
 }
 
-func NewProduce(url string) gateway.Producer {
+func NewProduce(url string) gateway2.Producer {
 	// Construct new client with the flag url
 	// and default backoff policy
 	cli := cony.NewClient(
@@ -82,7 +83,7 @@ func (p *produceImpl) setup() {
 	}()
 }
 
-func (p *produceImpl) ApiUpload(api *gateway.Api) error {
+func (p *produceImpl) ApiUpload(api *gateway2.Api) error {
 	bytes, err := json.Marshal(api)
 	if err != nil {
 		return err
@@ -92,7 +93,7 @@ func (p *produceImpl) ApiUpload(api *gateway.Api) error {
 	})
 }
 
-func (p *produceImpl) ApiCallRecord(entity *gateway.ApiCallEntity) error {
+func (p *produceImpl) ApiCallRecord(entity *gateway2.ApiCallEntity) error {
 	bytes, err := json.Marshal(entity)
 	if err != nil {
 		return err
@@ -102,7 +103,7 @@ func (p *produceImpl) ApiCallRecord(entity *gateway.ApiCallEntity) error {
 	})
 }
 
-func (p *produceImpl) ContractCallRecord(entity *gateway.ContractCallEntity) error {
+func (p *produceImpl) ContractCallRecord(entity *gateway2.ContractCallEntity) error {
 	bytes, err := json.Marshal(entity)
 	if err != nil {
 		return err

@@ -3,13 +3,14 @@ package mock
 import (
 	"context"
 
+	network2 "github.com/isnlan/coral/pkg/blink/network"
+
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"github.com/isnlan/coral/pkg/network"
 	"github.com/isnlan/coral/pkg/protos"
 )
 
-var _ network.Network = &DefaultMockNetwork{}
+var _ network2.Network = &DefaultMockNetwork{}
 
 type DefaultMockNetwork struct {
 }
