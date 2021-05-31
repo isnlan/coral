@@ -5,13 +5,17 @@ import (
 )
 
 var (
-	New         = errors.New
-	Wrap        = errors.Wrap
-	Wrapf       = errors.Wrapf
-	Errorf      = errors.Errorf
-	WithStack   = errors.WithStack
-	WithMessage = errors.WithMessage
-	Cause       = errors.Cause
+	New          = errors.New
+	Wrap         = errors.Wrap
+	Wrapf        = errors.Wrapf
+	Errorf       = errors.Errorf
+	WithStack    = errors.WithStack
+	WithMessage  = errors.WithMessage
+	WithMessagef = errors.WithMessagef
+	Cause        = errors.Cause
+	Is           = errors.Is
+	As           = errors.As
+	Unwrap       = errors.Unwrap
 )
 
 type CodeError interface {
