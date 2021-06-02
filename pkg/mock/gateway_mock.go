@@ -35,9 +35,9 @@ func (m *MockProducer) EXPECT() *MockProducerMockRecorder {
 }
 
 // ApiUpload mocks base method
-func (m *MockProducer) ApiUpload(api *gateway2.Api) error {
+func (m *MockProducer) APIUpload(api *gateway2.API) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ApiUpload", api)
+	ret := m.ctrl.Call(m, "APIUpload", api)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
@@ -45,13 +45,13 @@ func (m *MockProducer) ApiUpload(api *gateway2.Api) error {
 // ApiUpload indicates an expected call of ApiUpload
 func (mr *MockProducerMockRecorder) ApiUpload(api interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ApiUpload", reflect.TypeOf((*MockProducer)(nil).ApiUpload), api)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIUpload", reflect.TypeOf((*MockProducer)(nil).APIUpload), api)
 }
 
 // ApiCallRecord mocks base method
-func (m *MockProducer) ApiCallRecord(entity *gateway2.ApiCallEntity) error {
+func (m *MockProducer) APICallRecord(entity *gateway2.APICallEntity) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ApiCallRecord", entity)
+	ret := m.ctrl.Call(m, "APICallRecord", entity)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
@@ -59,7 +59,7 @@ func (m *MockProducer) ApiCallRecord(entity *gateway2.ApiCallEntity) error {
 // ApiCallRecord indicates an expected call of ApiCallRecord
 func (mr *MockProducerMockRecorder) ApiCallRecord(entity interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ApiCallRecord", reflect.TypeOf((*MockProducer)(nil).ApiCallRecord), entity)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APICallRecord", reflect.TypeOf((*MockProducer)(nil).APICallRecord), entity)
 }
 
 // ContractCallRecord mocks base method
@@ -100,9 +100,9 @@ func (m *MockConsumer) EXPECT() *MockConsumerMockRecorder {
 }
 
 // ApiHandler mocks base method
-func (m *MockConsumer) ApiHandler(api *gateway2.Api) error {
+func (m *MockConsumer) APIHandler(api *gateway2.API) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ApiHandler", api)
+	ret := m.ctrl.Call(m, "APIHandler", api)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
@@ -110,13 +110,13 @@ func (m *MockConsumer) ApiHandler(api *gateway2.Api) error {
 // ApiHandler indicates an expected call of ApiHandler
 func (mr *MockConsumerMockRecorder) ApiHandler(api interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ApiHandler", reflect.TypeOf((*MockConsumer)(nil).ApiHandler), api)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APIHandler", reflect.TypeOf((*MockConsumer)(nil).APIHandler), api)
 }
 
 // ApiCallHandler mocks base method
-func (m *MockConsumer) ApiCallHandler(entity *gateway2.ApiCallEntity) error {
+func (m *MockConsumer) APICallHandler(entity *gateway2.APICallEntity) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ApiCallHandler", entity)
+	ret := m.ctrl.Call(m, "APICallHandler", entity)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
@@ -124,7 +124,7 @@ func (m *MockConsumer) ApiCallHandler(entity *gateway2.ApiCallEntity) error {
 // ApiCallHandler indicates an expected call of ApiCallHandler
 func (mr *MockConsumerMockRecorder) ApiCallHandler(entity interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ApiCallHandler", reflect.TypeOf((*MockConsumer)(nil).ApiCallHandler), entity)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "APICallHandler", reflect.TypeOf((*MockConsumer)(nil).APICallHandler), entity)
 }
 
 // ContractCallHandler mocks base method

@@ -13,8 +13,8 @@ import (
 	"github.com/assembla/cony"
 )
 
-const GatewayApiRoute = "gateway.api"
-const GatewayApiCallRoute = "gateway.api.call"
+const GatewayAPIRoute = "gateway.api"
+const GatewayAPICallRoute = "gateway.api.call"
 const GetawayContractCallRoute = "gateway.contract.call"
 const GetawayRoute = "gateway.#"
 
@@ -57,11 +57,11 @@ func (p *produceImpl) setup() {
 	// Declare and register a publisher
 	// with the cony client
 
-	apiProducer := cony.NewPublisher(exc.Name, GatewayApiRoute)
+	apiProducer := cony.NewPublisher(exc.Name, GatewayAPIRoute)
 	p.cli.Publish(apiProducer)
 	p.apiProducer = apiProducer
 
-	apiCallProducer := cony.NewPublisher(exc.Name, GatewayApiCallRoute)
+	apiCallProducer := cony.NewPublisher(exc.Name, GatewayAPICallRoute)
 	p.cli.Publish(apiCallProducer)
 	p.apiCallProducer = apiCallProducer
 
@@ -83,7 +83,7 @@ func (p *produceImpl) setup() {
 	}()
 }
 
-func (p *produceImpl) ApiUpload(api *gateway2.Api) error {
+func (p *produceImpl) APIUpload(api *gateway2.API) error {
 	bytes, err := json.Marshal(api)
 	if err != nil {
 		return err
@@ -93,7 +93,7 @@ func (p *produceImpl) ApiUpload(api *gateway2.Api) error {
 	})
 }
 
-func (p *produceImpl) ApiCallRecord(entity *gateway2.ApiCallEntity) error {
+func (p *produceImpl) APICallRecord(entity *gateway2.APICallEntity) error {
 	bytes, err := json.Marshal(entity)
 	if err != nil {
 		return err

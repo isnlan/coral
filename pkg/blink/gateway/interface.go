@@ -1,13 +1,13 @@
 package gateway
 
 type Producer interface {
-	ApiUpload(api *Api) error
-	ApiCallRecord(entity *ApiCallEntity) error
+	APIUpload(api *API) error
+	APICallRecord(entity *APICallEntity) error
 	ContractCallRecord(entity *ContractCallEntity) error
 }
 
 type Consumer interface {
-	ApiHandler(api *Api) error
-	ApiCallHandler(entity *ApiCallEntity) error
+	APIHandler(api *API) error
+	APICallHandler(entity *APICallEntity) error
 	ContractCallHandler(entity *ContractCallEntity) error
 }

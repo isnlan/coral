@@ -19,42 +19,42 @@ func TestNewProduce(t *testing.T) {
 	produce := NewProduce(url)
 
 	time.Sleep(time.Second)
-	err := produce.ApiUpload(&gateway2.Api{
-		Id:      "id1",
+	err := produce.APIUpload(&gateway2.API{
+		ID:      "id1",
 		Scheme:  "http",
 		Method:  "get",
 		Path:    "/ping",
 		AppName: "myapp",
-		ApiName: "PING",
-		ApiType: "拼",
-		DocUrl:  "",
+		APIName: "PING",
+		APIType: "拼",
+		DocURL:  "",
 	})
 	assert.NoError(t, err)
 
-	err = produce.ApiUpload(&gateway2.Api{
-		Id:      "id1",
+	err = produce.APIUpload(&gateway2.API{
+		ID:      "id1",
 		Scheme:  "http",
 		Method:  "get",
 		Path:    "/ping",
 		AppName: "myapp",
-		ApiName: "PING",
-		DocUrl:  "",
+		APIName: "PING",
+		DocURL:  "",
 	})
 	assert.NoError(t, err)
 
-	err = produce.ApiCallRecord(&gateway2.ApiCallEntity{
-		ApiId:    "id1",
+	err = produce.APICallRecord(&gateway2.APICallEntity{
+		APIID:    "id1",
 		Latency:  10,
 		HttpCode: 200,
-		ClientId: "c1",
+		ClientID: "c1",
 	})
 	assert.NoError(t, err)
 
 	err = produce.ContractCallRecord(&gateway2.ContractCallEntity{
-		ClientId:  "ssss",
+		ClientID:  "ssss",
 		Address:   "adress",
-		ChainId:   "c1",
-		ChannelId: "chann1",
+		ChainID:   "c1",
+		ChannelID: "chann1",
 		Contract:  "tv",
 	})
 	assert.NoError(t, err)
@@ -64,12 +64,12 @@ func TestNewProduce(t *testing.T) {
 type mockConsume struct {
 }
 
-func (m mockConsume) ApiHandler(api *gateway2.Api) error {
+func (m mockConsume) APIHandler(api *gateway2.API) error {
 	fmt.Println("api", api)
 	return nil
 }
 
-func (m mockConsume) ApiCallHandler(entity *gateway2.ApiCallEntity) error {
+func (m mockConsume) APICallHandler(entity *gateway2.APICallEntity) error {
 	fmt.Println("entity", entity)
 	return nil
 }

@@ -62,25 +62,25 @@ func (c *Consume) Start() {
 		select {
 		case msg := <-c.cns.Deliveries():
 			switch msg.RoutingKey {
-			case GatewayApiRoute:
-				var api gateway2.Api
+			case GatewayAPIRoute:
+				var api gateway2.API
 				err := json.Unmarshal(msg.Body, &api)
 				if err != nil {
 					logger.Errorf("json unmarshal api error: %v, body: %q ", err, msg.Body)
 					continue
 				}
-				err = c.handler.ApiHandler(&api)
+				err = c.handler.APIHandler(&api)
 				if err != nil {
 					logger.Errorf("api handler error: %v, api: %v ", err, api)
 				}
-			case GatewayApiCallRoute:
-				var entity gateway2.ApiCallEntity
+			case GatewayAPICallRoute:
+				var entity gateway2.APICallEntity
 				err := json.Unmarshal(msg.Body, &entity)
 				if err != nil {
-					logger.Errorf("json unmarshal ApiCallEntity error: %v, body: %q ", err, msg.Body)
+					logger.Errorf("json unmarshal APICallEntity error: %v, body: %q ", err, msg.Body)
 					continue
 				}
-				err = c.handler.ApiCallHandler(&entity)
+				err = c.handler.APICallHandler(&entity)
 				if err != nil {
 					logger.Errorf("api handler error: %v, entity: %v ", err, entity)
 				}

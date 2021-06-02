@@ -35,7 +35,7 @@ func main() {
 		})
 	}
 	f2 := func(c *gin.Context) {
-		gateway2.SetClientId(trace.GetContextFrom(c), "aaaaaa")
+		gateway2.SetClientID(trace.GetContextFrom(c), "aaaaaa")
 		c.JSON(200, gin.H{
 			"message": "注册用户",
 		})
@@ -57,12 +57,12 @@ func main() {
 type mockConsume struct {
 }
 
-func (m mockConsume) ApiHandler(api *gateway2.Api) error {
+func (m mockConsume) APIHandler(api *gateway2.API) error {
 	fmt.Printf("api: %+v\n", api)
 	return nil
 }
 
-func (m mockConsume) ApiCallHandler(entity *gateway2.ApiCallEntity) error {
+func (m mockConsume) APICallHandler(entity *gateway2.APICallEntity) error {
 	fmt.Printf("entity: %+v\n", entity)
 	return nil
 }
