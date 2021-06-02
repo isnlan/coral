@@ -27,3 +27,5 @@ func Throw(desc string, code int, msg ...interface{}) {
 	}
 	panic(NewWithInfo(code, desc))
 }
+
+func Ignore(_ error) {}
