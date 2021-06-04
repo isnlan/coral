@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/hashicorp/consul/api"
+
 	"github.com/isnlan/coral/pkg/logging"
 
 	"github.com/isnlan/coral/pkg/discovery"
@@ -32,10 +34,12 @@ func (h *Handler) SetAclLease(acl *AclLease) error {
 
 func (h *Handler) GetAclLease(clientId string) (*AclLease, error) {
 	var acl AclLease
+
 	err := h.GetSource(clientId, &acl)
 	if err == notFindError {
 		return nil, nil
 	}
+
 	if err != nil {
 		return nil, err
 	}
@@ -57,10 +61,12 @@ func (h *Handler) SetChainLease(chain *ChainLease) error {
 
 func (h *Handler) GetChainLease(networkId string) (*ChainLease, error) {
 	var chain ChainLease
+
 	err := h.GetSource(networkId, &chain)
 	if err == notFindError {
 		return nil, nil
 	}
+
 	if err != nil {
 		return nil, err
 	}
@@ -79,11 +85,15 @@ func (h *Handler) DeleteChainLeaseList() error {
 func (h *Handler) WatchChainLeaseList(ctx context.Context, ch chan<- []string) {
 	keys := make(chan []string)
 	prefix := utils.MakeTypeName(&ChainLease{})
+
 	h.ds.WatchKeysByPrefix(ctx, ns, prefix, keys)
+
 	for {
 		select {
 		case list := <-keys:
+
 			var tmp []string
+
 			for _, key := range list {
 				split := strings.Split(key, ":")
 				if len(split) != 2 {
@@ -94,27 +104,58 @@ func (h *Handler) WatchChainLeaseList(ctx context.Context, ch chan<- []string) {
 			}
 			ch <- tmp
 		case <-ctx.Done():
-			logger.Warn("stop watching chain list")
+			logger.Warn("context done, stop watching chain list")
 			return
 		}
 	}
 }
 
-func (h *Handler) WatchChainLease(networkId string) {
+func (h *Handler) WatchChainLease(ctx context.Context, networkId string, ch chan *ChainLease) {
+	key := fmt.Sprintf("%s:%s", utils.MakeTypeName(&ChainLease{}), networkId)
+	pairs := make(chan *api.KVPair)
+
+	h.ds.WatchKey(ctx, ns, key, pairs)
+
+	for {
+		select {
+		case pair := <-pairs:
+			if pair == nil || len(pair.Value) == 0 {
+				ch <- nil
+				continue
+			}
+
+			var chain ChainLease
+
+			err := json.Unmarshal(pair.Value, &chain)
+			if err != nil {
+				logger.Errorf("json unmarshal error: %w, consul key: %v", err, key)
+				continue
+			}
+
+			ch <- &chain
+		case <-ctx.Done():
+			logger.Warn("context done, stop watching chain")
+			return
+		}
+	}
 }
 
 func (h *Handler) SetChannelLease(channel *ChannelLease) error {
 	key := fmt.Sprintf("%s:%s", channel.NetworkID, channel.Name)
+
 	return h.SetSource(key, channel)
 }
 
 func (h *Handler) GetChannelLease(networkId, channelName string) (*ChannelLease, error) {
 	var lease ChannelLease
+
 	key := fmt.Sprintf("%s:%s", networkId, channelName)
+
 	err := h.GetSource(key, &lease)
 	if err == notFindError {
 		return nil, nil
 	}
+
 	if err != nil {
 		return nil, err
 	}

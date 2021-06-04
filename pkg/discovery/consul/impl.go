@@ -208,8 +208,10 @@ func (c *consulImpl) WatchKey(ctx context.Context, ns, key string, ch chan<- *ap
 				time.Sleep(30 * time.Second)
 				return
 			}
+
 			if waitIndex != lastIndex {
 				waitIndex = lastIndex
+				// pair maybe is null, but we not care
 				ch <- pair
 			}
 
