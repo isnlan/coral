@@ -28,6 +28,7 @@ type ServiceDiscover interface {
 	DeleteKeyByPrefix(ns, prefix string) error
 	WatchKey(ctx context.Context, ns, key string, ch chan<- *api.KVPair)
 	WatchKeysByPrefix(ctx context.Context, ns, prefix string, ch chan<- []string)
+	WatchValuesByKeyPrefix(ctx context.Context, ns, prefix string, ch chan<- []*api.KVPair)
 }
 
 func GetLocalIP() (string, error) {

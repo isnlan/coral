@@ -188,6 +188,25 @@ func TestConsulImpl_WatchKeysByPrefix(t *testing.T) {
 	time.Sleep(time.Second * 10)
 }
 
+func TestConsulImpl_WatchValuesByKeyPrefix(t *testing.T) {
+	client, err := New("127.0.0.1:8500")
+	assert.NoError(t, err)
+
+	c := make(chan []*api.KVPair)
+
+	ctx, cancel := context.WithCancel(context.Background())
+	client.WatchValuesByKeyPrefix(ctx, "", "ChannelLease", c)
+
+	for keys := range c {
+		for _, key := range keys {
+			fmt.Printf("--> %+#v\n ", key.Key)
+		}
+	}
+	cancel()
+
+	time.Sleep(time.Second * 10)
+}
+
 func TestConsulImpl_DelKey(t *testing.T) {
 	client, err := New("127.0.0.1:8500")
 	assert.NoError(t, err)

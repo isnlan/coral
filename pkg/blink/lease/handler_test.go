@@ -97,6 +97,19 @@ func TestBlinkSourceImpl_SetChainLease(t *testing.T) {
 	assert.NoError(t, err)
 	assert.True(t, reflect.DeepEqual(lease, lease2))
 
+	channel := &ChannelLease{
+		ID:         primitive.NewObjectID().Hex(),
+		NetworkID:  lease.NetworkID,
+		Name:       "mychannel",
+		Endpoint:   "f/b",
+		IsRunning:  true,
+		SyncEnable: true,
+		SyncDB:     "",
+	}
+
+	err = impl.SetChannelLease(channel)
+	assert.NoError(t, err)
+
 	//err = impl.DeleteChainLease(lease)
 	//assert.NoError(t, err)
 	//
@@ -176,6 +189,36 @@ func TestHandler_WatchChannelLease(t *testing.T) {
 			} else {
 				fmt.Printf("chain lease changed: %v\n", lease)
 			}
+		}
+	}()
+
+	<-ctx.Done()
+}
+
+func TestHandler_WatchChannelLeaseList(t *testing.T) {
+	c, err := consul.New("127.0.0.1:8500")
+	assert.NoError(t, err)
+
+	impl := New(c)
+
+	ch := make(chan []*ChannelLease)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+	defer cancel()
+
+	go impl.WatchChannelLeaseList(ctx, ch)
+
+	go func() {
+		for list := range ch {
+			if len(list) == 0 {
+				fmt.Println("channel list is nil")
+				time.Sleep(time.Second * 2)
+				cancel()
+			} else {
+				for _, channel := range list {
+					fmt.Printf("channel: %+#v\n", channel)
+				}
+			}
+			fmt.Println("")
 		}
 	}()
 
