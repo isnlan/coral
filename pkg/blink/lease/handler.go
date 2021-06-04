@@ -17,7 +17,7 @@ import (
 
 const ns = "blink"
 
-var notFindError = errors.New("not find source")
+var errNotFindSource = errors.New("not find source")
 var logger = logging.MustGetLogger("source")
 
 type Handler struct {
@@ -36,7 +36,7 @@ func (h *Handler) GetAclLease(clientId string) (*AclLease, error) {
 	var acl AclLease
 
 	err := h.GetSource(clientId, &acl)
-	if err == notFindError {
+	if err == errNotFindSource {
 		return nil, nil
 	}
 
@@ -63,7 +63,7 @@ func (h *Handler) GetChainLease(networkId string) (*ChainLease, error) {
 	var chain ChainLease
 
 	err := h.GetSource(networkId, &chain)
-	if err == notFindError {
+	if err == errNotFindSource {
 		return nil, nil
 	}
 
@@ -140,6 +140,36 @@ func (h *Handler) WatchChainLease(ctx context.Context, networkId string, ch chan
 	}
 }
 
+func (h *Handler) WatchChannelLease(ctx context.Context, networkId, channelName string, ch chan *ChannelLease) {
+	key := fmt.Sprintf("%s:%s:%s", utils.MakeTypeName(&ChannelLease{}), networkId, channelName)
+	pairs := make(chan *api.KVPair)
+
+	h.ds.WatchKey(ctx, ns, key, pairs)
+
+	for {
+		select {
+		case pair := <-pairs:
+			if pair == nil || len(pair.Value) == 0 {
+				ch <- nil
+				continue
+			}
+
+			var channel ChannelLease
+
+			err := json.Unmarshal(pair.Value, &channel)
+			if err != nil {
+				logger.Errorf("json unmarshal error: %w, consul key: %v", err, key)
+				continue
+			}
+
+			ch <- &channel
+		case <-ctx.Done():
+			logger.Warn("context done, stop watching channel")
+			return
+		}
+	}
+}
+
 func (h *Handler) SetChannelLease(channel *ChannelLease) error {
 	key := fmt.Sprintf("%s:%s", channel.NetworkID, channel.Name)
 
@@ -152,7 +182,7 @@ func (h *Handler) GetChannelLease(networkId, channelName string) (*ChannelLease,
 	key := fmt.Sprintf("%s:%s", networkId, channelName)
 
 	err := h.GetSource(key, &lease)
-	if err == notFindError {
+	if err == errNotFindSource {
 		return nil, nil
 	}
 
@@ -191,7 +221,7 @@ func (h *Handler) GetSource(key string, v interface{}) error {
 	}
 
 	if len(bytes) == 0 {
-		return notFindError
+		return errNotFindSource
 	}
 
 	return json.Unmarshal(bytes, v)

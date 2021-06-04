@@ -154,3 +154,30 @@ func TestHandler_WatchChainLease(t *testing.T) {
 
 	<-ctx.Done()
 }
+
+func TestHandler_WatchChannelLease(t *testing.T) {
+	c, err := consul.New("127.0.0.1:8500")
+	assert.NoError(t, err)
+
+	impl := New(c)
+
+	ch := make(chan *ChannelLease)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+	defer cancel()
+
+	go impl.WatchChannelLease(ctx, "60b995c42b778ea9b3d0c2fc", "testchannel", ch)
+
+	go func() {
+		for lease := range ch {
+			if lease == nil {
+				fmt.Println("chain lease is nil")
+				time.Sleep(time.Second * 2)
+				cancel()
+			} else {
+				fmt.Printf("chain lease changed: %v\n", lease)
+			}
+		}
+	}()
+
+	<-ctx.Done()
+}
