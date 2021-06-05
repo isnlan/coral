@@ -87,7 +87,7 @@ func TestBlinkSourceImpl_SetChainLease(t *testing.T) {
 		NetworkName: "importantnetwork",
 		Account:     "kdcloud55538816",
 		Team:        "kdcloud-t5",
-		IsRunning:   false,
+		IsRunning:   true,
 		TlsEnabled:  false,
 	}
 	err = impl.SetChainLease(lease)
@@ -122,7 +122,7 @@ func TestBlinkSourceImpl_SetChainLease(t *testing.T) {
 
 }
 
-func TestBlinkSourceImpl_WatchChainLeaseList(t *testing.T) {
+func TestBlinkSourceImpl_WatchChainIDList(t *testing.T) {
 	c, err := consul.New("127.0.0.1:8500")
 	assert.NoError(t, err)
 
@@ -131,7 +131,7 @@ func TestBlinkSourceImpl_WatchChainLeaseList(t *testing.T) {
 	ch := make(chan []string)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
-	go impl.WatchChainLeaseList(ctx, ch)
+	go impl.WatchChainIDList(ctx, ch)
 
 	go func() {
 		for keys := range ch {
@@ -141,7 +141,7 @@ func TestBlinkSourceImpl_WatchChainLeaseList(t *testing.T) {
 	<-ctx.Done()
 }
 
-func TestHandler_WatchChainLease(t *testing.T) {
+func TestHandler_WatchChainLeaseByID(t *testing.T) {
 	c, err := consul.New("127.0.0.1:8500")
 	assert.NoError(t, err)
 
@@ -151,7 +151,7 @@ func TestHandler_WatchChainLease(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 
-	go impl.WatchChainLease(ctx, "60b995c42b778ea9b3d0c2fc", ch)
+	go impl.WatchChainLeaseByID(ctx, "60b995c42b778ea9b3d0c2fc", ch)
 
 	go func() {
 		for lease := range ch {
@@ -168,7 +168,7 @@ func TestHandler_WatchChainLease(t *testing.T) {
 	<-ctx.Done()
 }
 
-func TestHandler_WatchChannelLease(t *testing.T) {
+func TestHandler_WatchChannelLeaseByName(t *testing.T) {
 	c, err := consul.New("127.0.0.1:8500")
 	assert.NoError(t, err)
 
@@ -178,7 +178,7 @@ func TestHandler_WatchChannelLease(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 
-	go impl.WatchChannelLease(ctx, "60b995c42b778ea9b3d0c2fc", "testchannel", ch)
+	go impl.WatchChannelLeaseByName(ctx, "60b995c42b778ea9b3d0c2fc", "testchannel", ch)
 
 	go func() {
 		for lease := range ch {
@@ -206,6 +206,66 @@ func TestHandler_WatchChannelLeaseList(t *testing.T) {
 	defer cancel()
 
 	go impl.WatchChannelLeaseList(ctx, ch)
+
+	go func() {
+		for list := range ch {
+			if len(list) == 0 {
+				fmt.Println("channel list is nil")
+				time.Sleep(time.Second * 2)
+				cancel()
+			} else {
+				for _, channel := range list {
+					fmt.Printf("channel: %+#v\n", channel)
+				}
+			}
+			fmt.Println("")
+		}
+	}()
+
+	<-ctx.Done()
+}
+
+func TestHandler_WatchChainLeaseList(t *testing.T) {
+	c, err := consul.New("127.0.0.1:8500")
+	assert.NoError(t, err)
+
+	impl := New(c)
+
+	ch := make(chan []*ChainLease)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+	defer cancel()
+
+	go impl.WatchChainLeaseList(ctx, ch)
+
+	go func() {
+		for list := range ch {
+			if len(list) == 0 {
+				fmt.Println("chain list is nil")
+				time.Sleep(time.Second * 2)
+				cancel()
+			} else {
+				for _, chain := range list {
+					fmt.Printf("chain: %+#v\n", chain)
+				}
+			}
+			fmt.Println("")
+		}
+	}()
+
+	<-ctx.Done()
+}
+
+func TestHandler_WatchChannelLeaseListByNetworkId(t *testing.T) {
+	c, err := consul.New("127.0.0.1:8500")
+	assert.NoError(t, err)
+
+	impl := New(c)
+
+	ch := make(chan []*ChannelLease)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+	defer cancel()
+
+	go impl.WatchChannelLeaseListByNetworkId(ctx, "5fa26e237a065ea42dc99300", ch)
 
 	go func() {
 		for list := range ch {
