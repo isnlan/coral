@@ -16,7 +16,7 @@ type ChannelLease struct {
 	NetworkID  string `json:"network_id" mapstructure:"network_id"`
 	Name       string `json:"name" mapstructure:"name"`
 	Endpoint   string `json:"endpoint" mapstructure:"endpoint"`
-	IsRunning  bool   `json:"status" mapstructure:"status"`
+	IsRunning  bool   `json:"is_running" mapstructure:"is_running"`
 	SyncEnable bool   `json:"sync_enable" mapstructure:"sync_enable"`
 	SyncDB     string `json:"sync_db" mapstructure:"sync_db"`
 }
