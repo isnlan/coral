@@ -71,8 +71,8 @@ func TestBlinkSourceImpl_GetSource(t *testing.T) {
 	//err = impl.DeleteAclLease(acl)
 	//assert.NoError(t, err)
 
-	err = impl.DeleteAclLeaseList()
-	assert.NoError(t, err)
+	//err = impl.DeleteAclLeaseList()
+	//assert.NoError(t, err)
 }
 
 func TestBlinkSourceImpl_SetChainLease(t *testing.T) {
@@ -276,6 +276,35 @@ func TestHandler_WatchChannelLeaseListByNetworkId(t *testing.T) {
 			} else {
 				for _, channel := range list {
 					fmt.Printf("channel: %+#v\n", channel)
+				}
+			}
+			fmt.Println("")
+		}
+	}()
+
+	<-ctx.Done()
+}
+func TestHandler_WatchACLLeaseList(t *testing.T) {
+	c, err := consul.New("127.0.0.1:8500")
+	assert.NoError(t, err)
+
+	impl := New(c)
+
+	ch := make(chan []*AclLease)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+	defer cancel()
+
+	go impl.WatchACLLeaseList(ctx, ch)
+
+	go func() {
+		for list := range ch {
+			if len(list) == 0 {
+				fmt.Println("acl list is nil")
+				time.Sleep(time.Second * 2)
+				cancel()
+			} else {
+				for _, acl := range list {
+					fmt.Printf("acl: %+#v\n", acl)
 				}
 			}
 			fmt.Println("")

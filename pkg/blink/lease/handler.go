@@ -248,6 +248,41 @@ func (h *Handler) WatchChannelLeaseByName(ctx context.Context, networkId, channe
 	}
 }
 
+func (h *Handler) WatchACLLeaseList(ctx context.Context, ch chan<- []*AclLease) {
+	kvPairsChan := make(chan []*api.KVPair)
+
+	prefix := utils.MakeTypeName(&AclLease{})
+
+	h.ds.WatchValuesByKeyPrefix(ctx, ns, prefix, kvPairsChan)
+
+	for {
+		select {
+		case pairs := <-kvPairsChan:
+
+			var list []*AclLease
+
+			for _, pair := range pairs {
+				if len(pair.Value) > 0 {
+					var acl AclLease
+
+					err := json.Unmarshal(pair.Value, &acl)
+					if err != nil {
+						logger.Errorf("json unmarshal error: %w, consul key: %v", err, pair.Key)
+						continue
+					}
+
+					list = append(list, &acl)
+				}
+			}
+
+			ch <- list
+		case <-ctx.Done():
+			logger.Warn("context done, stop watching acl list")
+			return
+		}
+	}
+}
+
 func (h *Handler) SetChannelLease(channel *ChannelLease) error {
 	key := fmt.Sprintf("%s:%s", channel.NetworkID, channel.Name)
 
