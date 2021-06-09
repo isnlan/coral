@@ -6,8 +6,6 @@ import (
 	"strings"
 	"time"
 
-	"go.mongodb.org/mongo-driver/bson/primitive"
-
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
@@ -43,7 +41,7 @@ func InsertOne(ctx context.Context, coll *mongo.Collection, data interface{}) er
 	return err
 }
 
-func Find(ctx context.Context, coll *mongo.Collection, condition map[string]interface{}, limit, skip int64, sort primitive.D, f func(cur *mongo.Cursor) error) error {
+func Find(ctx context.Context, coll *mongo.Collection, condition map[string]interface{}, limit, skip int64, sort bson.D, f func(cur *mongo.Cursor) error) error {
 	if _, ok := ctx.Deadline(); !ok {
 		var cancel func()
 		ctx, cancel = context.WithTimeout(ctx, 5*time.Second)
