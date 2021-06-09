@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"strings"
 	"time"
 
 	"github.com/pkg/errors"
@@ -90,20 +89,4 @@ func (d *Dao) DeleteOne(ctx context.Context, condition map[string]interface{}) e
 	filter := bson.M(condition)
 	_, err := d.coll.DeleteOne(ctx, filter)
 	return err
-}
-
-func IsDup(err error) bool {
-	merr, ok := err.(mongo.WriteException)
-	if ok {
-		for _, we := range merr.WriteErrors {
-			if we.Code == 11000 ||
-				we.Code == 11001 ||
-				we.Code == 12582 ||
-				(we.Code == 16460 && strings.Contains(we.Message, " E11000 ")) {
-				return true
-			}
-		}
-	}
-
-	return false
 }
