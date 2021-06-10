@@ -95,9 +95,9 @@ func TestMongoApi(t *testing.T) {
 	// fmt.Println(api)
 
 	var list []*API
-	err = Find(ctx, coll, map[string]interface{}{}, 0, 0, primitive.D{}, func(cur *mongo.Cursor) error {
+	err = Find(ctx, coll, map[string]interface{}{}, 0, 0, primitive.D{}, func(decoder Decoder) error {
 		var api API
-		err := cur.Decode(&api)
+		err := decoder.Decode(&api)
 		if err != nil {
 			return err
 		}

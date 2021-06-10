@@ -41,7 +41,11 @@ func InsertOne(ctx context.Context, coll *mongo.Collection, data interface{}) er
 	return err
 }
 
-func Find(ctx context.Context, coll *mongo.Collection, condition map[string]interface{}, limit, skip int64, sort bson.D, f func(cur *mongo.Cursor) error) error {
+type Decoder interface {
+	Decode(val interface{}) error
+}
+
+func Find(ctx context.Context, coll *mongo.Collection, condition map[string]interface{}, limit, skip int64, sort bson.D, f func(decoder Decoder) error) error {
 	if _, ok := ctx.Deadline(); !ok {
 		var cancel func()
 		ctx, cancel = context.WithTimeout(ctx, 5*time.Second)
