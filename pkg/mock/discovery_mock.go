@@ -6,10 +6,12 @@ package mock
 
 import (
 	context "context"
+	reflect "reflect"
+
 	gomock "github.com/golang/mock/gomock"
+	"github.com/hashicorp/consul/api"
 	discovery "github.com/isnlan/coral/pkg/discovery"
 	grpc "google.golang.org/grpc"
-	reflect "reflect"
 )
 
 // MockServiceDiscover is a mock of ServiceDiscover interface
@@ -77,4 +79,43 @@ func (m *MockServiceDiscover) WatchService(ctx context.Context, name, tag string
 func (mr *MockServiceDiscoverMockRecorder) WatchService(ctx, name, tag, ch interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WatchService", reflect.TypeOf((*MockServiceDiscover)(nil).WatchService), ctx, name, tag, ch)
+}
+
+type MockServiceDiscover2 struct {
+}
+
+func (s2 *MockServiceDiscover2) RegisterHealthServer(s *grpc.Server) {
+}
+
+func (s2 *MockServiceDiscover2) ServiceRegister(name, address string, port int, tags ...string) (discovery.Deregister, error) {
+	return func() {}, nil
+}
+
+func (s2 *MockServiceDiscover2) WatchService(ctx context.Context, name string, tag string, ch chan<- []*discovery.ServiceInfo) {
+}
+
+func (s2 *MockServiceDiscover2) SetKey(ns, key string, value []byte) error {
+	return nil
+}
+
+func (s2 *MockServiceDiscover2) GetKey(ns, key string) ([]byte, error) {
+	return []byte{}, nil
+}
+
+func (s2 *MockServiceDiscover2) DeleteKey(ns, key string) error {
+	return nil
+}
+
+func (s2 *MockServiceDiscover2) DeleteKeyByPrefix(ns, prefix string) error {
+	return nil
+}
+
+func (s2 *MockServiceDiscover2) WatchKey(ctx context.Context, ns, key string, ch chan<- *api.KVPair) {
+
+}
+
+func (s2 *MockServiceDiscover2) WatchKeysByPrefix(ctx context.Context, ns, prefix string, ch chan<- []string) {
+}
+
+func (s2 *MockServiceDiscover2) WatchValuesByKeyPrefix(ctx context.Context, ns, prefix string, ch chan<- []*api.KVPair) {
 }
