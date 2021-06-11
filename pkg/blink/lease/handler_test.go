@@ -313,3 +313,31 @@ func TestHandler_WatchACLLeaseList(t *testing.T) {
 
 	<-ctx.Done()
 }
+
+func TestNewEventHubImpl(t *testing.T) {
+	c, err := consul.New("127.0.0.1:8500")
+	assert.NoError(t, err)
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Minute*10)
+	defer cancel()
+
+	impl := NewEventHubImpl(c, &mockEventHub{})
+	go impl.Start(ctx)
+
+	time.Sleep(time.Minute * 10)
+}
+
+type mockEventHub struct {
+}
+
+func (m *mockEventHub) Create(v interface{}) {
+	fmt.Printf("create: %+#v\n", v)
+}
+
+func (m *mockEventHub) Delete(v interface{}) {
+	fmt.Printf("detele: %+#v\n", v)
+}
+
+func (m *mockEventHub) Update(v interface{}) {
+	fmt.Printf("update: %+#v\n", v)
+}

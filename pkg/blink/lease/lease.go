@@ -11,6 +11,10 @@ type ChainLease struct {
 	TlsEnabled  bool   `json:"tls_enabled" mapstructure:"tls_enabled"`
 }
 
+func (l *ChainLease) UniqueID() string {
+	return l.NetworkID
+}
+
 type ChannelLease struct {
 	ID         string `json:"id" mapstructure:"id"`
 	NetworkID  string `json:"network_id" mapstructure:"network_id"`
@@ -19,6 +23,10 @@ type ChannelLease struct {
 	IsRunning  bool   `json:"is_running" mapstructure:"is_running"`
 	SyncEnable bool   `json:"sync_enable" mapstructure:"sync_enable"`
 	SyncDB     string `json:"sync_db" mapstructure:"sync_db"`
+}
+
+func (l *ChannelLease) UniqueID() string {
+	return l.NetworkID + ":" + l.Name
 }
 
 type AclLease struct {
@@ -33,4 +41,8 @@ type AclLease struct {
 	CreateTime   int64    `json:"create_time" mapstructure:"mapstructure"`    // 创建时间
 	Enable       bool     `json:"enable" mapstructure:"enable"`               // 可用
 	Description  string   `json:"description" mapstructure:"description"`     // 描述
+}
+
+func (l *AclLease) UniqueID() string {
+	return l.ClientId
 }
