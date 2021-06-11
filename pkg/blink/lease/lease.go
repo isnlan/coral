@@ -22,13 +22,15 @@ type ChannelLease struct {
 }
 
 type AclLease struct {
-	ID           string `json:"id" mapstructure:"id"`                       // 应用ID
-	Name         string `json:"name" mapstructure:"name"`                   // 应用名称
-	ClientId     string `json:"client_id" mapstructure:"client_id"`         // 客户端ID
-	ClientSecret string `json:"client_secret" mapstructure:"client_secret"` // 客户端Secret
-	Account      string `json:"account" mapstructure:"account"`             // 创建账户
-	Team         string `json:"team" mapstructure:"team"`                   // 组
-	NetworkID    string `json:"network_id" mapstructure:"network_id"`       // 网络ID（ChainID）
-	Enable       bool   `json:"enable" mapstructure:"enable"`               // 可用
-	Description  string `json:"description" mapstructure:"description"`     // 描述
+	ID           string   `json:"id" mapstructure:"id"`                       // 应用ID
+	Name         string   `json:"name" mapstructure:"name"`                   // 应用名称
+	ClientId     string   `json:"client_id" mapstructure:"client_id"`         // 客户端ID
+	ClientSecret string   `json:"client_secret" mapstructure:"client_secret"` // 客户端Secret
+	Account      string   `json:"account" mapstructure:"account"`             // 创建账户
+	Team         string   `json:"team" mapstructure:"team"`                   // 组
+	NetworkID    string   `json:"network_id" mapstructure:"network_id"`       // 网络ID（ChainID）
+	Enable       bool     `json:"enable" mapstructure:"enable"`               // 可用
+	Nodes        []string `json:"nodes" mapstructure:"nodes"`                 // 可用节点
+	CreateTime   int64    `json:"create_time" mapstructure:"mapstructure"`    // 创建时间
+	Description  string   `json:"description" mapstructure:"description"`     // 描述
 }
