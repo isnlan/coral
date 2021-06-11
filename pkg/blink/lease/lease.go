@@ -29,8 +29,8 @@ type AclLease struct {
 	Account      string   `json:"account" mapstructure:"account"`             // 创建账户
 	Team         string   `json:"team" mapstructure:"team"`                   // 组
 	NetworkID    string   `json:"network_id" mapstructure:"network_id"`       // 网络ID（ChainID）
-	Enable       bool     `json:"enable" mapstructure:"enable"`               // 可用
 	Nodes        []string `json:"nodes" mapstructure:"nodes"`                 // 可用节点
 	CreateTime   int64    `json:"create_time" mapstructure:"mapstructure"`    // 创建时间
+	Enable       bool     `json:"enable" mapstructure:"enable"`               // 可用
 	Description  string   `json:"description" mapstructure:"description"`     // 描述
 }
