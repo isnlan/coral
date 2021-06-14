@@ -330,14 +330,14 @@ func TestNewEventHubImpl(t *testing.T) {
 type mockEventHub struct {
 }
 
-func (m *mockEventHub) Create(v interface{}) {
-	fmt.Printf("create: %+#v\n", v)
+func (m *mockEventHub) OnAdd(v interface{}) {
+	fmt.Printf("add: %+#v\n", v)
 }
 
-func (m *mockEventHub) Delete(v interface{}) {
+func (m *mockEventHub) OnDelete(v interface{}) {
 	fmt.Printf("detele: %+#v\n", v)
 }
 
-func (m *mockEventHub) Update(v interface{}) {
+func (m *mockEventHub) OnUpdate(_, v interface{}) {
 	fmt.Printf("update: %+#v\n", v)
 }

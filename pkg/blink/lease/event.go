@@ -16,9 +16,9 @@ type EventHub interface {
 }
 
 type EventHandler interface {
-	Create(v interface{})
-	Delete(v interface{})
-	Update(v interface{})
+	OnAdd(v interface{})
+	OnDelete(v interface{})
+	OnUpdate(oldV, newV interface{})
 }
 
 type eventHubImpl struct {
@@ -75,7 +75,7 @@ func (r *eventHubImpl) filerChains(chains []*ChainLease) {
 				find = true
 				if !reflect.DeepEqual(old, chain) {
 					r.chains[id] = chain
-					r.update(chain)
+					r.update(old, chain)
 				}
 			}
 		}
@@ -105,7 +105,7 @@ func (r *eventHubImpl) filerChannels(channels []*ChannelLease) {
 				find = true
 				if !reflect.DeepEqual(old, channel) {
 					r.channels[id] = channel
-					r.update(channel)
+					r.update(old, channel)
 				}
 			}
 		}
@@ -135,7 +135,7 @@ func (r *eventHubImpl) filerACLs(acls []*AclLease) {
 				find = true
 				if !reflect.DeepEqual(old, acl) {
 					r.acls[id] = acl
-					r.update(acl)
+					r.update(old, acl)
 				}
 			}
 		}
@@ -156,19 +156,19 @@ func (r *eventHubImpl) filerACLs(acls []*AclLease) {
 
 func (r *eventHubImpl) create(v interface{}) {
 	if r.event != nil {
-		r.event.Create(v)
+		r.event.OnAdd(v)
 	}
 }
 
 func (r *eventHubImpl) delete(v interface{}) {
 	if r.event != nil {
-		r.event.Delete(v)
+		r.event.OnDelete(v)
 	}
 }
 
-func (r *eventHubImpl) update(v interface{}) {
+func (r *eventHubImpl) update(v1, v2 interface{}) {
 	if r.event != nil {
-		r.event.Update(v)
+		r.event.OnUpdate(v1, v2)
 	}
 }
 
