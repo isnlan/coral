@@ -3,6 +3,7 @@ package lease
 import (
 	"context"
 	"reflect"
+	"strings"
 	"sync"
 
 	"github.com/isnlan/coral/pkg/discovery"
@@ -13,6 +14,7 @@ type EventHub interface {
 	GetChainByID(networkID string) *ChainLease
 	GetChannelBy(networkID string, channelName string) *ChannelLease
 	GetAclByClientID(clientId string) *AclLease
+	GetChannelsByChainID(networkID string) []*ChannelLease
 }
 
 type EventHandler interface {
@@ -184,6 +186,21 @@ func (r *eventHubImpl) GetChannelBy(networkID string, channelName string) *Chann
 	defer r.rw.RUnlock()
 
 	return r.channels[networkID+":"+channelName]
+}
+
+func (r *eventHubImpl) GetChannelsByChainID(networkID string) []*ChannelLease {
+	r.rw.RLock()
+	defer r.rw.RUnlock()
+
+	var list []*ChannelLease
+
+	for key, item := range r.channels {
+		if strings.HasPrefix(key, networkID) {
+			list = append(list, item)
+		}
+	}
+
+	return list
 }
 
 func (r *eventHubImpl) GetAclByClientID(clientId string) *AclLease {

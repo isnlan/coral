@@ -324,7 +324,12 @@ func TestNewEventHubImpl(t *testing.T) {
 	impl := NewEventHubImpl(c, &mockEventHub{})
 	go impl.Start(ctx)
 
-	time.Sleep(time.Minute * 10)
+	time.Sleep(time.Second * 2)
+
+	list := impl.GetChannelsByChainID("60c30cd95bf646505ea8ab86")
+	fmt.Println(list)
+
+	time.Sleep(time.Minute)
 }
 
 type mockEventHub struct {
