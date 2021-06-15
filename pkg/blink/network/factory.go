@@ -20,15 +20,20 @@ const maxCallRecvMsgSize = 1024 * 1024 * 20
 
 var logger = logging.MustGetLogger("network")
 
-type Factory struct {
+type Factory interface {
+	Builder(chain *protos.Chain) (Builder, error)
+	Close()
+}
+
+type consulBaseFactoryImpl struct {
 	mu      *sync.RWMutex
 	url     string
 	clients map[string]*grpc.ClientConn
 	opts    []grpc.DialOption
 }
 
-func New(url string) *Factory {
-	return &Factory{
+func New(url string) Factory {
+	return &consulBaseFactoryImpl{
 		mu:      new(sync.RWMutex),
 		url:     url,
 		clients: map[string]*grpc.ClientConn{},
@@ -37,16 +42,16 @@ func New(url string) *Factory {
 	}
 }
 
-func (f *Factory) Builder(chain *protos.Chain) (*Builder, error) {
+func (f *consulBaseFactoryImpl) Builder(chain *protos.Chain) (Builder, error) {
 	client, err := f.getClient(chain.NetworkType)
 	if err != nil {
 		return nil, errors.WithMessage(err, "get network error")
 	}
 
-	return &Builder{chain: chain, client: client}, nil
+	return &builderImpl{chain: chain, client: client}, nil
 }
 
-func (f *Factory) getClient(netType string) (*grpc.ClientConn, error) {
+func (f *consulBaseFactoryImpl) getClient(netType string) (*grpc.ClientConn, error) {
 	f.mu.RLock()
 	client, find := f.clients[netType]
 	f.mu.RUnlock()
@@ -68,31 +73,16 @@ func (f *Factory) getClient(netType string) (*grpc.ClientConn, error) {
 	return client, nil
 }
 
-func (f *Factory) makeConsulUrl(netType string) string {
+func (f *consulBaseFactoryImpl) makeConsulUrl(netType string) string {
 	var svr *protos.NetworkServer
 	return fmt.Sprintf("consul://%s/%s?wait=30m&tag=%s&healthy=true&require-consistent=true",
 		f.url, utils.MakeTypeName(svr), netType)
 }
 
-func (f *Factory) Close() {
+func (f *consulBaseFactoryImpl) Close() {
 	f.mu.Lock()
 	defer f.mu.Unlock()
 	for _, client := range f.clients {
 		_ = client.Close()
 	}
-}
-
-type Builder struct {
-	chain   *protos.Chain
-	channel string
-	client  *grpc.ClientConn
-}
-
-func (b *Builder) SetChannel(channel string) *Builder {
-	b.channel = channel
-	return b
-}
-
-func (b *Builder) Build() Network {
-	return newNetworkImpl(b.chain, b.channel, protos.NewNetworkClient(b.client))
 }
