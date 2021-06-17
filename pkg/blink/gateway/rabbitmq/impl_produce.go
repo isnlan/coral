@@ -21,8 +21,8 @@ const GetawayRoute = "gateway.#"
 var exc = cony.Exchange{
 	Name:       "bink.gateway",
 	Kind:       "topic",
-	Durable:    true,
-	AutoDelete: false,
+	Durable:    false,
+	AutoDelete: true,
 }
 
 var logger = logging.MustGetLogger("rabbitmq")

@@ -2,6 +2,7 @@ package rabbitmq
 
 import (
 	"fmt"
+	"sync"
 	"testing"
 	"time"
 
@@ -59,6 +60,53 @@ func TestNewProduce(t *testing.T) {
 	})
 	assert.NoError(t, err)
 	time.Sleep(time.Minute)
+}
+
+func BenchmarkProduceImpl_APICallRecord(b *testing.B) {
+	url := "amqp://admin:admin@localhost:5672/"
+	produce := NewProduce(url)
+
+	apis := []string{"df05961e491bb6a77edeb7fc", "f15883f21409ed3f0eb34cff"}
+
+	for i := 0; i < b.N; i++ {
+		err := produce.APICallRecord(&gateway2.APICallEntity{
+			APIID:    apis[i%2],
+			Latency:  int64(i % 1000),
+			HttpCode: 200,
+			ClientID: "473d78a37c640099",
+		})
+		if err != nil {
+			b.Fatal(err)
+		}
+	}
+}
+
+func TestProduceImpl_APICallRecord(t *testing.T) {
+	url := "amqp://admin:admin@localhost:5672/"
+	produce := NewProduce(url)
+
+	apis := []string{"df05961e491bb6a77edeb7fc", "f15883f21409ed3f0eb34cff"}
+	var wg sync.WaitGroup
+	for j := 0; j < 1000; j++ {
+		wg.Add(1)
+		go func(j int) {
+			defer wg.Done()
+			for i := 0; i < 1000; i++ {
+				err := produce.APICallRecord(&gateway2.APICallEntity{
+					APIID:    apis[i%2],
+					Latency:  int64(i % 1000),
+					HttpCode: 200,
+					ClientID: "473d78a37c640099",
+				})
+				fmt.Println(j, i)
+				if err != nil {
+					t.Fatal(err)
+				}
+			}
+		}(j)
+	}
+
+	wg.Wait()
 }
 
 type mockConsume struct {
