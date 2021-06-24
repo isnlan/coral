@@ -2,6 +2,7 @@ package contract
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 )
 
@@ -47,7 +48,12 @@ func (e *InternalError) Error() string {
 }
 
 func (e *InternalError) External() string {
-	return strings.Join(e.info, ",")
+	msg := strings.Join(e.info, ",")
+	if e.err != nil {
+		msg = msg + fmt.Sprintf(": %s", e.err.Error())
+	}
+
+	return msg
 }
 
 func Check(err error, info ...string) {
