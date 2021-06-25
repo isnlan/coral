@@ -10,6 +10,8 @@ import (
 	"google.golang.org/grpc"
 )
 
+const HTTPHealthCheckRouter = "/health"
+
 type ServiceInfo struct {
 	ID      string
 	Address string
@@ -21,6 +23,7 @@ type Deregister func()
 type ServiceDiscover interface {
 	RegisterHealthServer(s *grpc.Server)
 	ServiceRegister(name, address string, port int, tags ...string) (Deregister, error)
+	HTTPServiceRegister(name, address string, port int, tags ...string) (Deregister, error)
 	WatchService(ctx context.Context, name string, tag string, ch chan<- []*ServiceInfo)
 	SetKey(ns, key string, value []byte) error
 	GetKey(ns, key string) ([]byte, error)

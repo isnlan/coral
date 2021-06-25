@@ -32,19 +32,36 @@ func New(url string) (*consulImpl, error) {
 	return &consulImpl{client: client}, nil
 }
 
+func (c *consulImpl) HTTPServiceRegister(name, address string, port int, tags ...string) (discovery.Deregister, error) {
+	check := &api.AgentServiceCheck{
+		HTTP:                           fmt.Sprintf("http://%s:%d%s", address, port, discovery.HTTPHealthCheckRouter),
+		Interval:                       "3s",
+		Timeout:                        "5s",
+		DeregisterCriticalServiceAfter: "30s",
+	}
+
+	return c.register(name, address, port, check, tags...)
+}
+
 func (c *consulImpl) ServiceRegister(name, address string, port int, tags ...string) (discovery.Deregister, error) {
+	check := &api.AgentServiceCheck{
+		GRPC:                           fmt.Sprintf("%s:%d", address, port),
+		Interval:                       "3s",
+		Timeout:                        "5s",
+		DeregisterCriticalServiceAfter: "30s",
+	}
+
+	return c.register(name, address, port, check, tags...)
+}
+
+func (c *consulImpl) register(name, address string, port int, check *api.AgentServiceCheck, tags ...string) (discovery.Deregister, error) {
 	svr := &api.AgentServiceRegistration{
 		Name:    name,
 		ID:      fmt.Sprintf("%s-%s:%d", name, address, port),
 		Address: address,
 		Port:    port,
 		Tags:    tags,
-		Check: &api.AgentServiceCheck{
-			GRPC:                           fmt.Sprintf("%s:%d", address, port),
-			Interval:                       "3s",
-			Timeout:                        "5s",
-			DeregisterCriticalServiceAfter: "30s",
-		},
+		Check:   check,
 	}
 
 	register := func() error {

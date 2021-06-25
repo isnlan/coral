@@ -5,8 +5,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"math/rand"
+	"net/http"
 	"testing"
 	"time"
+
+	"github.com/gin-gonic/gin"
+
+	"github.com/isnlan/coral/pkg/xgin"
 
 	"github.com/isnlan/coral/pkg/utils"
 
@@ -108,6 +113,32 @@ func TestNew2(t *testing.T) {
 		fmt.Println(err)
 
 	}
+}
+
+func TestNew3(t *testing.T) {
+	client, err := New("127.0.0.1:8500")
+	assert.NoError(t, err)
+
+	port := 7000
+
+	ip, err := discovery.GetLocalIP()
+	assert.NoError(t, err)
+
+	cancel, err := client.HTTPServiceRegister("MetricsExporter", ip, port, "blink")
+	assert.NoError(t, err)
+	go func() {
+		time.Sleep(time.Minute)
+		cancel()
+		//t.Logf("%s close", id)
+	}()
+
+	router := xgin.New()
+	router.GET(discovery.HTTPHealthCheckRouter, func(c *gin.Context) {
+		fmt.Println("check")
+		c.String(http.StatusOK, "ok")
+	})
+
+	router.Run(":7000")
 }
 
 func TestConsulImpl_GetKey(t *testing.T) {
