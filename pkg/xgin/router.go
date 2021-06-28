@@ -9,7 +9,7 @@ import (
 var logger = logging.MustGetLogger("xgin")
 
 func New(middleware ...gin.HandlerFunc) *gin.Engine {
-	middleware = append(middleware, LoggerWriter(), RecoveryWriter(), CorsMiddleware(), trace.TracerWrapper)
+	middleware = append(middleware, LoggerWriter(), RecoveryWriter(), CorsMiddleware(), trace.TracerWrapper, RecordMetrics())
 
 	router := gin.New()
 	router.Use(middleware...)

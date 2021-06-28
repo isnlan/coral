@@ -242,7 +242,7 @@ github.com/go-sql-driver/mysql
 github.com/go-stack/stack
 # github.com/gogo/protobuf v1.3.2
 github.com/gogo/protobuf/proto
-# github.com/golang/mock v1.2.0
+# github.com/golang/mock v1.4.3
 ## explicit
 github.com/golang/mock/gomock
 # github.com/golang/protobuf v1.4.3
@@ -493,10 +493,12 @@ github.com/pierrec/lz4/v4/internal/xxh32
 github.com/pkg/errors
 # github.com/pmezard/go-difflib v1.0.0
 github.com/pmezard/go-difflib/difflib
-# github.com/prometheus/client_golang v1.4.0
+# github.com/prometheus/client_golang v1.5.1
 ## explicit
 github.com/prometheus/client_golang/prometheus
 github.com/prometheus/client_golang/prometheus/internal
+github.com/prometheus/client_golang/prometheus/promauto
+github.com/prometheus/client_golang/prometheus/promhttp
 # github.com/prometheus/client_model v0.2.0
 github.com/prometheus/client_model/go
 # github.com/prometheus/common v0.9.1
@@ -522,6 +524,8 @@ github.com/smartystreets/assertions/internal/oglematchers
 github.com/smartystreets/goconvey/convey
 github.com/smartystreets/goconvey/convey/gotest
 github.com/smartystreets/goconvey/convey/reporting
+# github.com/spaolacci/murmur3 v1.1.0
+github.com/spaolacci/murmur3
 # github.com/spf13/afero v1.2.1
 github.com/spf13/afero
 github.com/spf13/afero/mem
@@ -560,6 +564,23 @@ github.com/syndtr/goleveldb/leveldb/opt
 github.com/syndtr/goleveldb/leveldb/storage
 github.com/syndtr/goleveldb/leveldb/table
 github.com/syndtr/goleveldb/leveldb/util
+# github.com/tal-tech/go-zero v1.1.7
+## explicit
+github.com/tal-tech/go-zero/core/errorx
+github.com/tal-tech/go-zero/core/fs
+github.com/tal-tech/go-zero/core/hash
+github.com/tal-tech/go-zero/core/iox
+github.com/tal-tech/go-zero/core/jsonx
+github.com/tal-tech/go-zero/core/lang
+github.com/tal-tech/go-zero/core/logx
+github.com/tal-tech/go-zero/core/mapping
+github.com/tal-tech/go-zero/core/rescue
+github.com/tal-tech/go-zero/core/stringx
+github.com/tal-tech/go-zero/core/syncx
+github.com/tal-tech/go-zero/core/sysx
+github.com/tal-tech/go-zero/core/threading
+github.com/tal-tech/go-zero/core/timex
+github.com/tal-tech/go-zero/core/trace/tracespec
 # github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc
 ## explicit
 github.com/tmthrgd/go-hex
@@ -668,7 +689,12 @@ go.opentelemetry.io/otel/codes
 go.opentelemetry.io/otel/internal
 go.opentelemetry.io/otel/label
 # go.uber.org/atomic v1.6.0
+## explicit
 go.uber.org/atomic
+# go.uber.org/automaxprocs v1.3.0
+go.uber.org/automaxprocs/internal/cgroups
+go.uber.org/automaxprocs/internal/runtime
+go.uber.org/automaxprocs/maxprocs
 # go.uber.org/multierr v1.5.0
 go.uber.org/multierr
 # go.uber.org/zap v1.15.0
@@ -768,7 +794,7 @@ golang.org/x/tools/internal/typesinternal
 # golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
 golang.org/x/xerrors
 golang.org/x/xerrors/internal
-# google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013
+# google.golang.org/genproto v0.0.0-20200729003335-053ba62fc06f
 google.golang.org/genproto/googleapis/rpc/status
 # google.golang.org/grpc v1.29.1
 ## explicit
