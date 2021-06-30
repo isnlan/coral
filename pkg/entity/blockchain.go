@@ -1,6 +1,7 @@
 package entity
 
 import (
+	"github.com/isnlan/coral/pkg/hex"
 	"github.com/isnlan/coral/pkg/protos"
 )
 
@@ -76,5 +77,39 @@ func FromInnerTransaction(t *protos.InnerTransaction) *Transaction {
 		Timestamp:      t.Timestamp.AsTime().Unix(),
 		ValidationCode: t.ValidationCode,
 		Event:          event,
+	}
+}
+
+// --------------------------------------------------------------------------------------------------------------------
+// 返回给前端的数据结构
+type HumanBlock struct {
+	Number           uint64         `json:"number"`            // 当前块高度
+	PreviousHash     string         `json:"previous_hash"`     // 前块Hash
+	Hash             string         `json:"hash"`              // 当前块Hash
+	DataHash         string         `json:"data_hash"`         // 数据Hash
+	TransactionCount int            `json:"transaction_count"` // 当前块中交易数量
+	TransactionList  []*Transaction `json:"transaction_list"`  // 交易列表
+	ChannelId        string         `json:"channel_id"`        // 链ID
+	Size             int            `json:"size"`              // 区块大小
+	Timestamp        int64          `json:"timestamp"`         // 时间戳
+}
+
+func FromBlockAndTransactions(block *Block, txs []*Transaction) *HumanBlock {
+	return &HumanBlock{
+		Number:           block.Number,
+		PreviousHash:     hex.Encode(block.PreviousHash),
+		Hash:             hex.Encode(block.Hash),
+		DataHash:         hex.Encode(block.DataHash),
+		TransactionCount: block.TransactionCount,
+		TransactionList:  txs,
+		ChannelId:        block.ChannelId,
+		Size:             block.Size,
+		Timestamp:        block.Timestamp,
+	}
+}
+
+func (b *HumanBlock) FilterEvent() {
+	for _, tx := range b.TransactionList {
+		tx.Event = nil
 	}
 }
