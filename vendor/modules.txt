@@ -127,7 +127,6 @@ github.com/emirpasic/gods/utils
 ## explicit
 github.com/ethereum/go-ethereum/common
 github.com/ethereum/go-ethereum/common/hexutil
-github.com/ethereum/go-ethereum/rlp
 # github.com/fatih/color v1.9.0
 github.com/fatih/color
 # github.com/frankban/quicktest v1.7.2
