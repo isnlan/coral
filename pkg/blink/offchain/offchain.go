@@ -8,13 +8,11 @@ import (
 	"github.com/isnlan/coral/pkg/response"
 	"github.com/isnlan/coral/pkg/trace"
 
-	"github.com/isnlan/coral/pkg/protos"
-
 	"github.com/isnlan/coral/pkg/entity"
 )
 
 type QueryService interface {
-	QueryChannelInfo(ctx context.Context, chainID, channelName string) (*protos.ChannelInformation, error)
+	QueryChannelInfo(ctx context.Context, chainID, channelName string) (*entity.CheckPoint, error)
 	QueryBlocks(ctx context.Context, chainID, channelName string, query interface{}) ([]*entity.Block, error)
 	QueryTxs(ctx context.Context, chainID, channelName string, query interface{}) ([]*entity.Transaction, error)
 }
@@ -48,13 +46,13 @@ func New(url string) QueryService {
 	}
 }
 
-func (c *client) QueryChannelInfo(ctx context.Context, chainID, channelName string) (*protos.ChannelInformation, error) {
+func (c *client) QueryChannelInfo(ctx context.Context, chainID, channelName string) (*entity.CheckPoint, error) {
 	var (
 		resp response.Response
-		info = &protos.ChannelInformation{}
+		cp   = &entity.CheckPoint{}
 	)
 
-	resp.Data = info
+	resp.Data = cp
 	req := &QueryChannelInfoRequest{
 		NetworkID:   chainID,
 		ChannelName: channelName,
@@ -69,7 +67,7 @@ func (c *client) QueryChannelInfo(ctx context.Context, chainID, channelName stri
 		return nil, errors.New(resp.Description)
 	}
 
-	return info, nil
+	return cp, nil
 }
 
 func (c *client) QueryBlocks(ctx context.Context, chainID, channelName string, query interface{}) ([]*entity.Block, error) {

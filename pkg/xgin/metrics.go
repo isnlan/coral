@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"time"
 
-	prometheus2 "github.com/isnlan/coral/prometheus"
+	prometheus3 "github.com/isnlan/coral/pkg/prometheus"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
@@ -34,7 +34,7 @@ var (
 )
 
 func RecordMetrics() gin.HandlerFunc {
-	if !prometheus2.Enabled() {
+	if !prometheus3.Enabled() {
 		return func(c *gin.Context) {
 			c.Next()
 		}

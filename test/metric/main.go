@@ -5,8 +5,8 @@ import (
 	"github.com/isnlan/coral/pkg/discovery"
 	"github.com/isnlan/coral/pkg/discovery/consul"
 	"github.com/isnlan/coral/pkg/errors"
+	prometheus2 "github.com/isnlan/coral/pkg/prometheus"
 	"github.com/isnlan/coral/pkg/xgin"
-	"github.com/isnlan/coral/prometheus"
 )
 
 func main() {
@@ -16,8 +16,8 @@ func main() {
 	ip, err := discovery.GetLocalIP()
 	errors.Check(err)
 
-	prometheus.StartAgent(ip, 9001)
-	prometheus.RegisterAgent(ds, "myapp", ip, 9001)
+	prometheus2.StartAgent(ip, 9001)
+	prometheus2.RegisterAgent(ds, "myapp", ip, 9001)
 
 	r := xgin.New()
 	r.GET("/ping", func(c *gin.Context) {
