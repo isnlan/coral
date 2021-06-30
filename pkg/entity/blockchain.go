@@ -94,6 +94,11 @@ type HumanBlock struct {
 	Timestamp        int64          `json:"timestamp"`         // 时间戳
 }
 
+func NewHumanBlock(b *protos.InnerBlock) *HumanBlock {
+	block, transactions := FromInnerBlock(b)
+	return FromBlockAndTransactions(block, transactions)
+}
+
 func FromBlockAndTransactions(block *Block, txs []*Transaction) *HumanBlock {
 	return &HumanBlock{
 		Number:           block.Number,
