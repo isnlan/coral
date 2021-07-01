@@ -33,7 +33,7 @@ func TestMutex(t *testing.T) {
 		}
 
 		fmt.Println("abc lock 1")
-		time.Sleep(time.Second * 10)
+		time.Sleep(time.Second * 3)
 		fmt.Println("abc release 1")
 		mutex.Unlock(context.Background())
 	}()
@@ -52,7 +52,7 @@ func TestMutex(t *testing.T) {
 		}
 
 		fmt.Println("abc lock 2")
-		time.Sleep(time.Second * 10)
+		time.Sleep(time.Second * 3)
 		fmt.Println("abc release 2")
 		mutex.Unlock(context.Background())
 	}()
