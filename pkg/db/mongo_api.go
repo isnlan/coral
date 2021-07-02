@@ -29,6 +29,30 @@ func IsDup(err error) bool {
 	return false
 }
 
+func IsConnectionError(err error) bool {
+	rawErr := errors.Cause(err)
+	if rawErr == nil {
+		return false
+	}
+
+	msg := rawErr.Error()
+
+	switch {
+	case strings.Contains(msg, "connection is closed"):
+		return true
+	case strings.Contains(msg, "failed to read"):
+		return true
+	case strings.Contains(msg, "failed to set read deadline"):
+		return true
+	case strings.Contains(msg, "incomplete read of message header"):
+		return true
+	case strings.Contains(msg, "incomplete read of full message"):
+		return true
+	default:
+		return false
+	}
+}
+
 func InsertOne(ctx context.Context, coll *mongo.Collection, data interface{}) error {
 	if _, ok := ctx.Deadline(); !ok {
 		var cancel func()
