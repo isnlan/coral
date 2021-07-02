@@ -13,26 +13,32 @@ import (
 
 type QueryService interface {
 	QueryChannelInfo(ctx context.Context, chainID, channelName string) (*entity.CheckPoint, error)
-	QueryBlocks(ctx context.Context, chainID, channelName string, query interface{}) ([]*entity.Block, error)
-	QueryTxs(ctx context.Context, chainID, channelName string, query interface{}) ([]*entity.Transaction, error)
+	QueryBlocks(ctx context.Context, chainID, channelName string, query map[string]interface{}, page, limit int) ([]*entity.Block, int64, error)
+	QueryTxs(ctx context.Context, chainID, channelName string, query map[string]interface{}, page, limit int) ([]*entity.Transaction, int64, error)
 }
 
 type (
-	QueryChannelInfoRequest struct {
+	RequestChannelInfo struct {
 		NetworkID   string `json:"network_id" validate:"required"`
 		ChannelName string `json:"channel_name" validate:"required"`
 	}
 
-	QueryChannelDataRequest struct {
+	RequestChannelData struct {
 		NetworkID   string      `json:"network_id" validate:"required"`
 		ChannelName string      `json:"channel_name" validate:"required"`
 		Query       interface{} `json:"query" validate:"required"`
+		Page        int         `json:"page" validate:"omitempty"`
+		Limit       int         `json:"limit" validate:"omitempty"`
 	}
 
-	QueryTxsRequest struct {
-		NetworkID   string `json:"network_id" validate:"required"`
-		ChannelName string `json:"channel_name" validate:"required"`
-		BlockNumber uint64 `json:"block_number" validate:"required"`
+	ResponseBlockList struct {
+		Blocks []*entity.Block `json:"blocks"`
+		Count  int64           `json:"count"`
+	}
+
+	ResponseTransactionList struct {
+		Txs   []*entity.Transaction `json:"txs"`
+		Count int64                 `json:"count"`
 	}
 )
 
@@ -53,7 +59,7 @@ func (c *client) QueryChannelInfo(ctx context.Context, chainID, channelName stri
 	)
 
 	resp.Data = cp
-	req := &QueryChannelInfoRequest{
+	req := &RequestChannelInfo{
 		NetworkID:   chainID,
 		ChannelName: channelName,
 	}
@@ -70,54 +76,58 @@ func (c *client) QueryChannelInfo(ctx context.Context, chainID, channelName stri
 	return cp, nil
 }
 
-func (c *client) QueryBlocks(ctx context.Context, chainID, channelName string, query interface{}) ([]*entity.Block, error) {
+func (c *client) QueryBlocks(ctx context.Context, chainID, channelName string, query map[string]interface{}, page, limit int) ([]*entity.Block, int64, error) {
 	var (
 		resp response.Response
-		qr   = &[]*entity.Block{}
+		qr   = new(ResponseBlockList)
 	)
 
 	resp.Data = qr
 
-	req := &QueryChannelDataRequest{
+	req := &RequestChannelData{
 		NetworkID:   chainID,
 		ChannelName: channelName,
 		Query:       query,
+		Page:        page,
+		Limit:       limit,
 	}
 
 	err := trace.DoPost(ctx, fmt.Sprintf("%s/api/v2/blockList", c.url), req, &resp)
 	if err != nil {
-		return nil, errors.WithStack(err)
+		return nil, 0, errors.WithStack(err)
 	}
 
 	if resp.ErrorCode != response.SuccessCode {
-		return nil, errors.New(resp.Description)
+		return nil, 0, errors.New(resp.Description)
 	}
 
-	return *qr, nil
+	return qr.Blocks, qr.Count, nil
 }
 
-func (c *client) QueryTxs(ctx context.Context, chainID, channelName string, query interface{}) ([]*entity.Transaction, error) {
+func (c *client) QueryTxs(ctx context.Context, chainID, channelName string, query map[string]interface{}, page, limit int) ([]*entity.Transaction, int64, error) {
 	var (
 		resp response.Response
-		qr   = &[]*entity.Transaction{}
+		qr   = new(ResponseTransactionList)
 	)
 
 	resp.Data = qr
 
-	req := &QueryChannelDataRequest{
+	req := &RequestChannelData{
 		NetworkID:   chainID,
 		ChannelName: channelName,
 		Query:       query,
+		Page:        page,
+		Limit:       limit,
 	}
 
 	err := trace.DoPost(ctx, fmt.Sprintf("%s/api/v2/txList", c.url), req, &resp)
 	if err != nil {
-		return nil, errors.WithStack(err)
+		return nil, 0, errors.WithStack(err)
 	}
 
 	if resp.ErrorCode != response.SuccessCode {
-		return nil, errors.New(resp.Description)
+		return nil, 0, errors.New(resp.Description)
 	}
 
-	return *qr, nil
+	return qr.Txs, qr.Count, nil
 }

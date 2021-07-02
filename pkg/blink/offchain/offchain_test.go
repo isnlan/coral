@@ -11,42 +11,32 @@ import (
 func TestNew(t *testing.T) {
 	qs := New("http://127.0.0.1:8089")
 	chain := "60dc61690c779df8628c051e"
-	channel := "channel1"
+	channel := "channel"
 	info, err := qs.QueryChannelInfo(context.Background(), chain, channel)
 
 	assert.NoError(t, err)
 	fmt.Println(info)
 
-	// {
-	// 	var filter []map[string]interface{}
-	// 	match := map[string]interface{}{
-	// 		"number": 1,
-	// 	}
-	//
-	// 	filter = append(filter, map[string]interface{}{
-	// 		"$match": match,
-	// 	})
-	//
-	// 	blocks, err := qs.QueryBlocks(context.Background(), "60dc61690c779df8628c051e", "channel", filter)
-	// 	assert.NoError(t, err)
-	// 	fmt.Println(blocks[0])
-	//
-	// }
-	//
-	// {
-	// 	var filter []map[string]interface{}
-	// 	match := map[string]interface{}{
-	// 		"tx_id": "ee18f6cab8b6395e04220135f191ae6e5164a9c56b0786c8d89ca44848630652",
-	// 	}
-	//
-	// 	filter = append(filter, map[string]interface{}{
-	// 		"$match": match,
-	// 	})
-	//
-	// 	txs, err := qs.QueryTxs(context.Background(), "60dc61690c779df8628c051e", "channel", filter)
-	// 	assert.NoError(t, err)
-	// 	fmt.Println(txs[0])
-	//
-	// }
+	{
+		match := map[string]interface{}{
+			"number": 1,
+		}
 
+		blocks, count, err := qs.QueryBlocks(context.Background(), chain, channel, match, 0, 0)
+		assert.NoError(t, err)
+		assert.Equal(t, count, int64(1))
+		fmt.Println(blocks[0])
+
+	}
+
+	{
+		match := map[string]interface{}{
+			"tx_id": "ee18f6cab8b6395e04220135f191ae6e5164a9c56b0786c8d89ca44848630652",
+		}
+
+		txs, count, err := qs.QueryTxs(context.Background(), "60dc61690c779df8628c051e", "channel", match, 0, 0)
+		assert.NoError(t, err)
+		assert.Equal(t, count, int64(1))
+		fmt.Println(txs[0])
+	}
 }
