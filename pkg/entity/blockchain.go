@@ -1,6 +1,8 @@
 package entity
 
 import (
+	"fmt"
+
 	"github.com/isnlan/coral/pkg/hex"
 	"github.com/isnlan/coral/pkg/protos"
 )
@@ -117,4 +119,14 @@ func (b *HumanBlock) FilterEvent() {
 	for _, tx := range b.TransactionList {
 		tx.Event = nil
 	}
+}
+
+// ----------------------------
+type Channel struct {
+	NetworkID string
+	Channel   string
+}
+
+func (c *Channel) String() string {
+	return fmt.Sprintf("[%s:%s]", c.NetworkID, c.Channel)
 }
