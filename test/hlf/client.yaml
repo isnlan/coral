@@ -1,0 +1,33 @@
+---
+crypto:
+  family: ecdsa
+  algorithm: P256-SHA256
+  hash: SHA2-256
+orderers:
+  orderer0:
+    host: 127.0.0.1:7050
+    useTLS: false
+    tlsPath: /data/gopath/src/github.com/isnlan/e2e_cli/crypto-config/ordererOrganizations/example.com/tlsca/tlsca.example.com-cert.pem
+
+peers:
+  peer0.org1.example.com:
+    host: 127.0.0.1:7051
+    useTLS: false
+    tlsPaht: /data/gopath/src/github.com/isnlan/e2e_cli/crypto-config/peerOrganizations/org1.example.com/tlsca/tlsca.org1.example.com-cert.pem
+  peer1.org1.example.com:
+    host: 127.0.0.1:8051
+    useTLS: false
+    tlsPaht: /data/gopath/src/github.com/isnlan/e2e_cli/crypto-config/peerOrganizations/org1.example.com/tlsca/tlsca.org1.example.com-cert.pem
+  peer0.org2.example.com:
+    host: 127.0.0.1:9051
+    useTLS: false
+    tlsPaht: /data/gopath/src/github.com/isnlan/e2e_cli/crypto-config/peerOrganizations/org2.example.com/tlsca/tlsca.org2.example.com-cert.pem
+  peer1.org2.example.com:
+    host: 127.0.0.1:10051
+    useTLS: false
+    tlsPaht: /data/gopath/src/github.com/isnlan/e2e_cli/crypto-config/peerOrganizations/org2.example.com/tlsca/tlsca.org2.example.com-cert.pem
+eventPeers:
+  peer0.org1.example.com:
+    host: 127.0.0.1:7051
+    useTLS: false
+    tlsPath: /data/gopath/src/github.com/isnlan/e2e_cli/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp/tlscacerts/tlsca.org1.example.com-cert.pem

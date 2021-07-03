@@ -5,15 +5,7 @@ License: Apache License Version 2.0
 package hlf
 
 import (
-	"archive/tar"
-	"bytes"
-	"compress/gzip"
 	"fmt"
-	"io"
-	"os"
-	"path"
-	"path/filepath"
-	"strings"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/hyperledger/fabric-protos-go/common"
@@ -63,8 +55,7 @@ type InstallRequest struct {
 	ChainCodeVersion string
 	ChainCodeType    ChainCodeType
 	Namespace        string
-	SrcPath          string
-	Libraries        []ChaincodeLibrary
+	GoPath           string
 }
 
 type CollectionConfig struct {
@@ -72,11 +63,6 @@ type CollectionConfig struct {
 	RequiredPeersCount int32
 	MaximumPeersCount  int32
 	Organizations      []string
-}
-
-type ChaincodeLibrary struct {
-	Namespace string
-	SrcPath   string
 }
 
 // ChainCodesResponse is the result of queering installed and instantiated chaincodes
@@ -95,7 +81,7 @@ func createInstallProposal(identity Identity, req *InstallRequest) (*transaction
 
 	switch req.ChainCodeType {
 	case ChaincodeSpec_GOLANG:
-		packageBytes, err = packGolangCC(req.Namespace, req.SrcPath, req.Libraries)
+		packageBytes, err = packGolangCC(req.Namespace, req.GoPath)
 		if err != nil {
 			return nil, err
 		}
@@ -239,71 +225,4 @@ func createInstantiateProposal(identity Identity, req *ChainCode, operation stri
 	}
 	return &transactionProposal{proposal: proposal, transactionId: txId.TransactionId}, nil
 
-}
-
-// packGolangCC read provided src expecting Golang source code, repackage it in provided namespace, and compress it
-func packGolangCC(namespace, source string, libs []ChaincodeLibrary) ([]byte, error) {
-
-	twBuf := new(bytes.Buffer)
-	tw := tar.NewWriter(twBuf)
-
-	var gzBuf bytes.Buffer
-	zw := gzip.NewWriter(&gzBuf)
-
-	concatLibs := append(libs, ChaincodeLibrary{SrcPath: source, Namespace: namespace})
-
-	for _, s := range concatLibs {
-		_, err := os.Stat(s.SrcPath)
-		if err != nil {
-			return nil, err
-		}
-		baseDir := path.Join("/src", s.Namespace)
-		err = filepath.Walk(s.SrcPath,
-			func(path string, info os.FileInfo, err error) error {
-				if err != nil {
-					return err
-				}
-
-				header, err := tar.FileInfoHeader(info, "")
-				if err != nil {
-					return err
-				}
-
-				header.Mode = 0100000
-				if baseDir != "" {
-					header.Name = filepath.Join(baseDir, strings.TrimPrefix(path, s.SrcPath))
-				}
-				if header.Name == baseDir {
-					return nil
-				}
-
-				if err := tw.WriteHeader(header); err != nil {
-					return err
-				}
-
-				if info.IsDir() {
-					return nil
-				}
-
-				file, err := os.Open(path)
-				if err != nil {
-					return err
-				}
-				defer file.Close()
-				_, err = io.Copy(tw, file)
-
-				return err
-			})
-		if err != nil {
-			tw.Close()
-			return nil, err
-		}
-	}
-	_, err := zw.Write(twBuf.Bytes())
-	if err != nil {
-		return nil, err
-	}
-	tw.Close()
-	zw.Close()
-	return gzBuf.Bytes(), nil
 }
