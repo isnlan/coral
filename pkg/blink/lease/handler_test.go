@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/isnlan/coral/pkg/discovery/consul"
-	"github.com/isnlan/coral/pkg/entity"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -18,14 +17,14 @@ func TestNew(t *testing.T) {
 	assert.NoError(t, err)
 
 	impl := New(c)
-	acl := &entity.AclClient{
-		ID:           primitive.NewObjectID(),
+	acl := &AclLease{
+		ID:           primitive.NewObjectID().Hex(),
 		Name:         "苍穹开发应用（请勿删除！！！）",
 		ClientId:     "5dbac7be00b59c0c",
 		ClientSecret: "447729b7724e28a9795d24a8c1500f773398b910d5c66c5058849d0136ea1220",
 		Account:      "kdcloud55538816",
 		Team:         "kdcloud-t5",
-		ChainId:      "5fa26e237a065ea42dc993dd",
+		NetworkID:    "5fa26e237a065ea42dc993dd",
 		Nodes:        nil,
 		Enable:       true,
 		CreateTime:   1604480693,
@@ -34,7 +33,7 @@ func TestNew(t *testing.T) {
 	err = impl.SetSource(acl.ClientId, acl)
 	assert.NoError(t, err)
 
-	var acl2 entity.AclClient
+	var acl2 AclLease
 	err = impl.GetSource("5dbac7be00b59c0c", &acl2)
 	assert.NoError(t, err)
 	fmt.Println(acl2)
@@ -42,7 +41,7 @@ func TestNew(t *testing.T) {
 	//err = impl.DeleteSource("5dbac7be00b59c0c", &entity.AclClient{})
 	//assert.NoError(t, err)
 
-	err = impl.DeleteSourceList(&entity.AclClient{})
+	err = impl.DeleteSourceList(&AclLease{})
 	assert.NoError(t, err)
 }
 

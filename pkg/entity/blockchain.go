@@ -130,3 +130,8 @@ type Channel struct {
 func (c *Channel) String() string {
 	return fmt.Sprintf("[%s:%s]", c.NetworkID, c.Channel)
 }
+
+type ChannelStatus struct {
+	Name   string `json:"name" yaml:"name"`
+	Enable bool   `json:"enable" yaml:"enable"`
+}
