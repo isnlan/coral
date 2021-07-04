@@ -69,10 +69,12 @@ func NewCAConfig(path string) (*CAConfig, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	config := new(CAConfig)
 	err = yaml.Unmarshal(data, config)
 	if err != nil {
 		return nil, err
 	}
+
 	return config, nil
 }

@@ -36,16 +36,17 @@ func decodeChannelFromFs(path string) (*common.Envelope, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	envelope := new(common.Envelope)
 	if err := proto.Unmarshal(channel, envelope); err != nil {
 		return nil, err
 	}
+
 	return envelope, nil
 }
 
 // buildAndSignChannelConfig take channel config payload and prepare the structure need for join transaction
 func buildAndSignChannelConfig(identity Identity, configPayload []byte, crypto CryptoSuite, channelId string) (*common.Envelope, error) {
-
 	pl := &common.Payload{}
 	if err := proto.Unmarshal(configPayload, pl); err != nil {
 		return nil, fmt.Errorf("envelope does not carry a valid payload: %s", err)
@@ -56,10 +57,12 @@ func buildAndSignChannelConfig(identity Identity, configPayload []byte, crypto C
 	if err != nil {
 		return nil, err
 	}
+
 	creator, err := marshalProtoIdentity(identity)
 	if err != nil {
 		return nil, err
 	}
+
 	txId, err := newTransactionId(creator)
 	if err != nil {
 		return nil, err
@@ -91,9 +94,11 @@ func buildAndSignChannelConfig(identity Identity, configPayload []byte, crypto C
 	if err != nil {
 		return nil, err
 	}
+
 	signedCommonPayload, err := crypto.Sign(commonPayload, identity.PrivateKey)
 	if err != nil {
 		return nil, err
 	}
+
 	return &common.Envelope{Payload: commonPayload, Signature: signedCommonPayload}, nil
 }

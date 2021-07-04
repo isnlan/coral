@@ -75,27 +75,33 @@ type EventBlockResponseTransactionEvent struct {
 func (e *EventListener) newConnection() error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
+
 	conn, err := grpc.DialContext(ctx, e.Peer.Uri, e.Peer.Opts...)
 	if err != nil {
 		return fmt.Errorf("cannot make new connection to: %s err: %v", e.Peer.Uri, err)
 	}
+
 	e.connection = conn
+
 	switch e.ListenerType {
 	case EventTypeFiltered:
 		client, err := peer.NewDeliverClient(e.connection).DeliverFiltered(e.Context)
 		if err != nil {
 			return err
 		}
+
 		e.client = client
 	case EventTypeFullBlock:
 		client, err := peer.NewDeliverClient(e.connection).Deliver(e.Context)
 		if err != nil {
 			return err
 		}
+
 		e.client = client
 	default:
 		return fmt.Errorf("invalid listener type provided")
 	}
+
 	return nil
 }
 
@@ -103,10 +109,12 @@ func (e *EventListener) SeekNewest() error {
 	if e.connection == nil || e.client == nil {
 		return fmt.Errorf("cannot seek no connection or client")
 	}
+
 	seek, err := e.createSeekEnvelope(newest, maxStop)
 	if err != nil {
 		return err
 	}
+
 	return e.client.Send(seek)
 }
 
@@ -114,10 +122,12 @@ func (e *EventListener) SeekOldest() error {
 	if e.connection == nil || e.client == nil {
 		return fmt.Errorf("cannot seek no connection or client")
 	}
+
 	seek, err := e.createSeekEnvelope(oldest, maxStop)
 	if err != nil {
 		return err
 	}
+
 	return e.client.Send(seek)
 }
 
@@ -125,11 +135,18 @@ func (e *EventListener) SeekSingle(num uint64) error {
 	if e.connection == nil || e.client == nil {
 		return fmt.Errorf("cannot seek no connection or client")
 	}
-	pos := &orderer.SeekPosition{Type: &orderer.SeekPosition_Specified{Specified: &orderer.SeekSpecified{Number: num}}}
+
+	pos := &orderer.SeekPosition{
+		Type: &orderer.SeekPosition_Specified{
+			Specified: &orderer.SeekSpecified{Number: num},
+		},
+	}
+
 	seek, err := e.createSeekEnvelope(pos, pos)
 	if err != nil {
 		return err
 	}
+
 	return e.client.Send(seek)
 }
 
@@ -137,15 +154,19 @@ func (e *EventListener) SeekRange(start, end uint64) error {
 	if e.connection == nil || e.client == nil {
 		return fmt.Errorf("cannot seek no connection or client")
 	}
+
 	if start > end {
 		return fmt.Errorf("start: %d cannot be bigger than end: %d", start, end)
 	}
+
 	startPos := &orderer.SeekPosition{Type: &orderer.SeekPosition_Specified{Specified: &orderer.SeekSpecified{Number: start}}}
 	endPos := &orderer.SeekPosition{Type: &orderer.SeekPosition_Specified{Specified: &orderer.SeekSpecified{Number: end}}}
+
 	seek, err := e.createSeekEnvelope(startPos, endPos)
 	if err != nil {
 		return err
 	}
+
 	return e.client.Send(seek)
 }
 
@@ -156,12 +177,14 @@ func (e *EventListener) Listen(response chan<- EventBlockResponse, cancel func()
 			response <- EventBlockResponse{Error: fmt.Errorf("error receiving data:%v", err)}
 			return
 		}
+
 		switch t := msg.Type.(type) {
 		case *peer.DeliverResponse_Block:
 			response <- *e.parseFullBlock(t, e.FullBlock)
 		case *peer.DeliverResponse_FilteredBlock:
 			response <- *e.parseFilteredBlock(t, e.FullBlock)
 		}
+
 		if cancel != nil {
 			if cancel() {
 				return
@@ -171,18 +194,19 @@ func (e *EventListener) Listen(response chan<- EventBlockResponse, cancel func()
 }
 
 func (e *EventListener) parseFilteredBlock(block *peer.DeliverResponse_FilteredBlock, fullBlock bool) *EventBlockResponse {
-
 	response := &EventBlockResponse{
 		ChannelId:    block.FilteredBlock.ChannelId,
 		BlockHeight:  block.FilteredBlock.Number,
 		Transactions: make([]EventBlockResponseTransaction, len(block.FilteredBlock.FilteredTransactions)),
 	}
+
 	if fullBlock {
 		m, err := proto.Marshal(block.FilteredBlock)
 		if err != nil {
 			response.Error = err
 			return response
 		}
+
 		response.RawBlock = m
 	}
 
@@ -196,6 +220,7 @@ func (e *EventListener) parseFilteredBlock(block *peer.DeliverResponse_FilteredB
 		if t.Type != common.HeaderType_ENDORSER_TRANSACTION {
 			continue
 		}
+
 		switch data := t.Data.(type) {
 		case *peer.FilteredTransaction_TransactionActions:
 			if len(data.TransactionActions.ChaincodeActions) > 0 {
@@ -212,22 +237,25 @@ func (e *EventListener) parseFilteredBlock(block *peer.DeliverResponse_FilteredB
 			return response
 		}
 	}
+
 	return response
 }
 
 func (e *EventListener) parseFullBlock(block *peer.DeliverResponse_Block, fullBlock bool) *EventBlockResponse {
-
 	response := &EventBlockResponse{
 		BlockHeight: block.Block.Header.Number,
 	}
+
 	if fullBlock {
 		m, err := proto.Marshal(block.Block)
 		if err != nil {
 			response.Error = err
 			return response
 		}
+
 		response.RawBlock = m
 	}
+
 	for idx, pl := range block.Block.Data.Data {
 		transaction := EventBlockResponseTransaction{}
 		envelope := new(common.Envelope)
@@ -238,13 +266,16 @@ func (e *EventListener) parseFullBlock(block *peer.DeliverResponse_Block, fullBl
 			response.Error = err
 			return response
 		}
+
 		if err := proto.Unmarshal(envelope.Payload, payload); err != nil {
 			response.Error = err
 		}
+
 		if err := proto.Unmarshal(payload.Header.ChannelHeader, header); err != nil {
 			response.Error = err
 			return response
 		}
+
 		if err := proto.Unmarshal(header.Extension, ex); err != nil {
 			response.Error = err
 			return response
@@ -258,6 +289,7 @@ func (e *EventListener) parseFullBlock(block *peer.DeliverResponse_Block, fullBl
 		if common.HeaderType(header.Type) == common.HeaderType_ENDORSER_TRANSACTION {
 			transaction.ChainCodeId = ex.ChaincodeId.Name
 			tx := &peer.Transaction{}
+
 			err := proto.Unmarshal(payload.Data, tx)
 			if err != nil {
 				response.Error = err
@@ -284,17 +316,20 @@ func (e *EventListener) parseFullBlock(block *peer.DeliverResponse_Block, fullBl
 				response.Error = err
 				return response
 			}
+
 			ccEvent := &peer.ChaincodeEvent{}
 			err = proto.Unmarshal(caPayload.Events, ccEvent)
 			if err != nil {
 				response.Error = err
 				return response
 			}
+
 			if ccEvent != nil {
 				transaction.Events = append(transaction.Events,
 					EventBlockResponseTransactionEvent{Name: ccEvent.EventName, Value: ccEvent.Payload})
 			}
 		}
+
 		response.Transactions = append(response.Transactions, transaction)
 	}
 
@@ -302,26 +337,23 @@ func (e *EventListener) parseFullBlock(block *peer.DeliverResponse_Block, fullBl
 }
 
 func (e *EventListener) createSeekEnvelope(start *orderer.SeekPosition, stop *orderer.SeekPosition) (*common.Envelope, error) {
-
 	marshaledIdentity, err := marshalProtoIdentity(e.Identity)
 	if err != nil {
 		return nil, err
 	}
+
 	nonce, err := generateRandomBytes(24)
 	if err != nil {
 		return nil, err
 	}
 
 	channelHeader, err := proto.Marshal(&common.ChannelHeader{
-		Type:    int32(common.HeaderType_DELIVER_SEEK_INFO),
-		Version: 0,
-		Timestamp: &timestamp.Timestamp{
-			Seconds: time.Now().Unix(),
-			Nanos:   0,
-		},
-		ChannelId: e.ChannelId,
-		Epoch:     0,
-		// TlsCertHash:[]
+		Type:        int32(common.HeaderType_DELIVER_SEEK_INFO),
+		Version:     0,
+		Timestamp:   &timestamp.Timestamp{Seconds: time.Now().Unix(), Nanos: 0},
+		ChannelId:   e.ChannelId,
+		Epoch:       0,
+		TlsCertHash: nil,
 	})
 	if err != nil {
 		return nil, err

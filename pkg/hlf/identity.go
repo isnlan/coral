@@ -53,8 +53,8 @@ func (i *Identity) GetAddress() (identity.Address, error) {
 
 // MarshalIdentity marshal identity to string
 func MarshalIdentity(i *Identity) (string, error) {
-
 	var pk, cert string
+
 	switch i.PrivateKey.(type) {
 	case *ecdsa.PrivateKey:
 		cast := i.PrivateKey.(*ecdsa.PrivateKey)
@@ -64,12 +64,12 @@ func MarshalIdentity(i *Identity) (string, error) {
 		}
 		block := pem.EncodeToMemory(&pem.Block{Type: "EC PRIVATE KEY", Bytes: b})
 		pk = base64.RawStdEncoding.EncodeToString(block)
-
 	default:
 		return "", ErrInvalidKeyType
 	}
 
 	cert = base64.RawStdEncoding.EncodeToString(i.Certificate.Raw)
+
 	str, err := json.Marshal(map[string]string{"cert": cert, "pk": pk, "mspid": i.MspId})
 	if err != nil {
 		return "", err
@@ -88,6 +88,7 @@ func UnmarshalIdentity(data string) (*Identity, error) {
 	if _, ok := raw["cert"]; !ok || len(raw["cert"]) < 1 {
 		return nil, ErrInvalidDataForParcelIdentity
 	}
+
 	if _, ok := raw["pk"]; !ok || len(raw["pk"]) < 1 {
 		return nil, ErrInvalidDataForParcelIdentity
 	}
@@ -96,6 +97,7 @@ func UnmarshalIdentity(data string) (*Identity, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	cert, err := x509.ParseCertificate(certRaw)
 	if err != nil {
 		return nil, err
@@ -105,11 +107,14 @@ func UnmarshalIdentity(data string) (*Identity, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	keyPem, _ := pem.Decode(keyRaw)
 	if keyPem == nil {
 		return nil, ErrInvalidDataForParcelIdentity
 	}
+
 	var pk interface{}
+
 	switch keyPem.Type {
 	case "EC PRIVATE KEY":
 		pk, err = x509.ParseECPrivateKey(keyPem.Bytes)
@@ -120,9 +125,7 @@ func UnmarshalIdentity(data string) (*Identity, error) {
 		return nil, ErrInvalidDataForParcelIdentity
 	}
 
-	identity := &Identity{Certificate: cert, PrivateKey: pk, MspId: raw["mspid"]}
-	return identity, nil
-
+	return &Identity{Certificate: cert, PrivateKey: pk, MspId: raw["mspid"]}, nil
 }
 
 // LoadCertFromFile read public key (pk) and private/secret kye (sk) from file system and return new Identity
@@ -136,6 +139,7 @@ func LoadCertFromFile(pk, sk string) (*Identity, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return LoadCertFromBytes(cf, kf)
 }
 
@@ -146,10 +150,12 @@ func LoadCertFromBytes(pk, sk []byte) (*Identity, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	key, err := x509.ParsePKCS8PrivateKey(kpb.Bytes)
 	if err != nil {
 		return nil, err
 	}
+
 	return &Identity{Certificate: crt, PrivateKey: key}, nil
 }
 
@@ -159,6 +165,7 @@ func LoadECCertFromBytes(pk, sk []byte) (*Identity, error) {
 	if cpb == nil {
 		return nil, errors.New("pem decode pk error")
 	}
+
 	kpb, _ := pem.Decode(sk)
 	if kpb == nil {
 		return nil, errors.New("pem decode sk error")
@@ -168,9 +175,11 @@ func LoadECCertFromBytes(pk, sk []byte) (*Identity, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	key, err := x509.ParseECPrivateKey(kpb.Bytes)
 	if err != nil {
 		return nil, err
 	}
+
 	return &Identity{Certificate: crt, PrivateKey: key}, nil
 }

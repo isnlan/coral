@@ -72,26 +72,34 @@ func packGolangCC(chaincodePath string, goPath string) ([]byte, error) {
 // -------------------------------------------------------------------------
 func findSource(goPath string, filePath string) ([]*Descriptor, error) {
 	var descriptors []*Descriptor
-	err := filepath.Walk(filePath,
-		func(path string, fileInfo os.FileInfo, err error) error {
+
+	f := func(path string, fileInfo os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if fileInfo.Mode().IsRegular() && isSource(path) {
+			relPath, err := filepath.Rel(goPath, path)
 			if err != nil {
 				return err
 			}
-			if fileInfo.Mode().IsRegular() && isSource(path) {
-				relPath, err := filepath.Rel(goPath, path)
-				if err != nil {
-					return err
-				}
-				if strings.Contains(relPath, "/META-INF/") {
-					relPath = relPath[strings.Index(relPath, "/META-INF/")+1:]
-				}
-				descriptors = append(descriptors, &Descriptor{name: relPath, fqp: path})
+
+			if strings.Contains(relPath, "/META-INF/") {
+				relPath = relPath[strings.Index(relPath, "/META-INF/")+1:]
 			}
-			return nil
 
-		})
+			descriptors = append(descriptors, &Descriptor{name: relPath, fqp: path})
+		}
 
-	return descriptors, err
+		return nil
+	}
+
+	err := filepath.Walk(filePath, f)
+	if err != nil {
+		return nil, err
+	}
+
+	return descriptors, nil
 }
 
 // -------------------------------------------------------------------------
@@ -108,6 +116,7 @@ func isSource(filePath string) bool {
 			return true
 		}
 	}
+
 	return false
 }
 
@@ -128,13 +137,16 @@ func generateTarGz(descriptors []*Descriptor) ([]byte, error) {
 			if err1 != nil {
 				return nil, errors.Wrap(err, fmt.Sprintf("packEntry failed and close error %s", err1))
 			}
+
 			return nil, errors.Wrap(err, "packEntry failed")
 		}
 	}
+
 	err := closeStream(tw, gw)
 	if err != nil {
 		return nil, errors.Wrap(err, "closeStream failed")
 	}
+
 	return codePackage.Bytes(), nil
 
 }
@@ -144,8 +156,8 @@ func closeStream(tw io.Closer, gw io.Closer) error {
 	if err != nil {
 		return err
 	}
-	err = gw.Close()
-	return err
+
+	return gw.Close()
 }
 
 func packEntry(tw *tar.Writer, gw *gzip.Writer, descriptor *Descriptor) error {
@@ -153,6 +165,7 @@ func packEntry(tw *tar.Writer, gw *gzip.Writer, descriptor *Descriptor) error {
 	if err != nil {
 		return err
 	}
+
 	defer func() {
 		err := file.Close()
 		if err != nil {
@@ -161,7 +174,6 @@ func packEntry(tw *tar.Writer, gw *gzip.Writer, descriptor *Descriptor) error {
 	}()
 
 	if stat, err := file.Stat(); err == nil {
-
 		// now lets create the header as needed for this file within the tarball
 		header := new(tar.Header)
 		header.Name = descriptor.name
@@ -177,18 +189,19 @@ func packEntry(tw *tar.Writer, gw *gzip.Writer, descriptor *Descriptor) error {
 		}
 
 		// copy the file data to the tarball
-
 		if _, err := io.Copy(tw, file); err != nil {
 			return err
 		}
+
 		if err := tw.Flush(); err != nil {
 			return err
 		}
+
 		if err := gw.Flush(); err != nil {
 			return err
 		}
-
 	}
+
 	return nil
 }
 

@@ -17,15 +17,19 @@ func defaultPolicy(mspid string) (*common.SignaturePolicyEnvelope, error) {
 	if len(mspid) == 0 {
 		return nil, ErrMspMissing
 	}
+
 	memberRole, err := proto.Marshal(&msp.MSPRole{Role: msp.MSPRole_MEMBER, MspIdentifier: mspid})
 	if err != nil {
 		return nil, fmt.Errorf("Error marshal MSPRole: %s", err)
 	}
+
 	onePrn := &msp.MSPPrincipal{
 		PrincipalClassification: msp.MSPPrincipal_ROLE,
 		Principal:               memberRole,
 	}
-	signedBy := &common.SignaturePolicy{Type: &common.SignaturePolicy_SignedBy{SignedBy: 0}}
+	signedBy := &common.SignaturePolicy{
+		Type: &common.SignaturePolicy_SignedBy{SignedBy: 0},
+	}
 	oneOfone := &common.SignaturePolicy{
 		Type: &common.SignaturePolicy_NOutOf_{
 			NOutOf: &common.SignaturePolicy_NOutOf{
@@ -38,6 +42,7 @@ func defaultPolicy(mspid string) (*common.SignaturePolicyEnvelope, error) {
 		Rule:       oneOfone,
 		Identities: []*msp.MSPPrincipal{onePrn},
 	}
+
 	return p, nil
 }
 
@@ -48,6 +53,7 @@ func CollectionConfigToPolicy(col []CollectionConfig) ([]*common.CollectionConfi
 		if len(c.Name) < 1 {
 			return nil, ErrCollectionNameMissing
 		}
+
 		if _, ok := collectionNames[c.Name]; ok {
 			return nil, ErrCollectionNameExists
 		}
@@ -63,6 +69,7 @@ func CollectionConfigToPolicy(col []CollectionConfig) ([]*common.CollectionConfi
 		if c.MaximumPeersCount < c.RequiredPeersCount {
 			return nil, ErrMaxPeerCountLestThanMinimum
 		}
+
 		if len(c.Organizations) == 0 {
 			return nil, ErrAtLeastOneOrgNeeded
 		}
@@ -72,6 +79,7 @@ func CollectionConfigToPolicy(col []CollectionConfig) ([]*common.CollectionConfi
 				return nil, ErrOrganizationNameMissing
 			}
 		}
+
 		collectionNames[c.Name] = true
 	}
 
@@ -81,6 +89,7 @@ func CollectionConfigToPolicy(col []CollectionConfig) ([]*common.CollectionConfi
 		if err != nil {
 			return nil, err
 		}
+
 		collection := &common.CollectionConfig{
 			Payload: &common.CollectionConfig_StaticCollectionConfig{
 				StaticCollectionConfig: &common.StaticCollectionConfig{
@@ -95,8 +104,10 @@ func CollectionConfigToPolicy(col []CollectionConfig) ([]*common.CollectionConfi
 				},
 			},
 		}
+
 		result = append(result, collection)
 	}
+
 	return result, nil
 }
 
@@ -104,11 +115,13 @@ func signedByAnyOfGivenRole(role msp.MSPRole_MSPRoleType, ids []string) (*common
 	sort.Strings(ids)
 	principals := make([]*msp.MSPPrincipal, len(ids))
 	sigspolicy := make([]*common.SignaturePolicy, len(ids))
+
 	for i, id := range ids {
 		marshalPrincipal, err := proto.Marshal(&msp.MSPRole{Role: role, MspIdentifier: id})
 		if err != nil {
 			return nil, err
 		}
+
 		principals[i] = &msp.MSPPrincipal{
 			PrincipalClassification: msp.MSPPrincipal_ROLE,
 			Principal:               marshalPrincipal}
@@ -118,6 +131,7 @@ func signedByAnyOfGivenRole(role msp.MSPRole_MSPRoleType, ids []string) (*common
 			},
 		}
 	}
+
 	p := &common.SignaturePolicyEnvelope{
 		Version: 0,
 		Rule: &common.SignaturePolicy{
@@ -130,5 +144,6 @@ func signedByAnyOfGivenRole(role msp.MSPRole_MSPRoleType, ids []string) (*common
 		},
 		Identities: principals,
 	}
+
 	return p, nil
 }

@@ -38,13 +38,16 @@ func (c *ChainCode) toChainCodeArgs() [][]byte {
 	if len(c.rawArgs) > 0 {
 		return c.rawArgs
 	}
+
 	args := make([][]byte, len(c.Args))
 	for i, arg := range c.Args {
 		args[i] = []byte(arg)
 	}
+
 	if len(c.ArgBytes) > 0 {
 		args = append(args, c.ArgBytes)
 	}
+
 	return args
 }
 
@@ -75,7 +78,6 @@ type ChainCodesResponse struct {
 // createInstallProposal read chaincode from provided source and namespace, pack it and generate install proposal
 // transaction. Transaction is not send from this func
 func createInstallProposal(identity Identity, req *InstallRequest) (*transactionProposal, error) {
-
 	var packageBytes []byte
 	var err error
 
@@ -110,10 +112,12 @@ func createInstallProposal(identity Identity, req *InstallRequest) (*transaction
 	if err != nil {
 		return nil, err
 	}
+
 	txId, err := newTransactionId(creator)
 	if err != nil {
 		return nil, err
 	}
+
 	ccHdrExt := &peer.ChaincodeHeaderExtension{ChaincodeId: &peer.ChaincodeID{Name: LSCC}}
 
 	channelHeaderBytes, err := channelHeader(common.HeaderType_ENDORSER_TRANSACTION, txId, req.ChannelId, 0, ccHdrExt)
@@ -139,12 +143,13 @@ func createInstallProposal(identity Identity, req *InstallRequest) (*transaction
 	if err != nil {
 		return nil, err
 	}
+
 	proposal, err := proposal(hdrBytes, ccPropPayloadBytes)
 	if err != nil {
 		return nil, err
 	}
-	return &transactionProposal{proposal: proposal, transactionId: txId.TransactionId}, nil
 
+	return &transactionProposal{proposal: proposal, transactionId: txId.TransactionId}, nil
 }
 
 // createInstantiateProposal creates instantiate proposal transaction for already installed chaincode.
@@ -169,6 +174,7 @@ func createInstantiateProposal(identity Identity, req *ChainCode, operation stri
 	if err != nil {
 		return nil, err
 	}
+
 	marshPolicy, err := proto.Marshal(policy)
 	if err != nil {
 		return nil, err
@@ -182,6 +188,7 @@ func createInstantiateProposal(identity Identity, req *ChainCode, operation stri
 		[]byte("escc"),
 		[]byte("vscc"),
 	}
+
 	if len(collectionConfig) > 0 {
 		args = append(args, collectionConfig)
 	}
@@ -196,24 +203,29 @@ func createInstantiateProposal(identity Identity, req *ChainCode, operation stri
 	if err != nil {
 		return nil, err
 	}
+
 	txId, err := newTransactionId(creator)
 	if err != nil {
 		return nil, err
 	}
+
 	headerExtension := &peer.ChaincodeHeaderExtension{ChaincodeId: &peer.ChaincodeID{Name: LSCC}}
 
 	channelHeaderBytes, err := channelHeader(common.HeaderType_ENDORSER_TRANSACTION, txId, req.ChannelId, 0, headerExtension)
 	if err != nil {
 		return nil, err
 	}
+
 	payloadBytes, err := proto.Marshal(&peer.ChaincodeProposalPayload{Input: spec, TransientMap: req.TransientMap})
 	if err != nil {
 		return nil, err
 	}
+
 	signatureHeader, err := signatureHeader(creator, txId)
 	if err != nil {
 		return nil, err
 	}
+
 	headerBytes, err := proto.Marshal(header(signatureHeader, channelHeaderBytes))
 	if err != nil {
 		return nil, err
@@ -223,6 +235,6 @@ func createInstantiateProposal(identity Identity, req *ChainCode, operation stri
 	if err != nil {
 		return nil, err
 	}
-	return &transactionProposal{proposal: proposal, transactionId: txId.TransactionId}, nil
 
+	return &transactionProposal{proposal: proposal, transactionId: txId.TransactionId}, nil
 }

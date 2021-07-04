@@ -62,6 +62,7 @@ func (c *ECCryptSuite) GenerateKey() (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return key, nil
 }
 
@@ -69,6 +70,7 @@ func (c *ECCryptSuite) CreateCertificateRequest(enrollmentId string, key interfa
 	if enrollmentId == "" {
 		return nil, ErrEnrollmentIdMissing
 	}
+
 	subj := pkix.Name{
 		CommonName: enrollmentId,
 	}
@@ -105,6 +107,7 @@ func (c *ECCryptSuite) CreateCertificateRequest(enrollmentId string, key interfa
 	if err != nil {
 		return nil, err
 	}
+
 	csr := pem.EncodeToMemory(&pem.Block{Type: "CERTIFICATE REQUEST", Bytes: csrBytes})
 	return csr, nil
 }
@@ -114,16 +117,19 @@ func (c *ECCryptSuite) Sign(msg []byte, k interface{}) ([]byte, error) {
 	if !ok {
 		return nil, ErrInvalidKeyType
 	}
+
 	h := c.Hash(msg)
 	R, S, err := ecdsa.Sign(rand.Reader, key, h)
 	if err != nil {
 		return nil, err
 	}
+
 	c.preventMalleability(key, S)
 	sig, err := asn1.Marshal(eCDSASignature{R, S})
 	if err != nil {
 		return nil, err
 	}
+
 	return sig, nil
 }
 
@@ -159,7 +165,6 @@ func NewECCryptSuiteFromConfig(config CryptoConfig) (CryptoSuite, error) {
 	}
 
 	switch config.Hash {
-
 	case "SHA2-256":
 		suite.hashFunction = sha256.New
 	case "SHA2-384":
@@ -171,5 +176,6 @@ func NewECCryptSuiteFromConfig(config CryptoConfig) (CryptoSuite, error) {
 	default:
 		return nil, ErrInvalidHash
 	}
+
 	return suite, nil
 }

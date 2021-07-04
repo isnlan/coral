@@ -26,7 +26,6 @@ const Org1MSP = "Org1MSP"
 const Org2MSP = "Org2MSP"
 
 func main() {
-
 	// initialize Fabric client
 	c, err := hlf.NewFabricClient("/data/gopath/src/github.com/isnlan/coral/test/hlf/client.yaml")
 	if err != nil {

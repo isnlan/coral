@@ -890,7 +890,6 @@ func (f *FabricCAClient) AddAffiliation(identity *Identity, req CAAddAffiliation
 // RemoveAffiliation remove affiliation from FabricCa server. FabricCa server must be configured to allows removal of
 // affiliations.
 func (f *FabricCAClient) RemoveAffiliation(identity *Identity, req CARemoveAffiliationRequest) (*CAAffiliationResponse, error) {
-
 	if identity == nil {
 		return nil, ErrCertificateEmpty
 	}
@@ -912,6 +911,7 @@ func (f *FabricCAClient) RemoveAffiliation(identity *Identity, req CARemoveAffil
 	if err != nil {
 		return nil, err
 	}
+
 	httpReq.Header.Set("authorization", token)
 
 	httpClient := &http.Client{Transport: f.getTransport()}
@@ -925,6 +925,7 @@ func (f *FabricCAClient) RemoveAffiliation(identity *Identity, req CARemoveAffil
 	if err != nil {
 		return nil, err
 	}
+
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
@@ -937,21 +938,23 @@ func (f *FabricCAClient) RemoveAffiliation(identity *Identity, req CARemoveAffil
 		if err := json.Unmarshal(body, result); err != nil {
 			return nil, err
 		}
+
 		if !result.Success {
 			return nil, concatErrors(result.Errors)
 		}
+
 		if len(result.Errors) > 0 {
 			return nil, concatErrors(result.Errors)
 		}
+
 		return &result.Result, nil
 	}
-	return nil, fmt.Errorf("non 200 response: %v message is: %s", resp.StatusCode, string(body))
 
+	return nil, fmt.Errorf("non 200 response: %v message is: %s", resp.StatusCode, string(body))
 }
 
 // ModifyAffiliation will modify existing affiliation
 func (f *FabricCAClient) ModifyAffiliation(identity *Identity, req CAModifyAffiliationRequest) (*CAAffiliationResponse, error) {
-
 	if identity == nil {
 		return nil, ErrCertificateEmpty
 	}
@@ -972,6 +975,9 @@ func (f *FabricCAClient) ModifyAffiliation(identity *Identity, req CAModifyAffil
 	httpReq, err := http.NewRequest("PUT",
 		fmt.Sprintf("%s/api/v1/affiliations/%s", f.Url, req.Name),
 		bytes.NewBuffer(reqJson))
+	if err != nil {
+		return nil, err
+	}
 
 	httpReq.Header.Set("Content-Type", "application/json")
 
@@ -979,6 +985,7 @@ func (f *FabricCAClient) ModifyAffiliation(identity *Identity, req CAModifyAffil
 	if err != nil {
 		return nil, err
 	}
+
 	httpReq.Header.Set("authorization", token)
 
 	httpClient := &http.Client{Transport: f.getTransport()}
@@ -991,6 +998,7 @@ func (f *FabricCAClient) ModifyAffiliation(identity *Identity, req CAModifyAffil
 	if err != nil {
 		return nil, err
 	}
+
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
@@ -1003,29 +1011,37 @@ func (f *FabricCAClient) ModifyAffiliation(identity *Identity, req CAModifyAffil
 		if err := json.Unmarshal(body, result); err != nil {
 			return nil, err
 		}
+
 		if !result.Success {
 			return nil, concatErrors(result.Errors)
 		}
+
 		if len(result.Errors) > 0 {
 			return nil, concatErrors(result.Errors)
 		}
+
 		return &result.Result, nil
 	}
+
 	return nil, fmt.Errorf("non 200 response: %v message is: %s", resp.StatusCode, string(body))
 }
 
 // ListAllIdentities get list of all identities from FabricCa server
 func (f *FabricCAClient) ListAllIdentities(identity *Identity, caName string) (*CAListAllIdentitiesResponse, error) {
-
 	if identity == nil {
 		return nil, ErrCertificateEmpty
 	}
 
 	httpReq, err := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/identities", f.Url), bytes.NewBuffer(nil))
+	if err != nil {
+		return nil, err
+	}
+
 	token, err := f.createAuthToken(identity, nil)
 	if err != nil {
 		return nil, err
 	}
+
 	httpReq.Header.Set("authorization", token)
 
 	if len(caName) > 0 {
@@ -1039,31 +1055,36 @@ func (f *FabricCAClient) ListAllIdentities(identity *Identity, caName string) (*
 	if err != nil {
 		return nil, err
 	}
+
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
+
 	if resp.StatusCode >= 200 && resp.StatusCode <= 299 {
 		result := new(caListAllIdentities)
 		if err := json.Unmarshal(body, result); err != nil {
 			return nil, err
 		}
+
 		if !result.Success {
 			return nil, concatErrors(result.Errors)
 		}
+
 		if len(result.Errors) > 0 {
 			return nil, concatErrors(result.Errors)
 		}
+
 		return &result.Result, nil
 	}
+
 	return nil, fmt.Errorf("non 200 response: %v message is: %s", resp.StatusCode, string(body))
 }
 
 // GetIdentity get single identity defined by `id` from FabricCa server
 func (f *FabricCAClient) GetIdentity(identity *Identity, id string, caName string) (*CAGetIdentityResponse, error) {
-
 	if identity == nil {
 		return nil, ErrCertificateEmpty
 	}
@@ -1073,10 +1094,15 @@ func (f *FabricCAClient) GetIdentity(identity *Identity, id string, caName strin
 	}
 
 	httpReq, err := http.NewRequest("GET", fmt.Sprintf("%s/api/v1/identities/%s", f.Url, id), bytes.NewBuffer(nil))
+	if err != nil {
+		return nil, err
+	}
+
 	token, err := f.createAuthToken(identity, nil)
 	if err != nil {
 		return nil, err
 	}
+
 	httpReq.Header.Set("authorization", token)
 
 	if len(caName) > 0 {
@@ -1086,35 +1112,41 @@ func (f *FabricCAClient) GetIdentity(identity *Identity, id string, caName strin
 	}
 
 	httpClient := &http.Client{Transport: f.getTransport()}
+
 	resp, err := httpClient.Do(httpReq)
 	if err != nil {
 		return nil, err
 	}
+
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
+
 	if resp.StatusCode >= 200 && resp.StatusCode <= 299 {
 		result := new(caGetIdentity)
 		if err := json.Unmarshal(body, result); err != nil {
 			return nil, err
 		}
+
 		if !result.Success {
 			return nil, concatErrors(result.Errors)
 		}
+
 		if len(result.Errors) > 0 {
 			return nil, concatErrors(result.Errors)
 		}
+
 		return &result.Result, nil
 	}
+
 	return nil, fmt.Errorf("non 200 response: %v message is: %s", resp.StatusCode, string(body))
 }
 
 // RemoveIdentity remove identity fromFabricCA. FabricCA must be configured to allow this operation
 func (f *FabricCAClient) RemoveIdentity(identity *Identity, req CARemoveIdentityRequest) (*CAGetIdentityResponse, error) {
-
 	if identity == nil {
 		return nil, ErrCertificateEmpty
 	}
@@ -1126,6 +1158,9 @@ func (f *FabricCAClient) RemoveIdentity(identity *Identity, req CARemoveIdentity
 	httpReq, err := http.NewRequest("DELETE",
 		fmt.Sprintf("%s/api/v1/identities/%s", f.Url, req.Name),
 		bytes.NewBuffer(nil))
+	if err != nil {
+		return nil, err
+	}
 
 	httpReq.Header.Set("Content-Type", "application/json")
 
@@ -1133,6 +1168,7 @@ func (f *FabricCAClient) RemoveIdentity(identity *Identity, req CARemoveIdentity
 	if err != nil {
 		return nil, err
 	}
+
 	httpReq.Header.Set("authorization", token)
 
 	httpClient := &http.Client{Transport: f.getTransport()}
@@ -1146,6 +1182,7 @@ func (f *FabricCAClient) RemoveIdentity(identity *Identity, req CARemoveIdentity
 	if err != nil {
 		return nil, err
 	}
+
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
@@ -1158,21 +1195,24 @@ func (f *FabricCAClient) RemoveIdentity(identity *Identity, req CARemoveIdentity
 		if err := json.Unmarshal(body, result); err != nil {
 			return nil, err
 		}
+
 		if !result.Success {
 			return nil, concatErrors(result.Errors)
 		}
+
 		if len(result.Errors) > 0 {
 			return nil, concatErrors(result.Errors)
 		}
+
 		return &result.Result, nil
 	}
+
 	return nil, fmt.Errorf("non 200 response: %v message is: %s", resp.StatusCode, string(body))
 
 }
 
 // ModifyIdentity will update existing identity
 func (f *FabricCAClient) ModifyIdentity(identity *Identity, req CAModifyIdentityRequest) (*CAGetIdentityResponse, error) {
-
 	if identity == nil {
 		return nil, ErrCertificateEmpty
 	}
@@ -1185,6 +1225,9 @@ func (f *FabricCAClient) ModifyIdentity(identity *Identity, req CAModifyIdentity
 	httpReq, err := http.NewRequest("PUT",
 		fmt.Sprintf("%s/api/v1/identities/%s", f.Url, req.ID),
 		bytes.NewBuffer(reqJson))
+	if err != nil {
+		return nil, err
+	}
 
 	httpReq.Header.Set("Content-Type", "application/json")
 
@@ -1192,6 +1235,7 @@ func (f *FabricCAClient) ModifyIdentity(identity *Identity, req CAModifyIdentity
 	if err != nil {
 		return nil, err
 	}
+
 	httpReq.Header.Set("authorization", token)
 
 	httpClient := &http.Client{Transport: f.getTransport()}
@@ -1200,6 +1244,7 @@ func (f *FabricCAClient) ModifyIdentity(identity *Identity, req CAModifyIdentity
 	if err != nil {
 		return nil, err
 	}
+
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
@@ -1212,37 +1257,40 @@ func (f *FabricCAClient) ModifyIdentity(identity *Identity, req CAModifyIdentity
 		if err := json.Unmarshal(body, result); err != nil {
 			return nil, err
 		}
+
 		if !result.Success {
 			return nil, concatErrors(result.Errors)
 		}
+
 		if len(result.Errors) > 0 {
 			return nil, concatErrors(result.Errors)
 		}
+
 		return &result.Result, nil
 	}
+
 	return nil, fmt.Errorf("non 200 response: %v message is: %s", resp.StatusCode, string(body))
 }
 
 // createAuthToken creates http authorization header token to verify the request.
 // it is composed by base64 encoded Cert concatenated by base64 encoded request signed with Cert private key
 func (f *FabricCAClient) createAuthToken(identity *Identity, request []byte) (string, error) {
-
 	encPem := pem.EncodeToMemory(&pem.Block{Type: "CERTIFICATE", Bytes: identity.Certificate.Raw})
 	encCert := base64.StdEncoding.EncodeToString(encPem)
 	body := base64.StdEncoding.EncodeToString(request)
 	sigString := body + "." + encCert
-	sig, err := f.Crypto.Sign([]byte(sigString), identity.PrivateKey)
 
+	sig, err := f.Crypto.Sign([]byte(sigString), identity.PrivateKey)
 	if err != nil {
 		return "", err
 	}
+
 	return fmt.Sprintf("%s.%s", encCert, base64.StdEncoding.EncodeToString(sig)), nil
 }
 
 func (f *FabricCAClient) getTransport() *http.Transport {
-	var tr *http.Transport
 	if f.Transport == nil {
-		tr = &http.Transport{
+		f.Transport = &http.Transport{
 			Proxy: http.ProxyFromEnvironment,
 			DialContext: (&net.Dialer{
 				Timeout:   30 * time.Second,
@@ -1256,10 +1304,9 @@ func (f *FabricCAClient) getTransport() *http.Transport {
 			TLSClientConfig:       &tls.Config{InsecureSkipVerify: f.SkipTLSVerification},
 			ExpectContinueTimeout: 1 * time.Second,
 		}
-	} else {
-		tr = f.Transport
 	}
-	return tr
+
+	return f.Transport
 }
 
 // helper function to concat multiple errors that can be returned from FabricCA as one error
@@ -1268,12 +1315,12 @@ func concatErrors(errs []caResponseErr) error {
 	for _, e := range errs {
 		errors += e.Message + ": "
 	}
+
 	return fmt.Errorf(errors)
 }
 
 // NewCaClientFromConfig creates new FabricCAClient from CAConfig
 func NewCaClientFromConfig(config CAConfig, transport *http.Transport) (*FabricCAClient, error) {
-
 	var crypto CryptoSuite
 	var err error
 	switch config.CryptoConfig.Family {
@@ -1302,5 +1349,6 @@ func NewCAClient(path string, transport *http.Transport) (*FabricCAClient, error
 	if err != nil {
 		return nil, err
 	}
+
 	return NewCaClientFromConfig(*config, transport)
 }

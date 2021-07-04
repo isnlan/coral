@@ -52,15 +52,19 @@ func (o *Orderer) Broadcast(envelope *common.Envelope) (*orderer.BroadcastRespon
 	if err != nil {
 		return nil, err
 	}
+
 	defer bcc.CloseSend()
+
 	err = bcc.Send(envelope)
 	if err != nil {
 		return nil, err
 	}
+
 	response, err := bcc.Recv()
 	if err != nil {
 		return nil, err
 	}
+
 	if response.Status != common.Status_SUCCESS {
 		return nil, fmt.Errorf("unexpected status: %v", response.Status)
 	}
@@ -71,22 +75,27 @@ func (o *Orderer) Broadcast(envelope *common.Envelope) (*orderer.BroadcastRespon
 // Deliver delivers envelope to orderer. Please note that new connection will be created on every call of Deliver.
 func (o *Orderer) Deliver(envelope *common.Envelope) (*common.Block, error) {
 	ctx, _ := context.WithTimeout(context.Background(), time.Second*5)
+
 	connection, err := grpc.DialContext(ctx, o.Uri, o.Opts...)
 	if err != nil {
 		return nil, fmt.Errorf("cannot connect to orderer: %s err is: %v", o.Name, err)
 	}
+
 	defer connection.Close()
 
 	dk, err := orderer.NewAtomicBroadcastClient(connection).Deliver(context.Background())
 	if err != nil {
 		return nil, err
 	}
+
 	if err := dk.Send(envelope); err != nil {
 		return nil, err
 	}
+
 	var block *common.Block
 	timer := time.NewTimer(time.Second * time.Duration(timeout))
 	defer timer.Stop()
+
 	for {
 		select {
 		case <-timer.C:
@@ -114,12 +123,12 @@ func (o *Orderer) Deliver(envelope *common.Envelope) (*common.Block, error) {
 }
 
 func (o *Orderer) getGenesisBlock(identity Identity, crypto CryptoSuite, channelId string) (*common.Block, error) {
-
 	seekInfo := &orderer.SeekInfo{
 		Start:    &orderer.SeekPosition{Type: &orderer.SeekPosition_Specified{Specified: &orderer.SeekSpecified{Number: 0}}},
 		Stop:     &orderer.SeekPosition{Type: &orderer.SeekPosition_Specified{Specified: &orderer.SeekSpecified{Number: 0}}},
 		Behavior: orderer.SeekInfo_BLOCK_UNTIL_READY,
 	}
+
 	seekInfoBytes, err := proto.Marshal(seekInfo)
 	if err != nil {
 		return nil, err
@@ -129,6 +138,7 @@ func (o *Orderer) getGenesisBlock(identity Identity, crypto CryptoSuite, channel
 	if err != nil {
 		return nil, err
 	}
+
 	txId, err := newTransactionId(creator)
 	if err != nil {
 		return nil, err
@@ -139,22 +149,31 @@ func (o *Orderer) getGenesisBlock(identity Identity, crypto CryptoSuite, channel
 	if err != nil {
 		return nil, err
 	}
+
 	header := header(signatureHeaderBytes, headerBytes)
 	payloadBytes, err := payload(header, seekInfoBytes)
 	if err != nil {
 		return nil, err
 	}
+
 	payloadSignedBytes, err := crypto.Sign(payloadBytes, identity.PrivateKey)
 	if err != nil {
 		return nil, err
 	}
+
 	env := &common.Envelope{Payload: payloadBytes, Signature: payloadSignedBytes}
+
 	return o.Deliver(env)
 }
 
 // NewOrdererFromConfig create new Orderer from config
 func NewOrdererFromConfig(conf OrdererConfig) (*Orderer, error) {
-	o := Orderer{Uri: conf.Host, Cert: conf.Cert, ServerNameOverride: conf.ServerNameOverride}
+	o := Orderer{
+		Uri:                conf.Host,
+		Cert:               conf.Cert,
+		ServerNameOverride: conf.ServerNameOverride,
+	}
+
 	if !conf.UseTLS {
 		o.Opts = []grpc.DialOption{grpc.WithInsecure()}
 	} else if o.Cert != "" {
@@ -162,9 +181,11 @@ func NewOrdererFromConfig(conf OrdererConfig) (*Orderer, error) {
 		if !cp.AppendCertsFromPEM([]byte(o.Cert)) {
 			return nil, fmt.Errorf("credentials: failed to append certificates")
 		}
+
 		creds := credentials.NewClientTLSFromCert(cp, o.ServerNameOverride)
 		o.Opts = append(o.Opts, grpc.WithTransportCredentials(creds))
 	}
+
 	o.Opts = append(o.Opts,
 		grpc.WithKeepaliveParams(keepalive.ClientParameters{
 			Time:                time.Duration(1) * time.Minute,
@@ -181,5 +202,6 @@ func NewOrdererFromConfig(conf OrdererConfig) (*Orderer, error) {
 			),
 		),
 	)
+
 	return &o, nil
 }

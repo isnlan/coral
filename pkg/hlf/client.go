@@ -37,17 +37,21 @@ func (c *FabricClient) CreateUpdateChannel(identity Identity, path string, chann
 	if err != nil {
 		return err
 	}
+
 	ou, err := buildAndSignChannelConfig(identity, envelope.GetPayload(), c.Crypto, channelId)
 	if err != nil {
 		return err
 	}
+
 	replay, err := ord.Broadcast(ou)
 	if err != nil {
 		return err
 	}
+
 	if replay.GetStatus() != common.Status_SUCCESS {
 		return errors.New("error creating new channel. See orderer logs for more details")
 	}
+
 	return nil
 }
 
@@ -66,7 +70,6 @@ func (c *FabricClient) JoinChannel(ctx context.Context, identity Identity, chann
 	}
 
 	block, err := ord.getGenesisBlock(identity, c.Crypto, channelId)
-
 	if err != nil {
 		return nil, err
 	}
@@ -76,23 +79,28 @@ func (c *FabricClient) JoinChannel(ctx context.Context, identity Identity, chann
 		return nil, err
 	}
 
-	chainCode := ChainCode{Name: CSCC,
+	chainCode := ChainCode{
+		Name:     CSCC,
 		Type:     ChaincodeSpec_GOLANG,
 		Args:     []string{"JoinChain"},
-		ArgBytes: blockBytes}
+		ArgBytes: blockBytes,
+	}
 
 	invocationBytes, err := chainCodeInvocationSpec(chainCode)
 	if err != nil {
 		return nil, err
 	}
+
 	creator, err := marshalProtoIdentity(identity)
 	if err != nil {
 		return nil, err
 	}
+
 	txId, err := newTransactionId(creator)
 	if err != nil {
 		return nil, err
 	}
+
 	ext := &peer.ChaincodeHeaderExtension{ChaincodeId: &peer.ChaincodeID{Name: CSCC}}
 	channelHeaderBytes, err := channelHeader(common.HeaderType_ENDORSER_TRANSACTION, txId, "", 0, ext)
 	if err != nil {
@@ -109,6 +117,7 @@ func (c *FabricClient) JoinChannel(ctx context.Context, identity Identity, chann
 	if err != nil {
 		return nil, err
 	}
+
 	chainCodePropPl := new(peer.ChaincodeProposalPayload)
 	chainCodePropPl.Input = invocationBytes
 
@@ -126,6 +135,7 @@ func (c *FabricClient) JoinChannel(ctx context.Context, identity Identity, chann
 	if err != nil {
 		return nil, err
 	}
+
 	return sendToPeers(ctx, execPeers, proposal), nil
 }
 
@@ -135,14 +145,17 @@ func (c *FabricClient) InstallChainCode(ctx context.Context, identity Identity, 
 	if len(peers) != len(execPeers) {
 		return nil, ErrPeerNameNotFound
 	}
+
 	prop, err := createInstallProposal(identity, req)
 	if err != nil {
 		return nil, err
 	}
+
 	proposal, err := signedProposal(prop.proposal, identity, c.Crypto)
 	if err != nil {
 		return nil, err
 	}
+
 	return sendToPeers(ctx, execPeers, proposal), nil
 
 }
@@ -164,12 +177,14 @@ func (c *FabricClient) InstantiateChainCode(ctx context.Context, identity Identi
 	if len(peers) != len(execPeers) {
 		return nil, ErrPeerNameNotFound
 	}
+
 	var collConfigBytes []byte
 	if len(collectionsConfig) > 0 {
 		collectionPolicy, err := CollectionConfigToPolicy(collectionsConfig)
 		if err != nil {
 			return nil, err
 		}
+
 		collConfigBytes, err = proto.Marshal(&common.CollectionConfigPackage{Config: collectionPolicy})
 		if err != nil {
 			return nil, err
@@ -200,6 +215,7 @@ func (c *FabricClient) InstantiateChainCode(ctx context.Context, identity Identi
 	if err != nil {
 		return nil, err
 	}
+
 	return reply, nil
 }
 
@@ -209,9 +225,11 @@ func (c *FabricClient) QueryInstalledChainCodes(ctx context.Context, identity Id
 	if len(peers) != len(execPeers) {
 		return nil, ErrPeerNameNotFound
 	}
+
 	if len(identity.MspId) == 0 {
 		return nil, ErrMspMissing
 	}
+
 	chainCode := ChainCode{
 		Name: LSCC,
 		Type: ChaincodeSpec_GOLANG,
@@ -227,6 +245,7 @@ func (c *FabricClient) QueryInstalledChainCodes(ctx context.Context, identity Id
 	if err != nil {
 		return nil, err
 	}
+
 	r := sendToPeers(ctx, execPeers, proposal)
 
 	response := make([]*ChainCodesResponse, len(r))
@@ -239,10 +258,13 @@ func (c *FabricClient) QueryInstalledChainCodes(ctx context.Context, identity Id
 			if err != nil {
 				ic.Error = err
 			}
+
 			ic.ChainCodes = dec
 		}
+
 		response[idx] = &ic
 	}
+
 	return response, nil
 }
 
@@ -262,10 +284,12 @@ func (c *FabricClient) QueryInstantiatedChainCodes(ctx context.Context, identity
 	if err != nil {
 		return nil, err
 	}
+
 	proposal, err := signedProposal(prop.proposal, identity, c.Crypto)
 	if err != nil {
 		return nil, err
 	}
+
 	r := sendToPeers(ctx, execPeers, proposal)
 	response := make([]*ChainCodesResponse, len(r))
 	for idx, p := range r {
@@ -301,10 +325,12 @@ func (c *FabricClient) QueryChannels(ctx context.Context, identity Identity, pee
 	if err != nil {
 		return nil, err
 	}
+
 	proposal, err := signedProposal(prop.proposal, identity, c.Crypto)
 	if err != nil {
 		return nil, err
 	}
+
 	r := sendToPeers(ctx, execPeers, proposal)
 	response := make([]*QueryChannelsResponse, 0, len(r))
 	for _, pr := range r {
@@ -323,8 +349,10 @@ func (c *FabricClient) QueryChannels(ctx context.Context, identity Identity, pee
 				}
 			}
 		}
+
 		response = append(response, &peerResponse)
 	}
+
 	return response, nil
 }
 
@@ -334,6 +362,7 @@ func (c *FabricClient) QueryChannelInfo(ctx context.Context, identity Identity, 
 	if len(peers) != len(execPeers) {
 		return nil, ErrPeerNameNotFound
 	}
+
 	chainCode := ChainCode{
 		ChannelId: channelId,
 		Name:      QSCC,
@@ -345,10 +374,12 @@ func (c *FabricClient) QueryChannelInfo(ctx context.Context, identity Identity, 
 	if err != nil {
 		return nil, err
 	}
+
 	proposal, err := signedProposal(prop.proposal, identity, c.Crypto)
 	if err != nil {
 		return nil, err
 	}
+
 	r := sendToPeers(ctx, execPeers, proposal)
 
 	response := make([]*QueryChannelInfoResponse, 0, len(r))
@@ -360,15 +391,15 @@ func (c *FabricClient) QueryChannelInfo(ctx context.Context, identity Identity, 
 			bci := new(common.BlockchainInfo)
 			if err := proto.Unmarshal(pr.Response.Response.Payload, bci); err != nil {
 				peerResponse.Error = err
-
 			} else {
 				peerResponse.Info = bci
 			}
 		}
+
 		response = append(response, &peerResponse)
 	}
-	return response, nil
 
+	return response, nil
 }
 
 // Query execute chainCode to one or many peers and return there responses without sending
@@ -380,14 +411,17 @@ func (c *FabricClient) Query(ctx context.Context, identity Identity, chainCode C
 	if len(peers) != len(execPeers) {
 		return nil, ErrPeerNameNotFound
 	}
+
 	prop, err := createTransactionProposal(identity, chainCode)
 	if err != nil {
 		return nil, err
 	}
+
 	proposal, err := signedProposal(prop.proposal, identity, c.Crypto)
 	if err != nil {
 		return nil, err
 	}
+
 	r := sendToPeers(ctx, execPeers, proposal)
 	response := make([]*QueryResponse, len(r))
 	for idx, p := range r {
@@ -397,8 +431,10 @@ func (c *FabricClient) Query(ctx context.Context, identity Identity, chainCode C
 		} else {
 			ic.Response = p.Response
 		}
+
 		response[idx] = &ic
 	}
+
 	return response, nil
 }
 
@@ -414,14 +450,17 @@ func (c *FabricClient) Invoke(ctx context.Context, identity Identity, chainCode 
 	if !ok {
 		return nil, ErrInvalidOrdererName
 	}
+
 	execPeers := c.getPeers(peers)
 	if len(peers) != len(execPeers) {
 		return nil, ErrPeerNameNotFound
 	}
+
 	prop, err := createTransactionProposal(identity, chainCode)
 	if err != nil {
 		return nil, err
 	}
+
 	proposal, err := signedProposal(prop.proposal, identity, c.Crypto)
 	if err != nil {
 		return nil, err
@@ -432,14 +471,17 @@ func (c *FabricClient) Invoke(ctx context.Context, identity Identity, chainCode 
 	if err != nil {
 		return nil, err
 	}
+
 	signedTransaction, err := c.Crypto.Sign(transaction, identity.PrivateKey)
 	if err != nil {
 		return nil, err
 	}
+
 	reply, err := ord.Broadcast(&common.Envelope{Payload: transaction, Signature: signedTransaction})
 	if err != nil {
 		return nil, err
 	}
+
 	return &InvokeResponse{Status: reply.Status, TxID: prop.transactionId, Response: endorsements[0].Response}, nil
 }
 
@@ -450,6 +492,7 @@ func (c *FabricClient) QueryTransaction(ctx context.Context, identity Identity, 
 	if len(peers) != len(execPeers) {
 		return nil, ErrPeerNameNotFound
 	}
+
 	chainCode := ChainCode{
 		ChannelId: channelId,
 		Name:      QSCC,
@@ -460,10 +503,12 @@ func (c *FabricClient) QueryTransaction(ctx context.Context, identity Identity, 
 	if err != nil {
 		return nil, err
 	}
+
 	proposal, err := signedProposal(prop.proposal, identity, c.Crypto)
 	if err != nil {
 		return nil, err
 	}
+
 	r := sendToPeers(ctx, execPeers, proposal)
 	response := make([]*QueryTransactionResponse, len(r))
 	for idx, p := range r {
@@ -475,10 +520,13 @@ func (c *FabricClient) QueryTransaction(ctx context.Context, identity Identity, 
 			if err != nil {
 				qtr.Error = err
 			}
+
 			qtr.Transaction = tx
 		}
+
 		response[idx] = &qtr
 	}
+
 	return response, nil
 }
 
@@ -487,25 +535,31 @@ func (c *FabricClient) QueryBlockByTxID(ctx context.Context, identity Identity, 
 	if len(peers) != len(execPeers) {
 		return nil, ErrPeerNameNotFound
 	}
+
 	chainCode := ChainCode{
 		ChannelId: channelId,
 		Name:      QSCC,
 		Type:      ChaincodeSpec_GOLANG,
-		Args:      []string{"GetBlockByTxID", channelId, txId}}
+		Args:      []string{"GetBlockByTxID", channelId, txId},
+	}
+
 	prop, err := createTransactionProposal(identity, chainCode)
 	if err != nil {
 		return nil, err
 	}
+
 	proposal, err := signedProposal(prop.proposal, identity, c.Crypto)
 	if err != nil {
 		return nil, err
 	}
+
 	r := sendToPeers(ctx, execPeers, proposal)
 	response := make([]*common.Block, len(r))
 	for idx, p := range r {
 		if p.Err != nil {
 			return nil, p.Err
 		}
+
 		block, err := decodeBlock(p.Response.Response.GetPayload())
 		if err != nil {
 			return nil, err
@@ -513,6 +567,7 @@ func (c *FabricClient) QueryBlockByTxID(ctx context.Context, identity Identity, 
 
 		response[idx] = block
 	}
+
 	return response, nil
 }
 
@@ -521,6 +576,7 @@ func (c *FabricClient) QueryBlockByHash(ctx context.Context, identity Identity, 
 	if len(peers) != len(execPeers) {
 		return nil, ErrPeerNameNotFound
 	}
+
 	chainCode := ChainCode{
 		ChannelId: channelId,
 		Name:      QSCC,
@@ -533,16 +589,19 @@ func (c *FabricClient) QueryBlockByHash(ctx context.Context, identity Identity, 
 	if err != nil {
 		return nil, err
 	}
+
 	proposal, err := signedProposal(prop.proposal, identity, c.Crypto)
 	if err != nil {
 		return nil, err
 	}
+
 	r := sendToPeers(ctx, execPeers, proposal)
 	response := make([]*common.Block, len(r))
 	for idx, p := range r {
 		if p.Err != nil {
 			return nil, p.Err
 		}
+
 		block, err := decodeBlock(p.Response.Response.GetPayload())
 		if err != nil {
 			return nil, err
@@ -550,6 +609,7 @@ func (c *FabricClient) QueryBlockByHash(ctx context.Context, identity Identity, 
 
 		response[idx] = block
 	}
+
 	return response, nil
 }
 
@@ -558,26 +618,32 @@ func (c *FabricClient) QueryBlockByNumber(ctx context.Context, identity Identity
 	if len(peers) != len(execPeers) {
 		return nil, ErrPeerNameNotFound
 	}
+
 	n := strconv.FormatInt(int64(number), 10)
 	chainCode := ChainCode{
 		ChannelId: channelId,
 		Name:      QSCC,
 		Type:      ChaincodeSpec_GOLANG,
-		Args:      []string{"GetBlockByNumber", channelId, n}}
+		Args:      []string{"GetBlockByNumber", channelId, n},
+	}
+
 	prop, err := createTransactionProposal(identity, chainCode)
 	if err != nil {
 		return nil, err
 	}
+
 	proposal, err := signedProposal(prop.proposal, identity, c.Crypto)
 	if err != nil {
 		return nil, err
 	}
+
 	r := sendToPeers(ctx, execPeers, proposal)
 	response := make([]*common.Block, len(r))
 	for idx, p := range r {
 		if p.Err != nil {
 			return nil, p.Err
 		}
+
 		block, err := decodeBlock(p.Response.Response.GetPayload())
 		if err != nil {
 			return nil, err
@@ -585,6 +651,7 @@ func (c *FabricClient) QueryBlockByNumber(ctx context.Context, identity Identity
 
 		response[idx] = block
 	}
+
 	return response, nil
 }
 
@@ -603,10 +670,12 @@ func (c *FabricClient) ListenForFullBlock(ctx context.Context, identity Identity
 	if !ok {
 		return ErrPeerNameNotFound
 	}
+
 	listener, err := NewEventListener(ctx, c.Crypto, identity, *ep, channelId, EventTypeFullBlock)
 	if err != nil {
 		return err
 	}
+
 	err = listener.SeekNewest()
 	if err != nil {
 		return err
@@ -624,10 +693,12 @@ func (c *FabricClient) ListenForFilteredBlock(ctx context.Context, identity Iden
 	if !ok {
 		return ErrPeerNameNotFound
 	}
+
 	listener, err := NewEventListener(ctx, c.Crypto, identity, *ep, channelId, EventTypeFiltered)
 	if err != nil {
 		return err
 	}
+
 	err = listener.SeekNewest()
 	if err != nil {
 		return err
@@ -692,9 +763,9 @@ func NewFabricClientFromConfig(config ClientConfig) (*FabricClient, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		newPeer.Name = name
 		peers[name] = newPeer
-
 	}
 
 	eventPeers := make(map[string]*Peer)
@@ -703,6 +774,7 @@ func NewFabricClientFromConfig(config ClientConfig) (*FabricClient, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		newEventPeer.Name = name
 		eventPeers[name] = newEventPeer
 	}
@@ -713,11 +785,20 @@ func NewFabricClientFromConfig(config ClientConfig) (*FabricClient, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		newOrderer.Name = name
 		orderers[name] = newOrderer
 	}
-	client := FabricClient{Peers: peers, EventPeers: eventPeers, Orderers: orderers, Crypto: crypto, close: make(chan struct{})}
-	return &client, nil
+
+	client := &FabricClient{
+		Peers:      peers,
+		EventPeers: eventPeers,
+		Orderers:   orderers,
+		Crypto:     crypto,
+		close:      make(chan struct{}),
+	}
+
+	return client, nil
 }
 
 // NewFabricClient creates new client from provided config file.
@@ -726,6 +807,7 @@ func NewFabricClient(path string) (*FabricClient, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return NewFabricClientFromConfig(*config)
 }
 
@@ -736,6 +818,7 @@ func (c FabricClient) getPeers(names []string) []*Peer {
 			res = append(res, fp)
 		}
 	}
+
 	return res
 }
 
@@ -746,5 +829,6 @@ func (c FabricClient) getEventPeers(names []string) []*Peer {
 			res = append(res, fp)
 		}
 	}
+
 	return res
 }

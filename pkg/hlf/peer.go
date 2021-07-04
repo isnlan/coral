@@ -48,18 +48,22 @@ func (p *Peer) Endorse(ctx context.Context, resp chan *PeerResponse, prop *peer.
 			resp <- &PeerResponse{Response: nil, Err: err, Name: p.Name}
 			return
 		}
+
 		p.conn = conn
 		p.client = peer.NewEndorserClient(p.conn)
 	}
+
 	proposalResp, err := p.client.ProcessProposal(ctx, prop)
 	if err != nil {
 		resp <- &PeerResponse{Response: nil, Name: p.Name, Err: err}
 		return
 	}
+
 	if proposalResp.Response.Status != 200 {
 		resp <- &PeerResponse{Response: nil, Name: p.Name, Err: errors.New(proposalResp.Response.Message)}
 		return
 	}
+
 	resp <- &PeerResponse{Response: proposalResp, Name: p.Name, Err: nil}
 }
 
@@ -92,5 +96,6 @@ func NewPeerFromConfig(conf PeerConfig) (*Peer, error) {
 				trace.OpenTracingClientInterceptor(),
 			)),
 	)
+
 	return &p, nil
 }
