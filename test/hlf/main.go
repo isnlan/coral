@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"k8s.io/apimachinery/pkg/util/json"
-
 	"github.com/isnlan/coral/pkg/hlf"
 
 	"context"
@@ -40,14 +38,14 @@ func main() {
 	// some operations require admin certificate
 	//createUpdateChannel(c)
 	//joinChannel(c)
-	installCC(c)
-	instantiateCC(c)
+	//installCC(c)
+	//instantiateCC(c)
 	//queryInstalledChaincodes(c)
 	//queryInstantiatedChaincodes(c)
-	//queryChannels(c, identity)
+	//queryChannels(c)
 	//queryChannelInfo(c)
-	//query(c, identity)
-	//invoke(c, *identity, []string{"invoke", "a", "b", "20"})
+	//invoke(c, []string{"overwrite", "k1", "v1"})
+	query(c)
 	//queryTransaction(c, identity)
 	//eventFullBlock(c, identity)
 	//eventFilteredBlock(c, identity)
@@ -80,17 +78,23 @@ func eventFilteredBlock(client *hlf.FabricClient, identity *hlf.Identity) {
 	}
 }
 
-func invoke(client *hlf.FabricClient, identity hlf.Identity, q []string) {
+func invoke(client *hlf.FabricClient, q []string) {
+	admin, err := hlf.LoadCertFromFile(ADM_PK, ADM_SK)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	admin.MspId = Org1MSP
 
 	chaincode := hlf.ChainCode{
-		ChannelId: "testchannel",
+		ChannelId: channel,
 		Type:      hlf.ChaincodeSpec_GOLANG,
-		Name:      "samplechaincode",
+		Name:      "kvdb",
 		Version:   "1.0",
 		Args:      q,
 	}
 
-	result, err := client.Invoke(context.Background(), identity, chaincode, []string{"peer01", "peer11"}, "orderer0")
+	result, err := client.Invoke(context.Background(), *admin, chaincode, []string{peer01, peer11}, order0)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(2)
@@ -99,17 +103,23 @@ func invoke(client *hlf.FabricClient, identity hlf.Identity, q []string) {
 
 }
 
-func query(client *hlf.FabricClient, identity *hlf.Identity) {
+func query(client *hlf.FabricClient) {
+	admin, err := hlf.LoadCertFromFile(ADM_PK, ADM_SK)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	admin.MspId = Org1MSP
 
 	chaincode := &hlf.ChainCode{
-		ChannelId: "testchannel",
+		ChannelId: channel,
 		Type:      hlf.ChaincodeSpec_GOLANG,
-		Name:      "samplechaincode",
+		Name:      "kvdb",
 		Version:   "1.0",
-		Args:      []string{"query", "a"},
+		Args:      []string{"read", "k1"},
 	}
 
-	result, err := client.Query(context.Background(), *identity, *chaincode, []string{"peer01"})
+	result, err := client.Query(context.Background(), *admin, *chaincode, []string{peer01, peer11})
 	if err != nil {
 		fmt.Print(err)
 		os.Exit(2)
@@ -136,8 +146,8 @@ func queryChannelInfo(client *hlf.FabricClient) {
 	}
 
 	// Please note that we must provide MSPid manually because Identity is not from FabricCA
-	admin.MspId = "Org1MSP"
-	result, err := client.QueryChannelInfo(context.Background(), *admin, "testchannel", []string{"peer0", "peer1"})
+	admin.MspId = Org1MSP
+	result, err := client.QueryChannelInfo(context.Background(), *admin, channel, []string{peer01})
 	if err != nil {
 		fmt.Print(err)
 		os.Exit(2)
@@ -145,9 +155,14 @@ func queryChannelInfo(client *hlf.FabricClient) {
 	fmt.Println(result)
 }
 
-func queryChannels(client *hlf.FabricClient, identity *hlf.Identity) {
-
-	result, err := client.QueryChannels(context.Background(), *identity, []string{"peer0", "peer1"})
+func queryChannels(client *hlf.FabricClient) {
+	admin, err := hlf.LoadCertFromFile(ADM_PK, ADM_SK)
+	admin.MspId = Org1MSP
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	result, err := client.QueryChannels(context.Background(), *admin, []string{peer01})
 	if err != nil {
 		fmt.Print(err)
 		os.Exit(2)
@@ -163,9 +178,9 @@ func queryInstantiatedChaincodes(client *hlf.FabricClient) {
 		os.Exit(1)
 	}
 	// Please note that we must provide MSPid manually because Identity is not from FabricCA
-	admin.MspId = "Org1MSP"
+	admin.MspId = Org1MSP
 
-	result, err := client.QueryInstantiatedChainCodes(context.Background(), *admin, "testchannel", []string{"peer0"})
+	result, err := client.QueryInstantiatedChainCodes(context.Background(), *admin, channel, []string{peer01, peer02})
 	if err != nil {
 		fmt.Print(err)
 		os.Exit(2)
@@ -181,8 +196,8 @@ func queryInstalledChaincodes(client *hlf.FabricClient) {
 		os.Exit(1)
 	}
 	// Please note that we must provide MSPid manually because Identity is not from FabricCA
-	admin.MspId = "Org1MSP"
-	response, err := client.QueryInstalledChainCodes(context.Background(), *admin, []string{"peer0"})
+	admin.MspId = Org1MSP
+	response, err := client.QueryInstalledChainCodes(context.Background(), *admin, []string{peer01, peer11, peer02})
 	if err != nil {
 		fmt.Print(err)
 		os.Exit(2)
@@ -218,9 +233,7 @@ func instantiateCC(client *hlf.FabricClient) {
 		os.Exit(2)
 	}
 
-	bytes, _ := json.Marshal(response)
-
-	fmt.Println(string(bytes))
+	fmt.Println(response)
 }
 
 func installCC(client *hlf.FabricClient) {
@@ -255,7 +268,7 @@ func joinChannel(client *hlf.FabricClient) {
 	}
 	// Please note that we must provide MSPid manually because Identity is not from FabricCA
 	admin.MspId = "Org1MSP"
-	response, err := client.JoinChannel(context.Background(), *admin, "mychannel", []string{"peer0.org1.example.com", "peer1.org1.example.com"}, "orderer0")
+	response, err := client.JoinChannel(context.Background(), *admin, channel, []string{"peer0.org1.example.com", "peer1.org1.example.com"}, "orderer0")
 	if err != nil {
 		fmt.Print(err)
 		os.Exit(2)
