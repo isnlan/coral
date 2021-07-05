@@ -58,7 +58,7 @@ func TestNewSDKConfig(t *testing.T) {
 			ChainCodeType:    ChaincodeSpec_GOLANG,
 			ChannelId:        channel,
 			ChainCodeName:    "kvdb",
-			ChainCodeVersion: "1.1",
+			ChainCodeVersion: "1.3",
 			Namespace:        "kvdb",
 			GoPath:           "/Users/snlan/go",
 		}
@@ -67,19 +67,19 @@ func TestNewSDKConfig(t *testing.T) {
 		fmt.Println(response)
 	}
 
-	if false {
+	if true {
 		req := &ChainCode{
 			Type:      ChaincodeSpec_GOLANG,
 			ChannelId: channel,
 			Name:      "kvdb",
-			Version:   "1.1",
+			Version:   "1.3",
 			Args:      []string{"init"}, // optional arguments for instantiation
 		}
 
 		// gohlf.CollectionConfig is new for v 1.1 and specify private collections for this chaincode. It is optional.
 
 		cc := []CollectionConfig{}
-		response, err := client.InstantiateChainCode(context.Background(), *admin, req, []string{peer01, peer11}, order0, "deploy", cc)
+		response, err := client.InstantiateChainCode(context.Background(), *admin, req, []string{peer01, peer11}, order0, "upgrade", cc)
 		assert.NoError(t, err)
 		fmt.Println(response)
 	}

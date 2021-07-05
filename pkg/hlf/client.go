@@ -11,7 +11,6 @@ import (
 
 	"github.com/golang/protobuf/proto"
 	"github.com/hyperledger/fabric-protos-go/common"
-	"github.com/hyperledger/fabric-protos-go/orderer"
 	"github.com/hyperledger/fabric-protos-go/peer"
 )
 
@@ -167,56 +166,56 @@ func (c *FabricClient) InstallChainCode(ctx context.Context, identity Identity, 
 // collectionsConfig is configuration for private collections in versions >= 1.1. If not provided no private collections
 // will be created. collectionsConfig can be specified when chaincode is upgraded.
 func (c *FabricClient) InstantiateChainCode(ctx context.Context, identity Identity, req *ChainCode, peers []string, orderer string,
-	operation string, collectionsConfig []CollectionConfig) (*orderer.BroadcastResponse, error) {
+	operation string, collectionsConfig []CollectionConfig) (string, error) {
 	ord, ok := c.Orderers[orderer]
 	if !ok {
-		return nil, ErrInvalidOrdererName
+		return "", ErrInvalidOrdererName
 	}
 
 	execPeers := c.getPeers(peers)
 	if len(peers) != len(execPeers) {
-		return nil, ErrPeerNameNotFound
+		return "", ErrPeerNameNotFound
 	}
 
 	var collConfigBytes []byte
 	if len(collectionsConfig) > 0 {
 		collectionPolicy, err := CollectionConfigToPolicy(collectionsConfig)
 		if err != nil {
-			return nil, err
+			return "", err
 		}
 
 		collConfigBytes, err = proto.Marshal(&common.CollectionConfigPackage{Config: collectionPolicy})
 		if err != nil {
-			return nil, err
+			return "", err
 		}
 	}
 
 	prop, err := createInstantiateProposal(identity, req, operation, collConfigBytes)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
 	proposal, err := signedProposal(prop.proposal, identity, c.Crypto)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
 	transaction, err := createTransaction(prop.proposal, sendToPeers(ctx, execPeers, proposal))
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
 	signedTransaction, err := c.Crypto.Sign(transaction, identity.PrivateKey)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
-	reply, err := ord.Broadcast(&common.Envelope{Payload: transaction, Signature: signedTransaction})
+	_, err = ord.Broadcast(&common.Envelope{Payload: transaction, Signature: signedTransaction})
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
-	return reply, nil
+	return prop.transactionId, nil
 }
 
 // QueryInstalledChainCodes get all chainCodes that are installed but not instantiated in one or many peers
