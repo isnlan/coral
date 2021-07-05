@@ -1,0 +1,141 @@
+
+client:
+  organization: org1
+  logging:
+    level: info
+  cryptoconfig:
+    path: /Users/snlan/nfs-data/baas/chains/adminchain1/artifacts/crypto-config
+  credentialStore:
+    path: /tmp/state-store
+    cryptoStore:
+      path: /tmp/msp
+  tlsCerts:
+    systemCertPool: true
+
+channels:
+
+organizations:
+
+  org1:
+    mspid: Org1MSP
+    cryptoPath:  peerOrganizations/adminchain1org1/users/{username}@adminchain1org1/msp
+    peers:
+      - peer0.adminchain1org1
+      - peer1.adminchain1org1
+
+    certificateAuthorities:
+      - ca.adminchain1org1
+
+orderers:
+
+  orderer0.adminchain1orderer:
+    url: orderer0.adminchain1orderer
+    grpcOptions:
+      ssl-target-name-override: orderer0.adminchain1orderer
+      keep-alive-time: 0s
+      keep-alive-timeout: 20s
+      keep-alive-permit: false
+      fail-fast: false
+      allow-insecure: false
+    tlsCACerts:
+      path: /Users/snlan/nfs-data/baas/chains/adminchain1/artifacts/crypto-config/ordererOrganizations/adminchain1orderer/tlsca/tlsca.adminchain1orderer-cert.pem
+
+  orderer1.adminchain1orderer:
+    url: orderer1.adminchain1orderer
+    grpcOptions:
+      ssl-target-name-override: orderer1.adminchain1orderer
+      keep-alive-time: 0s
+      keep-alive-timeout: 20s
+      keep-alive-permit: false
+      fail-fast: false
+      allow-insecure: false
+    tlsCACerts:
+      path: /Users/snlan/nfs-data/baas/chains/adminchain1/artifacts/crypto-config/ordererOrganizations/adminchain1orderer/tlsca/tlsca.adminchain1orderer-cert.pem
+
+  orderer2.adminchain1orderer:
+    url: orderer2.adminchain1orderer
+    grpcOptions:
+      ssl-target-name-override: orderer2.adminchain1orderer
+      keep-alive-time: 0s
+      keep-alive-timeout: 20s
+      keep-alive-permit: false
+      fail-fast: false
+      allow-insecure: false
+    tlsCACerts:
+      path: /Users/snlan/nfs-data/baas/chains/adminchain1/artifacts/crypto-config/ordererOrganizations/adminchain1orderer/tlsca/tlsca.adminchain1orderer-cert.pem
+
+peers:
+
+  peer0.adminchain1org1:
+    url: peer0.adminchain1org1
+    grpcOptions:
+      ssl-target-name-override: peer0.adminchain1org1
+      keep-alive-time: 0s
+      keep-alive-timeout: 20s
+      keep-alive-permit: false
+      fail-fast: false
+      allow-insecure: false
+    tlsCACerts:
+      path: /Users/snlan/nfs-data/baas/chains/adminchain1/artifacts/crypto-config/peerOrganizations/adminchain1org1/tlsca/tlsca.adminchain1org1-cert.pem
+
+  peer1.adminchain1org1:
+    url: peer1.adminchain1org1
+    grpcOptions:
+      ssl-target-name-override: peer1.adminchain1org1
+      keep-alive-time: 0s
+      keep-alive-timeout: 20s
+      keep-alive-permit: false
+      fail-fast: false
+      allow-insecure: false
+    tlsCACerts:
+      path: /Users/snlan/nfs-data/baas/chains/adminchain1/artifacts/crypto-config/peerOrganizations/adminchain1org1/tlsca/tlsca.adminchain1org1-cert.pem
+
+certificateAuthorities:
+
+  ca.adminchain1org1:
+    url: https://ca.adminchain1org1
+    tlsCACerts:
+      path: /Users/snlan/nfs-data/baas/chains/adminchain1/artifacts/crypto-config/peerOrganizations/adminchain1org1/tlsca/tlsca.adminchain1org1-cert.pem
+      client:
+        key:
+          path: /Users/snlan/nfs-data/baas/chains/adminchain1/artifacts/crypto-config/peerOrganizations/adminchain1org1/users/User1@adminchain1org1/tls/client.key
+        cert:
+          path: /Users/snlan/nfs-data/baas/chains/adminchain1/artifacts/crypto-config/peerOrganizations/adminchain1org1/users/User1@adminchain1org1/tls/client.crt
+    registrar:
+      enrollId: admin
+      enrollSecret: adminpw
+
+entityMatchers:
+
+  peer:
+    - pattern: peer0.adminchain1org1
+      urlSubstitutionExp: 172.20.168.94:32032
+      sslTargetOverrideUrlSubstitutionExp: peer0.adminchain1org1
+      mappedHost: peer0.adminchain1org1
+
+    - pattern: peer1.adminchain1org1
+      urlSubstitutionExp: 172.20.168.94:30611
+      sslTargetOverrideUrlSubstitutionExp: peer1.adminchain1org1
+      mappedHost: peer1.adminchain1org1
+
+  orderer:
+    - pattern: orderer0.adminchain1orderer
+      urlSubstitutionExp: 172.20.168.94:31779
+      sslTargetOverrideUrlSubstitutionExp: orderer0.adminchain1orderer
+      mappedHost: orderer0.adminchain1orderer
+
+    - pattern: orderer1.adminchain1orderer
+      urlSubstitutionExp: 172.20.168.94:31658
+      sslTargetOverrideUrlSubstitutionExp: orderer1.adminchain1orderer
+      mappedHost: orderer1.adminchain1orderer
+
+    - pattern: orderer2.adminchain1orderer
+      urlSubstitutionExp: 172.20.168.94:31327
+      sslTargetOverrideUrlSubstitutionExp: orderer2.adminchain1orderer
+      mappedHost: orderer2.adminchain1orderer
+
+  certificateAuthority:
+    - pattern: ca.adminchain1org1
+      urlSubstitutionExp: https://172.20.168.94:32511
+      sslTargetOverrideUrlSubstitutionExp: ca.adminchain1org1
+      mappedHost: ca.adminchain1org1

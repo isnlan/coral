@@ -27,7 +27,7 @@ const Org2MSP = "Org2MSP"
 
 func main() {
 	// initialize Fabric client
-	c, err := hlf.NewFabricClient("/data/gopath/src/github.com/isnlan/coral/test/fabric/client.yaml")
+	c, err := hlf.NewFabricClient("/Users/snlan/go/src/github.com/isnlan/coral/test/fabric/client.yaml")
 	if err != nil {
 		fmt.Printf("Error loading file: %v", err)
 		os.Exit(1)
