@@ -36,24 +36,24 @@ func TestNewSDKConfig(t *testing.T) {
 	assert.NoError(t, err)
 
 	fmt.Println(result)
-	channel := "mychannel1"
+	channel := "c2"
 	peer01 := "peer0.adminchain1org1"
 	peer11 := "peer1.adminchain1org1"
 	order0 := "orderer0.adminchain1orderer"
 
 	if false {
 		txpath := "/Users/snlan/nfs-data/baas/chains/adminchain1/artifacts/channel-artifacts/mychannel1.tx"
-		err = client.CreateUpdateChannel(*admin, txpath, "mychannel1", order0)
+		err = client.CreateUpdateChannel(*admin, txpath, channel, order0)
 		assert.NoError(t, err)
 	}
 
-	if true {
-		resp, err := client.GetGenesisBlock(context.Background(), *admin, "c12", order0)
+	if false {
+		resp, err := client.GetGenesisBlock(context.Background(), *admin, channel, order0)
 		assert.NoError(t, err)
 		fmt.Println(resp)
 	}
 
-	if false {
+	if true {
 		resp, err := client.JoinChannel(context.Background(), *admin, channel, []string{peer01, peer11}, order0)
 		assert.NoError(t, err)
 		fmt.Println(resp)

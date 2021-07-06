@@ -116,7 +116,7 @@ func (c *FabricClient) JoinChannel(ctx context.Context, identity Identity, chann
 	}
 
 	ext := &peer.ChaincodeHeaderExtension{ChaincodeId: &peer.ChaincodeID{Name: CSCC}}
-	channelHeaderBytes, err := channelHeader(common.HeaderType_ENDORSER_TRANSACTION, txId, channelId, 0, ext)
+	channelHeaderBytes, err := channelHeader(common.HeaderType_ENDORSER_TRANSACTION, txId, "", 0, ext)
 	if err != nil {
 		return nil, err
 	}

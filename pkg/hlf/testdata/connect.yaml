@@ -109,28 +109,28 @@ entityMatchers:
 
   peer:
     - pattern: peer0.adminchain1org1
-      urlSubstitutionExp: 172.20.168.94:32032
+      urlSubstitutionExp: 172.20.168.94:32430
       sslTargetOverrideUrlSubstitutionExp: peer0.adminchain1org1
       mappedHost: peer0.adminchain1org1
 
     - pattern: peer1.adminchain1org1
-      urlSubstitutionExp: 172.20.168.94:30611
+      urlSubstitutionExp: 172.20.168.94:30324
       sslTargetOverrideUrlSubstitutionExp: peer1.adminchain1org1
       mappedHost: peer1.adminchain1org1
 
   orderer:
     - pattern: orderer0.adminchain1orderer
-      urlSubstitutionExp: 172.20.168.94:31779
+      urlSubstitutionExp: 172.20.168.94:30392
       sslTargetOverrideUrlSubstitutionExp: orderer0.adminchain1orderer
       mappedHost: orderer0.adminchain1orderer
 
     - pattern: orderer1.adminchain1orderer
-      urlSubstitutionExp: 172.20.168.94:31658
+      urlSubstitutionExp: 172.20.168.94:32083
       sslTargetOverrideUrlSubstitutionExp: orderer1.adminchain1orderer
       mappedHost: orderer1.adminchain1orderer
 
     - pattern: orderer2.adminchain1orderer
-      urlSubstitutionExp: 172.20.168.94:31327
+      urlSubstitutionExp: 172.20.168.94:30135
       sslTargetOverrideUrlSubstitutionExp: orderer2.adminchain1orderer
       mappedHost: orderer2.adminchain1orderer
 
