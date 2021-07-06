@@ -48,7 +48,7 @@ func TestNewSDKConfig(t *testing.T) {
 	}
 
 	if true {
-		resp, err := client.GetGenesisBlock(context.Background(), *admin, "c120", order0)
+		resp, err := client.GetGenesisBlock(context.Background(), *admin, "c12", order0)
 		assert.NoError(t, err)
 		fmt.Println(resp)
 	}
