@@ -54,6 +54,21 @@ func (c *FabricClient) CreateUpdateChannel(identity Identity, path string, chann
 	return nil
 }
 
+// GetGenesisBlock get genesis block from order by identity
+func (c *FabricClient) GetGenesisBlock(ctx context.Context, identity Identity, channelId string, orderer string) (*common.Block, error) {
+	ord, ok := c.Orderers[orderer]
+	if !ok {
+		return nil, ErrInvalidOrdererName
+	}
+
+	block, err := ord.getGenesisBlock(identity, c.Crypto, channelId)
+	if err != nil {
+		return nil, err
+	}
+
+	return block, nil
+}
+
 // JoinChannel send transaction to one or many Peers to join particular channel.
 // Channel must be created before this operation using `CreateUpdateChannel` or manually using CLI interface.
 // Orderers must be aware of this channel, otherwise operation will fail.
@@ -101,7 +116,7 @@ func (c *FabricClient) JoinChannel(ctx context.Context, identity Identity, chann
 	}
 
 	ext := &peer.ChaincodeHeaderExtension{ChaincodeId: &peer.ChaincodeID{Name: CSCC}}
-	channelHeaderBytes, err := channelHeader(common.HeaderType_ENDORSER_TRANSACTION, txId, "", 0, ext)
+	channelHeaderBytes, err := channelHeader(common.HeaderType_ENDORSER_TRANSACTION, txId, channelId, 0, ext)
 	if err != nil {
 		return nil, err
 	}
