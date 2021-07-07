@@ -20,7 +20,7 @@ func Enabled() bool {
 	return enabled.Load()
 }
 
-func StartAgent(host string, port int) {
+func StartAgent(port int) {
 	enabled.Store(true)
 
 	http.Handle("/metrics", promhttp.Handler())
@@ -28,7 +28,7 @@ func StartAgent(host string, port int) {
 		fmt.Fprintln(w, "ok")
 	})
 
-	addr := fmt.Sprintf("%s:%d", host, port)
+	addr := fmt.Sprintf(":%d", port)
 	logger.Infof("starting prometheus agent at %s", addr)
 
 	go func() {

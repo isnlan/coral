@@ -16,7 +16,7 @@ func main() {
 	ip, err := discovery.GetLocalIP()
 	errors.Check(err)
 
-	prometheus2.StartAgent(ip, 9001)
+	prometheus2.StartAgent(9001)
 	prometheus2.RegisterAgent(ds, "myapp", ip, 9001)
 
 	r := xgin.New()
