@@ -179,3 +179,14 @@ func NewECCryptSuiteFromConfig(config CryptoConfig) (CryptoSuite, error) {
 
 	return suite, nil
 }
+
+func NewDefaultCryptoSuite() CryptoSuite {
+	cryptoConfig := CryptoConfig{
+		Family:    "ecdsa",
+		Algorithm: "P256-SHA256",
+		Hash:      "SHA2-256",
+	}
+
+	crypto, _ := NewECCryptSuiteFromConfig(cryptoConfig)
+	return crypto
+}
