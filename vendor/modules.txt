@@ -554,6 +554,7 @@ github.com/streadway/amqp
 # github.com/stretchr/testify v1.7.0
 ## explicit
 github.com/stretchr/testify/assert
+github.com/stretchr/testify/require
 # github.com/sykesm/zap-logfmt v0.0.3
 ## explicit
 github.com/sykesm/zap-logfmt

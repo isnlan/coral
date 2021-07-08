@@ -1,7 +1,12 @@
 package hlf
 
 import (
+	"encoding/pem"
+	"fmt"
+	"github.com/isnlan/coral/pkg/errors"
+	"github.com/isnlan/coral/pkg/hlf/crypto"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -35,4 +40,12 @@ phgmvP8Sqx0Oav3TyZ92ALlIGPfz30vNQQ==
 	assert.NoError(t, err)
 	assert.Equal(t, addr.String(), "97362A7B592DAF95AFD0B046551EC9E62BE7607F")
 
+	idBytes :=  pem.EncodeToMemory(&pem.Block{Type: "CERTIFICATE", Bytes: identity.Certificate.Raw})
+
+	expirationTime := crypto.ExpiresAt(idBytes)
+	if !expirationTime.IsZero() && time.Now().After(expirationTime) {
+		err := errors.New("proposal client identity expired")
+		assert.NoError(t, err)
+	}
+	fmt.Println(expirationTime.IsZero())
 }
