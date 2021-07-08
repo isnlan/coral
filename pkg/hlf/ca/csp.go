@@ -23,7 +23,6 @@ import (
 	"crypto/x509"
 	"encoding/hex"
 	"fmt"
-	"io/ioutil"
 	_ "time" // for ocspSignerFromConfig
 
 	_ "github.com/cloudflare/cfssl/cli" // for ocspSignerFromConfig
@@ -41,17 +40,17 @@ import (
 
 // BccspBackedSigner attempts to create a signer using csp bccsp.BCCSP. This csp could be SW (golang crypto)
 // PKCS11 or whatever BCCSP-conformant library is configured
-func BccspBackedSigner(caFile, keyFile string, policy *config.Signing, csp bccsp.BCCSP) (signer.Signer, error) {
-	_, cspSigner, parsedCa, err := GetSignerFromCertFile(caFile, csp)
+func BccspBackedSigner(caPEM, keyPEM []byte, policy *config.Signing, csp bccsp.BCCSP) (signer.Signer, error) {
+	_, cspSigner, parsedCa, err := GetSignerFromCertFile(caPEM, csp)
 	if err != nil {
 		// Fallback: attempt to read out of keyFile and import
 		log.Debugf("No key found in BCCSP keystore, attempting fallback")
 		var key bccsp.Key
 		var signer crypto.Signer
 
-		key, err = ImportBCCSPKeyFromPEM(keyFile, csp, true)
+		key, err = ImportBCCSPKeyFromPEM(keyPEM, csp, true)
 		if err != nil {
-			return nil, errors.WithMessage(err, fmt.Sprintf("Could not find the private key in BCCSP keystore nor in keyfile '%s'", keyFile))
+			return nil, errors.WithMessage(err, fmt.Sprintf("Could not find the private key in BCCSP keystore nor in keyfile '%s'", keyPEM))
 		}
 
 		signer, err = cspsigner.New(csp, key)
@@ -98,12 +97,7 @@ func GetSignerFromCert(cert *x509.Certificate, csp bccsp.BCCSP) (bccsp.Key, cryp
 }
 
 // GetSignerFromCertFile load skiFile and load private key represented by ski and return bccsp signer that conforms to crypto.Signer
-func GetSignerFromCertFile(certFile string, csp bccsp.BCCSP) (bccsp.Key, crypto.Signer, *x509.Certificate, error) {
-	// Load cert file
-	certBytes, err := ioutil.ReadFile(certFile)
-	if err != nil {
-		return nil, nil, nil, errors.Wrapf(err, "Could not read certFile '%s'", certFile)
-	}
+func GetSignerFromCertFile(certBytes []byte, csp bccsp.BCCSP) (bccsp.Key, crypto.Signer, *x509.Certificate, error) {
 	// Parse certificate
 	parsedCa, err := helpers.ParseCertificatePEM(certBytes)
 	if err != nil {
@@ -115,29 +109,25 @@ func GetSignerFromCertFile(certFile string, csp bccsp.BCCSP) (bccsp.Key, crypto.
 }
 
 // ImportBCCSPKeyFromPEM attempts to create a private BCCSP key from a pem file keyFile
-func ImportBCCSPKeyFromPEM(keyFile string, myCSP bccsp.BCCSP, temporary bool) (bccsp.Key, error) {
-	keyBuff, err := ioutil.ReadFile(keyFile)
+func ImportBCCSPKeyFromPEM(keyPEM []byte, myCSP bccsp.BCCSP, temporary bool) (bccsp.Key, error) {
+	key, err := utils.PEMtoPrivateKey(keyPEM, nil)
 	if err != nil {
-		return nil, err
-	}
-	key, err := utils.PEMtoPrivateKey(keyBuff, nil)
-	if err != nil {
-		return nil, errors.WithMessage(err, fmt.Sprintf("Failed parsing private key from %s", keyFile))
+		return nil, errors.WithMessage(err, fmt.Sprintf("Failed parsing private key from %s", keyPEM))
 	}
 	switch key.(type) {
 	case *ecdsa.PrivateKey:
 		priv, err := utils.PrivateKeyToDER(key.(*ecdsa.PrivateKey))
 		if err != nil {
-			return nil, errors.WithMessage(err, fmt.Sprintf("Failed to convert ECDSA private key for '%s'", keyFile))
+			return nil, errors.WithMessage(err, fmt.Sprintf("Failed to convert ECDSA private key for '%s'", keyPEM))
 		}
 		sk, err := myCSP.KeyImport(priv, &bccsp.ECDSAPrivateKeyImportOpts{Temporary: temporary})
 		if err != nil {
-			return nil, errors.WithMessage(err, fmt.Sprintf("Failed to import ECDSA private key for '%s'", keyFile))
+			return nil, errors.WithMessage(err, fmt.Sprintf("Failed to import ECDSA private key for '%s'", keyPEM))
 		}
 		return sk, nil
 	case *rsa.PrivateKey:
-		return nil, errors.Errorf("Failed to import RSA key from %s; RSA private key import is not supported", keyFile)
+		return nil, errors.Errorf("Failed to import RSA key from %s; RSA private key import is not supported", keyPEM)
 	default:
-		return nil, errors.Errorf("Failed to import key from %s: invalid secret key type", keyFile)
+		return nil, errors.Errorf("Failed to import key from %s: invalid secret key type", keyPEM)
 	}
 }

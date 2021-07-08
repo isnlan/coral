@@ -4,11 +4,13 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
+	"io/ioutil"
+	"testing"
+	"time"
+
 	"github.com/isnlan/coral/pkg/hlf"
 	crypto2 "github.com/isnlan/coral/pkg/hlf/crypto"
 	"github.com/stretchr/testify/assert"
-	"testing"
-	"time"
 )
 
 func TestCA_Enroll(t *testing.T) {
@@ -18,10 +20,16 @@ func TestCA_Enroll(t *testing.T) {
 		Hash:      "SHA2-256",
 	}
 
+	certPEM, err := ioutil.ReadFile("/Users/snlan/go/src/github.com/isnlan/coral/test/ca/ca.org1-cert.pem")
+	assert.NoError(t, err)
+
+	keyPEM, err := ioutil.ReadFile("/Users/snlan/go/src/github.com/isnlan/coral/test/ca/key.pem")
+	assert.NoError(t, err)
+
 	conf := &Config{
 		ParentServerURL: "",
-		CertFile:        "/data/gopath/src/github.com/isnlan/coral/test/ca/ca.org1-cert.pem",
-		KeyFile:         "/data/gopath/src/github.com/isnlan/coral/test/ca/key.pem",
+		Cert:            certPEM,
+		Key:             keyPEM,
 	}
 
 	crypto, err := hlf.NewECCryptSuiteFromConfig(CryptoConfig)
@@ -48,9 +56,7 @@ func TestCA_Enroll(t *testing.T) {
 	assert.NoError(t, err)
 	fmt.Println(1, address)
 
-
-	idBytes :=  pem.EncodeToMemory(&pem.Block{Type: "CERTIFICATE", Bytes: id.Certificate.Raw})
-
+	idBytes := pem.EncodeToMemory(&pem.Block{Type: "CERTIFICATE", Bytes: id.Certificate.Raw})
 
 	expirationTime := crypto2.ExpiresAt(idBytes)
 	if !expirationTime.IsZero() && time.Now().After(expirationTime) {

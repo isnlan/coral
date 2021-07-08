@@ -7,7 +7,6 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
-	"io/ioutil"
 	"strings"
 	"time"
 
@@ -36,15 +35,15 @@ type CA struct {
 	parentServerURL string
 	signing         *config.Signing
 	enrollSigner    signer.Signer
-	certFile        string
-	keyFile         string
+	cert            []byte
+	key             []byte
 	attrMgr         *attrmgr.Mgr
 }
 
 type Config struct {
 	ParentServerURL string
-	CertFile        string
-	KeyFile         string
+	Cert            []byte
+	Key             []byte
 }
 
 func New(cfg *Config) (*CA, error) {
@@ -58,18 +57,18 @@ func New(cfg *Config) (*CA, error) {
 		csr:             &CSRInfo{},
 		parentServerURL: cfg.ParentServerURL,
 		signing:         signing,
-		certFile:        cfg.CertFile,
-		keyFile:         cfg.KeyFile,
+		cert:            cfg.Cert,
+		key:             cfg.Key,
 		attrMgr:         attrmgr.New(),
 		enrollSigner:    nil,
 	}
 
-	err := ca.validateCertAndKey(ca.certFile, ca.keyFile)
+	err := ca.validateCertAndKey(ca.cert, ca.key)
 	if err != nil {
 		return nil, err
 	}
 
-	ca.csr.CN, err = ca.loadCNFromEnrollmentInfo(ca.certFile)
+	ca.csr.CN, err = ca.loadCNFromEnrollmentInfo(ca.cert)
 	if err != nil {
 		return nil, err
 	}
@@ -95,7 +94,7 @@ func New(cfg *Config) (*CA, error) {
 
 	//ca.issuer = issuer
 
-	ca.enrollSigner, err = BccspBackedSigner(ca.certFile, ca.keyFile, ca.signing, ca.csp)
+	ca.enrollSigner, err = BccspBackedSigner(ca.cert, ca.key, ca.signing, ca.csp)
 	if err != nil {
 		return nil, err
 	}
@@ -340,53 +339,40 @@ func setRequestOUs(req *signer.SignRequest, user *User) {
 	req.Subject = s
 }
 
-func (ca *CA) validateCertAndKey(certFile string, keyFile string) error {
+func (ca *CA) validateCertAndKey(certPEM []byte, keyPEM []byte) error {
 	log.Debug("Validating the CA certificate and key")
-	var err error
-	var certPEM []byte
-
-	certPEM, err = ioutil.ReadFile(certFile)
-	if err != nil {
-		return errors.Wrapf(err, certificateError+" '%s'", certFile)
-	}
 
 	cert, err := GetX509CertificateFromPEM(certPEM)
 	if err != nil {
-		return errors.WithMessage(err, fmt.Sprintf(certificateError+" '%s'", certFile))
+		return errors.WithMessage(err, fmt.Sprintf(certificateError+" '%s'", certPEM))
 	}
 
 	if err = validateDates(cert); err != nil {
-		return errors.WithMessage(err, fmt.Sprintf(certificateError+" '%s'", certFile))
+		return errors.WithMessage(err, fmt.Sprintf(certificateError+" '%s'", certPEM))
 	}
 	if err = validateUsage(cert, ca.name); err != nil {
-		return errors.WithMessage(err, fmt.Sprintf(certificateError+" '%s'", certFile))
+		return errors.WithMessage(err, fmt.Sprintf(certificateError+" '%s'", certPEM))
 	}
 	if err = validateIsCA(cert); err != nil {
-		return errors.WithMessage(err, fmt.Sprintf(certificateError+" '%s'", certFile))
+		return errors.WithMessage(err, fmt.Sprintf(certificateError+" '%s'", certPEM))
 	}
 	if err = validateKeyType(cert); err != nil {
-		return errors.WithMessage(err, fmt.Sprintf(certificateError+" '%s'", certFile))
+		return errors.WithMessage(err, fmt.Sprintf(certificateError+" '%s'", certPEM))
 	}
 	if err = validateKeySize(cert); err != nil {
-		return errors.WithMessage(err, fmt.Sprintf(certificateError+" '%s'", certFile))
+		return errors.WithMessage(err, fmt.Sprintf(certificateError+" '%s'", certPEM))
 	}
-	if err = validateMatchingKeys(cert, keyFile); err != nil {
-		return errors.WithMessage(err, fmt.Sprintf("Invalid certificate and/or key in files '%s' and '%s'", certFile, keyFile))
+	if err = validateMatchingKeys(cert, keyPEM); err != nil {
+		return errors.WithMessage(err, fmt.Sprintf("Invalid certificate and/or key in files '%s' and '%s'", certPEM, keyPEM))
 	}
 	log.Debug("Validation of CA certificate and key successful")
 
 	return nil
 }
 
-func (ca *CA) loadCNFromEnrollmentInfo(certFile string) (string, error) {
+func (ca *CA) loadCNFromEnrollmentInfo(certPEM []byte) (string, error) {
 	log.Debug("Loading CN from existing enrollment information")
-	cert, err := ReadFile(certFile)
-
-	if err != nil {
-		log.Debugf("No cert found at %s", certFile)
-		return "", err
-	}
-	name, err := GetEnrollmentIDFromPEM(cert)
+	name, err := GetEnrollmentIDFromPEM(certPEM)
 	if err != nil {
 		return "", err
 	}
@@ -417,7 +403,7 @@ func (ca *CA) initEnrollmentSigner() (err error) {
 		}
 	}
 
-	ca.enrollSigner, err = BccspBackedSigner(ca.certFile, ca.keyFile, policy, ca.csp)
+	ca.enrollSigner, err = BccspBackedSigner(ca.cert, ca.key, policy, ca.csp)
 	if err != nil {
 		return err
 	}
@@ -521,13 +507,8 @@ func validateKeySize(cert *x509.Certificate) error {
 	return nil
 }
 
-func validateMatchingKeys(cert *x509.Certificate, keyFile string) error {
+func validateMatchingKeys(cert *x509.Certificate, keyPEM []byte) error {
 	log.Debug("Check that public key and private key match")
-
-	keyPEM, err := ioutil.ReadFile(keyFile)
-	if err != nil {
-		return err
-	}
 
 	pubKey := cert.PublicKey
 	switch pubKey.(type) {
