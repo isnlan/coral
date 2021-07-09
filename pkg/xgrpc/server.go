@@ -28,6 +28,8 @@ func NewServer(addr string, opts ...grpc.ServerOption) (*Server, error) {
 		return nil, errors.WithMessage(err, "failed to listen")
 	}
 
+	grpc_prometheus.EnableHandlingTimeHistogram()
+
 	streamInterceptor := grpc.StreamInterceptor(grpc_middleware.ChainStreamServer(
 		grpc_ctxtags.StreamServerInterceptor(),
 		grpc_opentracing.StreamServerInterceptor(),
