@@ -77,12 +77,14 @@ func (r *eventHubImpl) filerChains(chains []*ChainLease) {
 				find = true
 				if !reflect.DeepEqual(old, chain) {
 					r.chains[id] = chain
+					logger.Infof("chain update: %+#v -> %+#v ", old, chain)
 					r.update(old, chain)
 				}
 			}
 		}
 
 		if !find {
+			logger.Infof("chain removed: %+#v", old)
 			delete(r.chains, id)
 			r.delete(old)
 		}
@@ -90,6 +92,7 @@ func (r *eventHubImpl) filerChains(chains []*ChainLease) {
 
 	for _, chain := range chains {
 		if _, find := r.chains[chain.UniqueID()]; !find {
+			logger.Infof("chain add: %+#v", chain)
 			r.chains[chain.UniqueID()] = chain
 			r.create(chain)
 		}
