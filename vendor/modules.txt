@@ -12,6 +12,9 @@ github.com/Microsoft/hcsshim/osversion
 ## explicit
 # github.com/acobaugh/osrelease v0.0.0-20181218015638-a93a0a55a249
 github.com/acobaugh/osrelease
+# github.com/alecthomas/units v0.0.0-20190717042225-c3de453c63f4
+## explicit
+github.com/alecthomas/units
 # github.com/andybalholm/brotli v1.0.0
 github.com/andybalholm/brotli
 # github.com/armon/go-metrics v0.3.2
@@ -516,6 +519,11 @@ github.com/prometheus/common/model
 github.com/prometheus/procfs
 github.com/prometheus/procfs/internal/fs
 github.com/prometheus/procfs/internal/util
+# github.com/prometheus/prometheus v2.5.0+incompatible
+## explicit
+github.com/prometheus/prometheus/pkg/labels
+github.com/prometheus/prometheus/pkg/textparse
+github.com/prometheus/prometheus/pkg/value
 # github.com/quasoft/memstore v0.0.0-20180925164028-84a050167438
 github.com/quasoft/memstore
 # github.com/sergi/go-diff v1.1.0
