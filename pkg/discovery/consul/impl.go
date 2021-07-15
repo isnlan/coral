@@ -25,10 +25,12 @@ type consulImpl struct {
 func New(url string) (*consulImpl, error) {
 	config := api.DefaultConfig()
 	config.Address = url
+
 	client, err := api.NewClient(config)
 	if err != nil {
 		return nil, err
 	}
+
 	return &consulImpl{client: client}, nil
 }
 
@@ -71,6 +73,7 @@ func (c *consulImpl) register(name, address string, port int, check *api.AgentSe
 	if err := register(); err != nil {
 		return nil, err
 	}
+
 	logger.Infof("service: %s register success!", svr.ID)
 
 	ctx, cancel := context.WithCancel(context.Background())
@@ -82,6 +85,8 @@ func (c *consulImpl) register(name, address string, port int, check *api.AgentSe
 			case <-tick.C:
 				_, _, err := c.client.Agent().Service(svr.ID, &api.QueryOptions{RequireConsistent: true})
 				if err != nil {
+					logger.Errorf("service not found, we will register again: %v", err)
+
 					if err := register(); err != nil {
 						logger.Errorf("service: %s register error", svr.ID)
 					} else {
@@ -95,6 +100,7 @@ func (c *consulImpl) register(name, address string, port int, check *api.AgentSe
 				} else {
 					logger.Warnf("service: %s deregister", svr.ID)
 				}
+
 				return
 			}
 		}
@@ -109,14 +115,20 @@ func (c *consulImpl) RegisterHealthServer(s *grpc.Server) {
 
 func (c *consulImpl) WatchService(ctx context.Context, name string, tag string, ch chan<- []*discovery.ServiceInfo) {
 	go func() {
+		defer func() {
+			logger.Warnf("WatchService name: %s, tag: %s stopped", name, tag)
+		}()
+
 		var waitIndex uint64
 		for {
 			entries, lastIndex, err := c.serviceEntriesWatch(name, tag, waitIndex)
 			if err != nil {
-				logger.Errorf("service entries watch error: %v", err)
-				time.Sleep(30 * time.Second)
+				logger.Errorf("WatchService name: %s, tag: %s error: %v", name, tag, err)
+				time.Sleep(10 * time.Second)
+				waitIndex = 0
 				continue
 			}
+
 			if waitIndex != lastIndex {
 				waitIndex = lastIndex
 				ch <- entries
@@ -171,6 +183,7 @@ func (c *consulImpl) SetKey(ns, key string, value []byte) error {
 		// Namespace: ns,
 	}
 	_, err := c.client.KV().Put(pair, opt)
+
 	return err
 }
 
@@ -217,13 +230,18 @@ func (c *consulImpl) DeleteKeyByPrefix(ns, prefix string) error {
 
 func (c *consulImpl) WatchKey(ctx context.Context, ns, key string, ch chan<- *api.KVPair) {
 	go func() {
+		defer func() {
+			logger.Warnf("WatchKey ns %s, key %s stopped", ns, key)
+		}()
+
 		var waitIndex uint64
 		for {
 			pair, lastIndex, err := c.getKeyByIndex(ns, key, waitIndex)
 			if err != nil {
-				logger.Errorf("key watch error: %v", err)
-				time.Sleep(30 * time.Second)
-				return
+				logger.Errorf("WatchKey ns %s, key %s error: %v", ns, key, err)
+				time.Sleep(10 * time.Second)
+				waitIndex = 0
+				continue
 			}
 
 			if waitIndex != lastIndex {
@@ -234,7 +252,6 @@ func (c *consulImpl) WatchKey(ctx context.Context, ns, key string, ch chan<- *ap
 
 			select {
 			case <-ctx.Done():
-				logger.Infof("stop watching key: %s", key)
 				return
 			default:
 			}
@@ -259,14 +276,20 @@ func (c *consulImpl) getKeyByIndex(ns, key string, waitIndex uint64) (*api.KVPai
 
 func (c *consulImpl) WatchKeysByPrefix(ctx context.Context, ns, prefix string, ch chan<- []string) {
 	go func() {
+		defer func() {
+			logger.Warnf("WatchKeysByPrefix ns %s, key %s stopped", ns, prefix)
+		}()
+
 		var waitIndex uint64
 		for {
 			keys, lastIndex, err := c.getKeysByPrefixAndIndex(ns, prefix, waitIndex)
 			if err != nil {
-				logger.Errorf("key watch error: %v", err)
-				time.Sleep(30 * time.Second)
-				return
+				logger.Errorf("WatchKeysByPrefix ns %s, key %s error: %v", ns, prefix, err)
+				time.Sleep(10 * time.Second)
+				waitIndex = 0
+				continue
 			}
+
 			if waitIndex != lastIndex {
 				waitIndex = lastIndex
 				ch <- keys
@@ -274,7 +297,6 @@ func (c *consulImpl) WatchKeysByPrefix(ctx context.Context, ns, prefix string, c
 
 			select {
 			case <-ctx.Done():
-				logger.Infof("stop watching keys by prefix: %s", prefix)
 				return
 			default:
 			}
@@ -299,14 +321,20 @@ func (c *consulImpl) getKeysByPrefixAndIndex(ns, prefix string, waitIndex uint64
 
 func (c *consulImpl) WatchValuesByKeyPrefix(ctx context.Context, ns, prefix string, ch chan<- []*api.KVPair) {
 	go func() {
+		defer func() {
+			logger.Warnf("WatchValuesByKeyPrefix ns %s, key %s stopped", ns, prefix)
+		}()
+
 		var waitIndex uint64
 		for {
 			kvs, lastIndex, err := c.getValuesByKeyPrefixAndIndex(ns, prefix, waitIndex)
 			if err != nil {
-				logger.Errorf("key watch error: %v", err)
-				time.Sleep(30 * time.Second)
-				return
+				logger.Errorf("WatchValuesByKeyPrefix ns %s, key %s error: %v", ns, prefix, err)
+				time.Sleep(10 * time.Second)
+				waitIndex = 0
+				continue
 			}
+
 			if waitIndex != lastIndex {
 				waitIndex = lastIndex
 				ch <- kvs
@@ -314,7 +342,6 @@ func (c *consulImpl) WatchValuesByKeyPrefix(ctx context.Context, ns, prefix stri
 
 			select {
 			case <-ctx.Done():
-				logger.Infof("stop watching values by prefix: %s", prefix)
 				return
 			default:
 			}
